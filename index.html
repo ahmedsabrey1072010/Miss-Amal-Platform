@@ -61,7 +61,7 @@
       overflow-x: hidden;
     }
 
-    /* Sidebar Styling */
+    /* Sidebar Styling & Mobile Fixes */
     #sidebar {
       width: var(--sidebar-width);
       background-color: var(--bg-sidebar);
@@ -87,7 +87,7 @@
       left: 0;
       width: 100vw;
       height: 100vh;
-      background: rgba(0, 0, 0, 0.4);
+      background: rgba(0, 0, 0, 0.5);
       z-index: 1040;
       display: none;
       opacity: 0;
@@ -327,10 +327,18 @@
       color: var(--text-muted);
     }
 
+    /* Responsive Breakpoint for Mobile Sidebar */
     @media (max-width: 991px) {
-      #sidebar { transform: translateX(100%); }
-      #sidebar.mobile-open { transform: translateX(0); }
-      #content { margin-right: 0 !important; width: 100% !important; }
+      #sidebar { 
+        transform: translateX(100%); 
+      }
+      #sidebar.mobile-open { 
+        transform: translateX(0) !important; 
+      }
+      #content { 
+        margin-right: 0 !important; 
+        width: 100% !important; 
+      }
     }
   </style>
 </head>
@@ -374,7 +382,8 @@
       </div>
       
       <div class="d-flex align-items-center gap-2">
-        <button class="btn btn-sm btn-outline-secondary rounded-circle p-2" onclick="toggleTheme()" title="تبديل الوضع" style="width: 36px; height: 36px;">
+        <!-- Improved Theme Toggle Button -->
+        <button class="btn btn-sm btn-outline-secondary rounded-circle d-flex align-items-center justify-content-center" onclick="toggleTheme()" title="تبديل الوضع" style="width: 38px; height: 38px;">
           <i class="fa-solid fa-moon" id="themeIcon"></i>
         </button>
         
@@ -724,14 +733,12 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    // إعدادات Supabase المتصلة بقاعدة البيانات الخاصة بك وبالمفتاح الصحيح
-    const SUPABASE_URL = 'https://hoddrxekayofbyqmoyyz.supabase.co'; 
+    // إعدادات Supabase المتصلة بقاعدة البيانات الخاصة بك
+    const SUPABASE_URL = 'https://hoddrxekayofbyqmoyyz.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_Z6u7TuaH-WhcweAyb2hsJg_X5pWJ6HS';
-    
-    // تفعيل عميل Supabase
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    let users = JSON.parse(localStorage.getItem('platform_users')) || [];
+    let users = [];
     let notifications = JSON.parse(localStorage.getItem('platform_notifs')) || [
       { id: 1, title: "بداية المراجعات النهائية", content: "سوف يتم رفع ملخصات الذكاء الاصطناعي أسبوعياً بنفس هذا القسم.", date: "2026-11-10", time: "23:00" }
     ];
@@ -741,7 +748,7 @@
     let books = JSON.parse(localStorage.getItem('platform_books')) || [
       { id: 1, title: "مذكرة خوارزميات الذكاء الاصطناعي", grade: "الصف الثاني الثانوي", url: "#" }
     ];
-    let chatMessages = JSON.parse(localStorage.getItem('platform_chat')) || [];
+    let chatMessages = [];
     let auditLogs = JSON.parse(localStorage.getItem('platform_logs')) || [];
     let currentUser = JSON.parse(localStorage.getItem('platform_current_user')) || null;
     let isAdminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
@@ -756,6 +763,26 @@
       return (user && user.username && user.username.trim() !== '') ? user.username : (user ? user.name : 'زائر');
     }
 
+    // جلب البيانات من Supabase عند فتح المنصة لضمان المزامنة بين الأجهزة
+    async function fetchSupabaseData() {
+      // 1. جلب المستخدمين
+      const { data: profilesData, error: profilesError } = await _supabase.from('profiles').select('*');
+      if (!profilesError && profilesData) {
+        users = profilesData;
+      }
+
+      // 2. جلب رسائل المنتدى (من جدول lessons أو chat)
+      const { data: lessonsData, error: lessonsError } = await _supabase.from('lessons').select('*');
+      if (!lessonsError && lessonsData) {
+        chatMessages = lessonsData.map(l => ({
+          sender: l.title || 'زائر',
+          text: l.content || '',
+          img: l.img_url || null
+        }));
+      }
+      updateUI();
+    }
+
     function updateUI() {
       if (currentUser && currentUser.status === 'approved') {
         document.getElementById('authButtons').style.display = 'none';
@@ -766,7 +793,7 @@
         document.getElementById('profName').value = currentUser.name;
         document.getElementById('profUsername').value = currentUser.username || '';
         document.getElementById('profPhone').value = currentUser.phone;
-        document.getElementById('profParentPhone').value = currentUser.parentPhone || '';
+        document.getElementById('profParentPhone').value = currentUser.parent_phone || '';
       } else {
         document.getElementById('authButtons').style.display = 'flex';
         document.getElementById('userProfileBadge').style.display = 'none';
@@ -823,7 +850,6 @@
 
     function toggleSidebar() {
       const sidebar = document.getElementById('sidebar');
-      const content = document.getElementById('content');
       const backdrop = document.getElementById('sidebarBackdrop');
 
       if (window.innerWidth <= 991) {
@@ -831,7 +857,7 @@
         backdrop.classList.toggle('show');
       } else {
         sidebar.classList.toggle('collapsed');
-        content.classList.toggle('expanded');
+        document.getElementById('content').classList.toggle('expanded');
       }
     }
 
@@ -855,7 +881,8 @@
       document.getElementById('parentPhoneGroup').style.display = role === 'student' ? 'block' : 'none';
     }
 
-    function handleRegister(e) {
+    // تسجيل حساب جديد مباشرة إلى Supabase
+    async function handleRegister(e) {
       e.preventDefault();
       const name = document.getElementById('regName').value;
       const username = document.getElementById('regUsername').value;
@@ -871,40 +898,40 @@
         return;
       }
 
-      if (role === 'student' && parentPhone && !isValidEgyPhone(parentPhone)) {
-        alert("يرجى إدخال رقم مصري صحيح لولي الأمر.");
-        return;
-      }
-
       if (pass !== passConfirm) {
         alert("كلمتا المرور غير متطابقتين!");
         return;
       }
 
-      if (users.find(u => u.phone === phone)) {
-        alert("رقم الهاتف هذا مسجل بالفعل!");
-        return;
-      }
+      const { error } = await _supabase.from('profiles').insert([
+        {
+          name, username, role, grade, phone,
+          parent_phone: parentPhone,
+          pass,
+          status: 'pending'
+        }
+      ]);
 
-      users.push({
-        id: Date.now(),
-        name, username, role, grade, phone, parentPhone, pass,
-        status: 'pending',
-        date: new Date().toLocaleDateString('ar-EG')
-      });
-      localStorage.setItem('platform_users', JSON.stringify(users));
-      alert("تم إرسال طلبك بنجاح وهو قيد الانتظار لموافقة الأدمن.");
-      authModal.hide();
+      if (error) {
+        alert("خطأ أثناء الاتصال بقاعدة البيانات: " + error.message);
+      } else {
+        alert("تم إرسال طلبك بنجاح وهو قيد الانتظار لموافقة الأدمن.");
+        authModal.hide();
+        fetchSupabaseData();
+      }
     }
 
-    function handleLogin(e) {
+    // تسجيل الدخول بالتحقق من جدول Supabase
+    async function handleLogin(e) {
       e.preventDefault();
       const phone = document.getElementById('loginPhone').value;
       const pass = document.getElementById('loginPass').value;
 
+      await fetchSupabaseData();
       const user = users.find(u => u.phone === phone && u.pass === pass);
+      
       if (!user) {
-        alert("خطأ في البيانات المدخلة!");
+        alert("خطأ في البيانات المدخلة أو الرقم غير مسجل!");
         return;
       }
 
@@ -930,24 +957,35 @@
       showSection('homeSection');
     }
 
-    function updateProfile(e) {
+    async function updateProfile(e) {
       e.preventDefault();
       if (!currentUser) return;
       
       currentUser.name = document.getElementById('profName').value;
       currentUser.username = document.getElementById('profUsername').value;
       currentUser.phone = document.getElementById('profPhone').value;
-      currentUser.parentPhone = document.getElementById('profParentPhone').value;
+      currentUser.parent_phone = document.getElementById('profParentPhone').value;
       const newPass = document.getElementById('profPass').value;
       if (newPass) currentUser.pass = newPass;
 
-      const idx = users.findIndex(u => u.id === currentUser.id);
-      if (idx !== -1) users[idx] = currentUser;
+      const { error } = await _supabase
+        .from('profiles')
+        .update({
+          name: currentUser.name,
+          username: currentUser.username,
+          phone: currentUser.phone,
+          parent_phone: currentUser.parent_phone,
+          pass: currentUser.pass
+        })
+        .eq('id', currentUser.id);
 
-      localStorage.setItem('platform_users', JSON.stringify(users));
-      localStorage.setItem('platform_current_user', JSON.stringify(currentUser));
-      alert("تم تحديث بيانات الملف الشخصي بنجاح!");
-      updateUI();
+      if (error) {
+        alert("حدث خطأ أثناء التحديث: " + error.message);
+      } else {
+        localStorage.setItem('platform_current_user', JSON.stringify(currentUser));
+        alert("تم تحديث بيانات الملف الشخصي بنجاح!");
+        fetchSupabaseData();
+      }
     }
 
     function addAuditLog(name, role, action) {
@@ -1011,32 +1049,34 @@
       container.scrollTop = container.scrollHeight;
     }
 
-    function sendChatMessage() {
+    // إرسال رسالة المنتدى إلى Supabase لتظهر على كل الأجهزة
+    async function sendChatMessage() {
       const input = document.getElementById('chatInput');
       if (!input.value.trim()) return;
 
-      chatMessages.push({
-        sender: currentUser ? getDisplayName(currentUser) : 'زائر',
-        text: input.value,
-        img: null
-      });
-      localStorage.setItem('platform_chat', JSON.stringify(chatMessages));
-      input.value = '';
-      renderChat();
+      const senderName = currentUser ? getDisplayName(currentUser) : 'زائر';
+      const { error } = await _supabase.from('lessons').insert([
+        { title: senderName, content: input.value }
+      ]);
+
+      if (error) {
+        alert("فشل إرسال الرسالة: " + error.message);
+      } else {
+        input.value = '';
+        fetchSupabaseData();
+      }
     }
 
-    function handleImageUpload(e) {
+    async function handleImageUpload(e) {
       const file = e.target.files[0];
       if (file) {
         const reader = new FileReader();
-        reader.onload = function(event) {
-          chatMessages.push({
-            sender: currentUser ? getDisplayName(currentUser) : 'زائر',
-            text: '',
-            img: event.target.result
-          });
-          localStorage.setItem('platform_chat', JSON.stringify(chatMessages));
-          renderChat();
+        reader.onload = async function(event) {
+          const senderName = currentUser ? getDisplayName(currentUser) : 'زائر';
+          await _supabase.from('lessons').insert([
+            { title: senderName, content: '[صورة مرفقة]', img_url: event.target.result }
+          ]);
+          fetchSupabaseData();
         };
         reader.readAsDataURL(file);
       }
@@ -1083,7 +1123,8 @@
       alert("تم تسجيل خروج الأدمن بنجاح وإغلاق اللوحة.");
     }
 
-    function loadAdminData() {
+    async function loadAdminData() {
+      await fetchSupabaseData();
       const pendingUsers = users.filter(u => u.status === 'pending');
       const approvedUsers = users.filter(u => u.status === 'approved');
 
@@ -1097,7 +1138,7 @@
           <td><span class="text-muted">${u.username || 'بدون اسم مستعار'}</span></td>
           <td>${u.grade}</td>
           <td>${u.phone}</td>
-          <td>${u.parentPhone || '-'}</td>
+          <td>${u.parent_phone || '-'}</td>
           <td>
             <button class="btn btn-success btn-sm me-1" onclick="approveUser(${u.id})">قبول</button>
             <button class="btn btn-danger btn-sm" onclick="rejectUser(${u.id})">رفض</button>
@@ -1124,7 +1165,7 @@
           <td><span class="badge bg-secondary-subtle text-secondary">${u.username || 'اسم حقيقي'}</span></td>
           <td>${u.grade}</td>
           <td>${u.phone}</td>
-          <td>${u.parentPhone || '-'}</td>
+          <td>${u.parent_phone || '-'}</td>
           <td>
             <button class="btn btn-outline-danger btn-sm" onclick="deleteStudent(${u.id})"><i class="fa-solid fa-trash me-1"></i> حذف</button>
           </td>
@@ -1132,28 +1173,30 @@
       `).join('');
     }
 
-    function approveUser(id) {
-      const user = users.find(u => u.id === id);
-      if (user) {
-        user.status = 'approved';
-        localStorage.setItem('platform_users', JSON.stringify(users));
+    async function approveUser(id) {
+      const { error } = await _supabase.from('profiles').update({ status: 'approved' }).eq('id', id);
+      if (!error) {
+        fetchSupabaseData();
         loadAdminData();
-        updateUI();
       }
     }
 
-    function rejectUser(id) {
-      users = users.filter(u => u.id !== id);
-      localStorage.setItem('platform_users', JSON.stringify(users));
-      loadAdminData();
+    async function rejectUser(id) {
+      const { error } = await _supabase.from('profiles').delete().eq('id', id);
+      if (!error) {
+        fetchSupabaseData();
+        loadAdminData();
+      }
     }
 
-    function deleteStudent(id) {
+    async function deleteStudent(id) {
       if (confirm("هل أنت متأكد من حذف هذا الطالب نهائياً من المنصة؟")) {
-        users = users.filter(u => u.id !== id);
-        localStorage.setItem('platform_users', JSON.stringify(users));
-        loadAdminData();
-        alert("تم حذف الطالب بنجاح.");
+        const { error } = await _supabase.from('profiles').delete().eq('id', id);
+        if (!error) {
+          fetchSupabaseData();
+          loadAdminData();
+          alert("تم حذف الطالب بنجاح.");
+        }
       }
     }
 
@@ -1206,7 +1249,8 @@
       alert("تم رفع الكتاب بنجاح!");
     }
 
-    updateUI();
+    // جلب البيانات أول ما الصفحة تفتح
+    fetchSupabaseData();
   </script>
 </body>
 </html>
