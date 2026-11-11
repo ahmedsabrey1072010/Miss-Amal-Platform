@@ -61,7 +61,7 @@
       overflow-x: hidden;
     }
 
-    /* Sidebar Styling & Mobile Fixes */
+    /* Sidebar Styling (Desktop & Mobile Fixed) */
     #sidebar {
       width: var(--sidebar-width);
       background-color: var(--bg-sidebar);
@@ -73,12 +73,36 @@
       display: flex;
       flex-direction: column;
       border-left: 1px solid rgba(255, 255, 255, 0.05);
-      transform: translateX(0);
-      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: transform 0.3s ease-in-out;
     }
 
-    #sidebar.collapsed {
-      transform: translateX(100%);
+    /* Desktop Collapsed State */
+    @media (min-width: 992px) {
+      #sidebar.collapsed {
+        transform: translateX(100%);
+      }
+      #content {
+        margin-right: var(--sidebar-width);
+        width: calc(100% - var(--sidebar-width));
+      }
+      #content.expanded {
+        margin-right: 0;
+        width: 100%;
+      }
+    }
+
+    /* Mobile Drawer State */
+    @media (max-width: 991px) {
+      #sidebar {
+        transform: translateX(100%);
+      }
+      #sidebar.mobile-open {
+        transform: translateX(0) !important;
+      }
+      #content {
+        margin-right: 0 !important;
+        width: 100% !important;
+      }
     }
 
     .sidebar-backdrop {
@@ -156,35 +180,29 @@
 
     /* Main Layout */
     #content {
-      margin-right: var(--sidebar-width);
       flex: 1;
       display: flex;
       flex-direction: column;
       min-height: 100vh;
-      width: calc(100% - var(--sidebar-width));
-      transition: margin-right 0.35s cubic-bezier(0.4, 0, 0.2, 1), width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    #content.expanded {
-      margin-right: 0;
-      width: 100%;
+      transition: margin-right 0.3s ease, width 0.3s ease;
     }
 
     .top-header {
       background: var(--bg-card);
       border-bottom: 1px solid var(--border-color);
-      padding: 14px 24px;
+      padding: 12px 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       position: sticky;
       top: 0;
       z-index: 1000;
-      gap: 12px;
+      gap: 8px;
+      flex-wrap: nowrap;
     }
 
     .main-container {
-      padding: 32px;
+      padding: 24px;
       flex: 1;
     }
 
@@ -202,7 +220,7 @@
       background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
       color: white;
       border-radius: 20px;
-      padding: 48px 32px;
+      padding: 40px 20px;
       position: relative;
       overflow: hidden;
       box-shadow: 0 10px 25px -5px rgba(79, 70, 229, 0.3);
@@ -230,9 +248,10 @@
       color: white;
       border: none;
       border-radius: var(--radius-md);
-      padding: 8px 16px;
+      padding: 8px 14px;
       font-weight: 600;
-      font-size: 0.88rem;
+      font-size: 0.85rem;
+      white-space: nowrap;
     }
     .btn-custom-primary:hover { background: var(--primary-hover); color: white; }
 
@@ -241,9 +260,10 @@
       color: var(--primary);
       border: 1.5px solid var(--primary);
       border-radius: var(--radius-md);
-      padding: 8px 16px;
+      padding: 8px 14px;
       font-weight: 600;
-      font-size: 0.88rem;
+      font-size: 0.85rem;
+      white-space: nowrap;
     }
     .btn-custom-outline:hover { background: var(--primary); color: white; }
 
@@ -282,7 +302,7 @@
     }
 
     .chat-message {
-      max-width: 70%;
+      max-width: 80%;
       padding: 12px 18px;
       border-radius: 16px;
       font-size: 0.95rem;
@@ -321,24 +341,10 @@
     footer {
       background: var(--bg-card);
       border-top: 1px solid var(--border-color);
-      padding: 20px 32px;
+      padding: 20px;
       text-align: center;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       color: var(--text-muted);
-    }
-
-    /* Responsive Breakpoint for Mobile Sidebar */
-    @media (max-width: 991px) {
-      #sidebar { 
-        transform: translateX(100%); 
-      }
-      #sidebar.mobile-open { 
-        transform: translateX(0) !important; 
-      }
-      #content { 
-        margin-right: 0 !important; 
-        width: 100% !important; 
-      }
     }
   </style>
 </head>
@@ -382,20 +388,20 @@
       </div>
       
       <div class="d-flex align-items-center gap-2">
-        <!-- Improved Theme Toggle Button -->
-        <button class="btn btn-sm btn-outline-secondary rounded-circle d-flex align-items-center justify-content-center" onclick="toggleTheme()" title="تبديل الوضع" style="width: 38px; height: 38px;">
+        <!-- Theme Toggle Button -->
+        <button class="btn btn-sm btn-outline-secondary rounded-circle d-flex align-items-center justify-content-center" onclick="toggleTheme()" title="تبديل الوضع" style="width: 36px; height: 36px; flex-shrink: 0;">
           <i class="fa-solid fa-moon" id="themeIcon"></i>
         </button>
         
-        <!-- Auth Controls -->
-        <div id="authButtons" class="d-flex align-items-center gap-2">
-          <button class="btn btn-custom-primary" onclick="showAuthModal('login')">تسجيل الدخول</button>
-          <button class="btn btn-custom-outline" onclick="showAuthModal('register')">إنشاء حساب</button>
+        <!-- Auth Controls (Never overlap) -->
+        <div id="authButtons" class="d-flex align-items-center gap-1">
+          <button class="btn btn-custom-primary px-2 py-1" style="font-size: 0.8rem;" onclick="showAuthModal('login')">دخول</button>
+          <button class="btn btn-custom-outline px-2 py-1" style="font-size: 0.8rem;" onclick="showAuthModal('register')">حساب</button>
         </div>
 
         <div id="userProfileBadge" style="display: none;" class="align-items-center gap-2">
-          <span class="badge bg-primary-subtle text-primary fw-semibold px-3 py-2 rounded-pill" id="userNameBadge"></span>
-          <button class="btn btn-sm btn-outline-danger rounded-circle" onclick="logout()" title="تسجيل خروج"><i class="fa-solid fa-right-from-bracket"></i></button>
+          <span class="badge bg-primary-subtle text-primary fw-semibold px-2 py-1 rounded-pill text-truncate" id="userNameBadge" style="max-width: 100px;"></span>
+          <button class="btn btn-sm btn-outline-danger rounded-circle p-1" onclick="logout()" title="تسجيل خروج" style="width: 32px; height: 32px;"><i class="fa-solid fa-right-from-bracket"></i></button>
         </div>
       </div>
     </header>
@@ -406,7 +412,7 @@
       <!-- Home Section -->
       <section id="homeSection">
         <div class="hero-card mb-4 text-center">
-          <h2 class="fw-bold mb-2">طريقك لاحتراف البرمجة والذكاء الاصطناعي</h2>
+          <h2 class="fw-bold mb-2 fs-4 fs-md-3">طريقك لاحتراف البرمجة والذكاء الاصطناعي</h2>
           <p class="opacity-90 mb-4 fs-6">إشراف وتدريس: المس **أمل شفيق السيد**</p>
           <button class="btn btn-light text-primary fw-bold px-4 py-2 rounded-pill" onclick="showAuthModal('register')">ابدأ رحلتك الآن</button>
         </div>
@@ -450,9 +456,9 @@
 
       <!-- Books Section -->
       <section id="booksSection" style="display: none;">
-        <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
           <h4 class="fw-bold m-0"><i class="fa-solid fa-book-open text-primary me-2"></i>مكتبة المذكرات والكتب</h4>
-          <input type="text" id="bookSearch" class="form-control w-25" placeholder="بحث عن كتاب..." onkeyup="filterBooks()">
+          <input type="text" id="bookSearch" class="form-control w-100 w-md-25" placeholder="بحث عن كتاب..." onkeyup="filterBooks()">
         </div>
         <div class="row g-4" id="booksContainer"></div>
       </section>
@@ -472,7 +478,7 @@
               </button>
             </div>
 
-            <button class="btn btn-custom-primary px-4 py-2" onclick="sendChatMessage()"><i class="fa-solid fa-paper-plane me-1"></i> إرسال</button>
+            <button class="btn btn-custom-primary px-3 py-2" onclick="sendChatMessage()"><i class="fa-solid fa-paper-plane me-1"></i> إرسال</button>
           </div>
         </div>
       </section>
@@ -480,15 +486,15 @@
       <!-- Editor Section -->
       <section id="editorSection" style="display: none;">
         <div class="custom-card">
-          <div class="d-flex justify-content-between align-items-center mb-3">
+          <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-3">
             <h5 class="fw-bold m-0"><i class="fa-solid fa-terminal text-primary me-2"></i>محرر الأكواد التفاعلي</h5>
             <select id="editorLanguage" class="form-select w-auto" onchange="switchEditorLang()">
               <option value="js">JavaScript</option>
               <option value="python">Python Simulator</option>
             </select>
           </div>
-          <textarea id="codeTextarea" class="form-control font-monospace mb-3" rows="12" dir="ltr" style="background:#0f172a; color:#38bdf8; border:none;"></textarea>
-          <button class="btn btn-success fw-bold px-4 mb-3" onclick="runCode()"><i class="fa-solid fa-play me-1"></i> تشغيل الشفرة</button>
+          <textarea id="codeTextarea" class="form-control font-monospace mb-3" rows="10" dir="ltr" style="background:#0f172a; color:#38bdf8; border:none;"></textarea>
+          <button class="btn btn-success fw-bold px-4 mb-3 w-100 w-md-auto" onclick="runCode()"><i class="fa-solid fa-play me-1"></i> تشغيل الشفرة</button>
           <h6 class="fw-bold">مخرجات التشغيل / Console Output:</h6>
           <pre id="codeOutput" class="p-3 rounded-3 bg-dark text-success font-monospace" style="min-height: 120px; border: 1px solid rgba(255,255,255,0.1);"></pre>
         </div>
@@ -535,7 +541,7 @@
         </div>
 
         <div id="adminDashboard" style="display: none;">
-          <div class="d-flex justify-content-between align-items-center mb-4">
+          <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-4">
             <div>
               <h4 class="fw-bold m-0"><i class="fa-solid fa-chart-pie text-warning me-2"></i>لوحة تحكم الأدمن</h4>
               <small class="text-muted">مرحباً بك، تتيح لك هذه اللوحة إدارة كافة محتويات وطلاب المنصة.</small>
@@ -565,13 +571,13 @@
           </div>
 
           <!-- Admin Tabs -->
-          <ul class="nav nav-pills mb-4 gap-2" id="adminTabs">
-            <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#pendingTab"><i class="fa-solid fa-user-clock me-1"></i> الطلبات المعلقة</a></li>
-            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#studentsTab"><i class="fa-solid fa-users me-1"></i> قائمة الطلاب</a></li>
-            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#logsTab"><i class="fa-solid fa-clock-rotate-left me-1"></i> السجلات</a></li>
-            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#manageNewsTab"><i class="fa-solid fa-bullhorn me-1"></i> نشر إشعار</a></li>
-            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#manageHonorTab"><i class="fa-solid fa-award me-1"></i> المتميزين</a></li>
-            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#manageBooksTab"><i class="fa-solid fa-book me-1"></i> المذكرات</a></li>
+          <ul class="nav nav-pills mb-4 gap-2 overflow-x-auto flex-nowrap" id="adminTabs">
+            <li class="nav-item"><a class="nav-link active text-nowrap" data-bs-toggle="tab" href="#pendingTab"><i class="fa-solid fa-user-clock me-1"></i> الطلبات المعلقة</a></li>
+            <li class="nav-item"><a class="nav-link text-nowrap" data-bs-toggle="tab" href="#studentsTab"><i class="fa-solid fa-users me-1"></i> قائمة الطلاب</a></li>
+            <li class="nav-item"><a class="nav-link text-nowrap" data-bs-toggle="tab" href="#logsTab"><i class="fa-solid fa-clock-rotate-left me-1"></i> السجلات</a></li>
+            <li class="nav-item"><a class="nav-link text-nowrap" data-bs-toggle="tab" href="#manageNewsTab"><i class="fa-solid fa-bullhorn me-1"></i> نشر إشعار</a></li>
+            <li class="nav-item"><a class="nav-link text-nowrap" data-bs-toggle="tab" href="#manageHonorTab"><i class="fa-solid fa-award me-1"></i> المتميزين</a></li>
+            <li class="nav-item"><a class="nav-link text-nowrap" data-bs-toggle="tab" href="#manageBooksTab"><i class="fa-solid fa-book me-1"></i> المذكرات</a></li>
           </ul>
 
           <div class="tab-content custom-card">
@@ -588,7 +594,7 @@
             </div>
 
             <div class="tab-pane fade" id="studentsTab">
-              <input type="text" id="studentSearch" class="form-control w-50 mb-3" placeholder="بحث بالاسم الحقيقي أو الهاتف..." onkeyup="filterStudents()">
+              <input type="text" id="studentSearch" class="form-control w-100 w-md-50 mb-3" placeholder="بحث بالاسم الحقيقي أو الهاتف..." onkeyup="filterStudents()">
               <div class="table-responsive">
                 <table class="table table-striped align-middle">
                   <thead>
@@ -733,12 +739,11 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    // إعدادات Supabase المتصلة بقاعدة البيانات الخاصة بك
-    const SUPABASE_URL = 'https://hoddrxekayofbyqmoyyz.supabase.co';
-    const SUPABASE_ANON_KEY = 'sb_publishable_Z6u7TuaH-WhcweAyb2hsJg_X5pWJ6HS';
-    const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+    const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+    // const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    let users = [];
+    let users = JSON.parse(localStorage.getItem('platform_users')) || [];
     let notifications = JSON.parse(localStorage.getItem('platform_notifs')) || [
       { id: 1, title: "بداية المراجعات النهائية", content: "سوف يتم رفع ملخصات الذكاء الاصطناعي أسبوعياً بنفس هذا القسم.", date: "2026-11-10", time: "23:00" }
     ];
@@ -748,7 +753,7 @@
     let books = JSON.parse(localStorage.getItem('platform_books')) || [
       { id: 1, title: "مذكرة خوارزميات الذكاء الاصطناعي", grade: "الصف الثاني الثانوي", url: "#" }
     ];
-    let chatMessages = [];
+    let chatMessages = JSON.parse(localStorage.getItem('platform_chat')) || [];
     let auditLogs = JSON.parse(localStorage.getItem('platform_logs')) || [];
     let currentUser = JSON.parse(localStorage.getItem('platform_current_user')) || null;
     let isAdminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
@@ -763,26 +768,6 @@
       return (user && user.username && user.username.trim() !== '') ? user.username : (user ? user.name : 'زائر');
     }
 
-    // جلب البيانات من Supabase عند فتح المنصة لضمان المزامنة بين الأجهزة
-    async function fetchSupabaseData() {
-      // 1. جلب المستخدمين
-      const { data: profilesData, error: profilesError } = await _supabase.from('profiles').select('*');
-      if (!profilesError && profilesData) {
-        users = profilesData;
-      }
-
-      // 2. جلب رسائل المنتدى (من جدول lessons أو chat)
-      const { data: lessonsData, error: lessonsError } = await _supabase.from('lessons').select('*');
-      if (!lessonsError && lessonsData) {
-        chatMessages = lessonsData.map(l => ({
-          sender: l.title || 'زائر',
-          text: l.content || '',
-          img: l.img_url || null
-        }));
-      }
-      updateUI();
-    }
-
     function updateUI() {
       if (currentUser && currentUser.status === 'approved') {
         document.getElementById('authButtons').style.display = 'none';
@@ -793,7 +778,7 @@
         document.getElementById('profName').value = currentUser.name;
         document.getElementById('profUsername').value = currentUser.username || '';
         document.getElementById('profPhone').value = currentUser.phone;
-        document.getElementById('profParentPhone').value = currentUser.parent_phone || '';
+        document.getElementById('profParentPhone').value = currentUser.parentPhone || '';
       } else {
         document.getElementById('authButtons').style.display = 'flex';
         document.getElementById('userProfileBadge').style.display = 'none';
@@ -881,8 +866,7 @@
       document.getElementById('parentPhoneGroup').style.display = role === 'student' ? 'block' : 'none';
     }
 
-    // تسجيل حساب جديد مباشرة إلى Supabase
-    async function handleRegister(e) {
+    function handleRegister(e) {
       e.preventDefault();
       const name = document.getElementById('regName').value;
       const username = document.getElementById('regUsername').value;
@@ -898,40 +882,40 @@
         return;
       }
 
+      if (role === 'student' && parentPhone && !isValidEgyPhone(parentPhone)) {
+        alert("يرجى إدخال رقم مصري صحيح لولي الأمر.");
+        return;
+      }
+
       if (pass !== passConfirm) {
         alert("كلمتا المرور غير متطابقتين!");
         return;
       }
 
-      const { error } = await _supabase.from('profiles').insert([
-        {
-          name, username, role, grade, phone,
-          parent_phone: parentPhone,
-          pass,
-          status: 'pending'
-        }
-      ]);
-
-      if (error) {
-        alert("خطأ أثناء الاتصال بقاعدة البيانات: " + error.message);
-      } else {
-        alert("تم إرسال طلبك بنجاح وهو قيد الانتظار لموافقة الأدمن.");
-        authModal.hide();
-        fetchSupabaseData();
+      if (users.find(u => u.phone === phone)) {
+        alert("رقم الهاتف هذا مسجل بالفعل!");
+        return;
       }
+
+      users.push({
+        id: Date.now(),
+        name, username, role, grade, phone, parentPhone, pass,
+        status: 'pending',
+        date: new Date().toLocaleDateString('ar-EG')
+      });
+      localStorage.setItem('platform_users', JSON.stringify(users));
+      alert("تم إرسال طلبك بنجاح وهو قيد الانتظار لموافقة الأدمن.");
+      authModal.hide();
     }
 
-    // تسجيل الدخول بالتحقق من جدول Supabase
-    async function handleLogin(e) {
+    function handleLogin(e) {
       e.preventDefault();
       const phone = document.getElementById('loginPhone').value;
       const pass = document.getElementById('loginPass').value;
 
-      await fetchSupabaseData();
       const user = users.find(u => u.phone === phone && u.pass === pass);
-      
       if (!user) {
-        alert("خطأ في البيانات المدخلة أو الرقم غير مسجل!");
+        alert("خطأ في البيانات المدخلة!");
         return;
       }
 
@@ -957,35 +941,24 @@
       showSection('homeSection');
     }
 
-    async function updateProfile(e) {
+    function updateProfile(e) {
       e.preventDefault();
       if (!currentUser) return;
       
       currentUser.name = document.getElementById('profName').value;
       currentUser.username = document.getElementById('profUsername').value;
       currentUser.phone = document.getElementById('profPhone').value;
-      currentUser.parent_phone = document.getElementById('profParentPhone').value;
+      currentUser.parentPhone = document.getElementById('profParentPhone').value;
       const newPass = document.getElementById('profPass').value;
       if (newPass) currentUser.pass = newPass;
 
-      const { error } = await _supabase
-        .from('profiles')
-        .update({
-          name: currentUser.name,
-          username: currentUser.username,
-          phone: currentUser.phone,
-          parent_phone: currentUser.parent_phone,
-          pass: currentUser.pass
-        })
-        .eq('id', currentUser.id);
+      const idx = users.findIndex(u => u.id === currentUser.id);
+      if (idx !== -1) users[idx] = currentUser;
 
-      if (error) {
-        alert("حدث خطأ أثناء التحديث: " + error.message);
-      } else {
-        localStorage.setItem('platform_current_user', JSON.stringify(currentUser));
-        alert("تم تحديث بيانات الملف الشخصي بنجاح!");
-        fetchSupabaseData();
-      }
+      localStorage.setItem('platform_users', JSON.stringify(users));
+      localStorage.setItem('platform_current_user', JSON.stringify(currentUser));
+      alert("تم تحديث بيانات الملف الشخصي بنجاح!");
+      updateUI();
     }
 
     function addAuditLog(name, role, action) {
@@ -1049,34 +1022,32 @@
       container.scrollTop = container.scrollHeight;
     }
 
-    // إرسال رسالة المنتدى إلى Supabase لتظهر على كل الأجهزة
-    async function sendChatMessage() {
+    function sendChatMessage() {
       const input = document.getElementById('chatInput');
       if (!input.value.trim()) return;
 
-      const senderName = currentUser ? getDisplayName(currentUser) : 'زائر';
-      const { error } = await _supabase.from('lessons').insert([
-        { title: senderName, content: input.value }
-      ]);
-
-      if (error) {
-        alert("فشل إرسال الرسالة: " + error.message);
-      } else {
-        input.value = '';
-        fetchSupabaseData();
-      }
+      chatMessages.push({
+        sender: currentUser ? getDisplayName(currentUser) : 'زائر',
+        text: input.value,
+        img: null
+      });
+      localStorage.setItem('platform_chat', JSON.stringify(chatMessages));
+      input.value = '';
+      renderChat();
     }
 
-    async function handleImageUpload(e) {
+    function handleImageUpload(e) {
       const file = e.target.files[0];
       if (file) {
         const reader = new FileReader();
-        reader.onload = async function(event) {
-          const senderName = currentUser ? getDisplayName(currentUser) : 'زائر';
-          await _supabase.from('lessons').insert([
-            { title: senderName, content: '[صورة مرفقة]', img_url: event.target.result }
-          ]);
-          fetchSupabaseData();
+        reader.onload = function(event) {
+          chatMessages.push({
+            sender: currentUser ? getDisplayName(currentUser) : 'زائر',
+            text: '',
+            img: event.target.result
+          });
+          localStorage.setItem('platform_chat', JSON.stringify(chatMessages));
+          renderChat();
         };
         reader.readAsDataURL(file);
       }
@@ -1123,8 +1094,7 @@
       alert("تم تسجيل خروج الأدمن بنجاح وإغلاق اللوحة.");
     }
 
-    async function loadAdminData() {
-      await fetchSupabaseData();
+    function loadAdminData() {
       const pendingUsers = users.filter(u => u.status === 'pending');
       const approvedUsers = users.filter(u => u.status === 'approved');
 
@@ -1138,7 +1108,7 @@
           <td><span class="text-muted">${u.username || 'بدون اسم مستعار'}</span></td>
           <td>${u.grade}</td>
           <td>${u.phone}</td>
-          <td>${u.parent_phone || '-'}</td>
+          <td>${u.parentPhone || '-'}</td>
           <td>
             <button class="btn btn-success btn-sm me-1" onclick="approveUser(${u.id})">قبول</button>
             <button class="btn btn-danger btn-sm" onclick="rejectUser(${u.id})">رفض</button>
@@ -1165,7 +1135,7 @@
           <td><span class="badge bg-secondary-subtle text-secondary">${u.username || 'اسم حقيقي'}</span></td>
           <td>${u.grade}</td>
           <td>${u.phone}</td>
-          <td>${u.parent_phone || '-'}</td>
+          <td>${u.parentPhone || '-'}</td>
           <td>
             <button class="btn btn-outline-danger btn-sm" onclick="deleteStudent(${u.id})"><i class="fa-solid fa-trash me-1"></i> حذف</button>
           </td>
@@ -1173,30 +1143,28 @@
       `).join('');
     }
 
-    async function approveUser(id) {
-      const { error } = await _supabase.from('profiles').update({ status: 'approved' }).eq('id', id);
-      if (!error) {
-        fetchSupabaseData();
+    function approveUser(id) {
+      const user = users.find(u => u.id === id);
+      if (user) {
+        user.status = 'approved';
+        localStorage.setItem('platform_users', JSON.stringify(users));
         loadAdminData();
+        updateUI();
       }
     }
 
-    async function rejectUser(id) {
-      const { error } = await _supabase.from('profiles').delete().eq('id', id);
-      if (!error) {
-        fetchSupabaseData();
-        loadAdminData();
-      }
+    function rejectUser(id) {
+      users = users.filter(u => u.id !== id);
+      localStorage.setItem('platform_users', JSON.stringify(users));
+      loadAdminData();
     }
 
-    async function deleteStudent(id) {
+    function deleteStudent(id) {
       if (confirm("هل أنت متأكد من حذف هذا الطالب نهائياً من المنصة؟")) {
-        const { error } = await _supabase.from('profiles').delete().eq('id', id);
-        if (!error) {
-          fetchSupabaseData();
-          loadAdminData();
-          alert("تم حذف الطالب بنجاح.");
-        }
+        users = users.filter(u => u.id !== id);
+        localStorage.setItem('platform_users', JSON.stringify(users));
+        loadAdminData();
+        alert("تم حذف الطالب بنجاح.");
       }
     }
 
@@ -1249,8 +1217,7 @@
       alert("تم رفع الكتاب بنجاح!");
     }
 
-    // جلب البيانات أول ما الصفحة تفتح
-    fetchSupabaseData();
+    updateUI();
   </script>
 </body>
 </html>
