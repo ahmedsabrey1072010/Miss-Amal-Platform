@@ -377,7 +377,7 @@
           <i class="fa-solid fa-moon" id="themeIcon"></i>
         </button>
         
-        <!-- Single Auth Button (Shown ONLY when NOT logged in) -->
+        <!-- Single Login Button (Shown ONLY when NOT logged in, completely hidden when logged in) -->
         <div id="authContainer">
           <button class="btn btn-custom-primary" onclick="showAuthModal('login')">تسجيل الدخول</button>
         </div>
@@ -677,8 +677,8 @@
             <small id="loginLockMsg" class="text-danger d-block mb-2 text-center" style="display: none;"></small>
             
             <div class="text-center mt-3 pt-2 border-top">
-              <small class="text-muted">ليس لديك حساب؟</small>
-              <a href="#" class="text-primary text-decoration-none fw-semibold ms-1" onclick="showAuthModal('register')">إنشاء حساب جديد</a>
+              <small class="text-muted">إذا لم يكن لديك حساب؟</small>
+              <a href="#" class="text-primary text-decoration-none fw-semibold ms-1" onclick="showAuthModal('register')">قم بإنشاء حساب</a>
             </div>
           </form>
 
@@ -727,7 +727,7 @@
             
             <div class="text-center mt-3 pt-2 border-top">
               <small class="text-muted">لديك حساب بالفعل؟</small>
-              <a href="#" class="text-primary text-decoration-none fw-semibold ms-1" onclick="showAuthModal('login')">تسجيل الدخول</a>
+              <a href="#" class="text-primary text-decoration-none fw-semibold ms-1" onclick="showAuthModal('login')">قم بتسجيل الدخول</a>
             </div>
           </form>
         </div>
