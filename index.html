@@ -388,13 +388,13 @@
           <i class="fa-solid fa-moon" id="themeIcon"></i>
         </button>
         
-        <!-- Auth Controls (Hidden when logged in) -->
+        <!-- Auth Controls (Shown ONLY when NOT logged in) -->
         <div id="authButtons" class="d-flex align-items-center gap-2">
           <button class="btn btn-custom-primary" onclick="showAuthModal('login')">تسجيل الدخول</button>
           <button class="btn btn-custom-outline" onclick="showAuthModal('register')">إنشاء حساب</button>
         </div>
 
-        <!-- User Profile Badge & Logout Button (Shown only when logged in) -->
+        <!-- User Profile Badge & Logout Button (Shown ONLY when logged in) -->
         <div id="userProfileBadge" style="display: none;" class="align-items-center gap-2">
           <span class="badge bg-primary-subtle text-primary fw-semibold px-3 py-2 rounded-pill" id="userNameBadge"></span>
           <button class="btn btn-sm btn-outline-danger rounded-circle" onclick="logout()" title="تسجيل خروج"><i class="fa-solid fa-right-from-bracket"></i></button>
@@ -794,6 +794,7 @@
 
     function updateUI() {
       if (currentUser && currentUser.status === 'approved') {
+        // عند تسجيل الدخول: إخفاء أزرار تسجيل الدخول وإنشاء حساب تماماً، وإظهار اليوزر وزر تسجيل الخروج فقط
         document.getElementById('authButtons').style.display = 'none';
         document.getElementById('userProfileBadge').style.display = 'flex';
         document.getElementById('userNameBadge').innerText = getDisplayName(currentUser);
@@ -804,6 +805,7 @@
         document.getElementById('profPhone').value = currentUser.phone;
         document.getElementById('profParentPhone').value = currentUser.parent_phone || '';
       } else {
+        // في حالة عدم تسجيل الدخول: إظهار أزرار تسجيل الدخول وإنشاء الحساب
         document.getElementById('authButtons').style.display = 'flex';
         document.getElementById('userProfileBadge').style.display = 'none';
         document.getElementById('profileNavItem').style.display = 'none';
