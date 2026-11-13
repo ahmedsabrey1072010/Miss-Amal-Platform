@@ -521,7 +521,7 @@
               <input type="text" id="profName" class="form-control" required>
             </div>
             <div class="mb-3">
-              <label class="form-label fw-semibold">اسم المستخدم المستعار (اختياري للخصوصية)</label>
+              <label class="form-label fw-semibold">اسم المستخدم المستعار (اختياري)</label>
               <input type="text" id="profUsername" class="form-control" placeholder="مثال: Coder_2026">
             </div>
             <div class="mb-3">
@@ -786,8 +786,22 @@
     ];
     let chatMessages = [];
     let auditLogs = JSON.parse(localStorage.getItem('platform_logs')) || [];
+    
+    // استرجاع حالة المستخدم الأخيرة وتفضيلاته من localStorage للحفاظ عليها
     let currentUser = JSON.parse(localStorage.getItem('platform_current_user')) || null;
+    let savedTheme = localStorage.getItem('platform_theme') || 'light';
     let isAdminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
+
+    // تطبيق الثيم المحفوظ مسبقاً (داكن أو فاتح) عند بدء التشغيل
+    document.body.setAttribute('data-theme', savedTheme);
+    window.addEventListener('DOMContentLoaded', () => {
+      const themeIcon = document.getElementById('themeIcon');
+      if (savedTheme === 'dark') {
+        themeIcon.className = 'fa-solid fa-sun';
+      } else {
+        themeIcon.className = 'fa-solid fa-moon';
+      }
+    });
 
     const ADMIN_PASS = "Sabrey1990@@";
     let loginAttempts = JSON.parse(localStorage.getItem('platform_login_attempts')) || {};
@@ -797,7 +811,10 @@
     }
 
     function getDisplayName(user) {
-      return (user && user.username && user.username.trim() !== '') ? user.username : (user ? user.name : 'زائر');
+      if (!user) return 'زائر';
+      const nameToShow = (user.username && user.username.trim() !== '') ? user.username : user.name;
+      const roleText = user.role === 'teacher' ? ' (معلم)' : ' (طالب)';
+      return nameToShow + roleText;
     }
 
     async function fetchSupabaseData() {
@@ -805,7 +822,7 @@
       const { data: profilesData } = await _supabase.from('profiles').select('*');
       if (profilesData) users = profilesData;
 
-      // جلب الإشعارات
+      // جلب الإشعارات وحفظها محلياً
       const { data: notifsData } = await _supabase.from('notifications').select('*').order('created_at', { ascending: false });
       if (notifsData) {
         notifications = notifsData.map(n => ({
@@ -813,22 +830,41 @@
           content: n.content,
           date: new Date(n.created_at).toLocaleDateString('ar-EG')
         }));
+        localStorage.setItem('platform_notifications', JSON.stringify(notifications));
+      } else {
+        const localNotifs = localStorage.getItem('platform_notifications');
+        if (localNotifs) notifications = JSON.parse(localNotifs);
       }
 
-      // جلب رسائل الشات الحية من جدول chat_messages
+      // جلب رسائل الشات الحية من جدول chat_messages وحفظها محلياً كنسخة احتياطية
       const { data: messagesData, error: msgError } = await _supabase.from('chat_messages').select('*').order('created_at', { ascending: true });
       if (!msgError && messagesData) {
-        chatMessages = messagesData.map(m => ({
-          sender: m.sender || 'زائر',
-          text: m.content || '',
-          img: m.image_url || null
-        }));
+        chatMessages = messagesData.map(m => {
+          // محاولة مطابقة معرف المرسل مع جدول المستخدمين لإحضار اسمه وصفته بدقة
+          let senderDisplay = 'زائر';
+          const foundUser = users.find(u => u.phone === m.sender || u.id == m.sender);
+          if (foundUser) {
+            senderDisplay = getDisplayName(foundUser);
+          } else if (m.sender) {
+            senderDisplay = m.sender;
+          }
+
+          return {
+            sender: senderDisplay,
+            text: m.content || '',
+            img: m.image_url || null
+          };
+        });
+        localStorage.setItem('platform_chat', JSON.stringify(chatMessages));
+      } else {
+        const localChat = localStorage.getItem('platform_chat');
+        if (localChat) chatMessages = JSON.parse(localChat);
       }
+
       updateUI();
     }
 
     function setupRealtimeSubscription() {
-      // اشتراك حي ومباشر لتحديث الشات فوراً عبر الجدول chat_messages
       _supabase
         .channel('public:chat_messages')
         .on('postgres_changes', { event: '*', schema: 'public', table: 'chat_messages' }, payload => {
@@ -836,7 +872,6 @@
         })
         .subscribe();
 
-      // اشتراك حي للإشعارات
       _supabase
         .channel('public:notifications')
         .on('postgres_changes', { event: '*', schema: 'public', table: 'notifications' }, payload => {
@@ -895,15 +930,18 @@
       }
     }
 
+    // حفظ وضع الثيم (داكن / فاتح) في localStorage
     function toggleTheme() {
       const body = document.body;
       const themeIcon = document.getElementById('themeIcon');
       if (body.getAttribute('data-theme') === 'light') {
         body.setAttribute('data-theme', 'dark');
         themeIcon.className = 'fa-solid fa-sun';
+        localStorage.setItem('platform_theme', 'dark');
       } else {
         body.setAttribute('data-theme', 'light');
         themeIcon.className = 'fa-solid fa-moon';
+        localStorage.setItem('platform_theme', 'light');
       }
     }
 
@@ -1015,6 +1053,7 @@
       }
 
       currentUser = user;
+      // حفظ بيانات المستخدم الحالي لجلسة مستمرة لا تضيع
       localStorage.setItem('platform_current_user', JSON.stringify(currentUser));
       addAuditLog(user.name, user.role, "تسجيل دخول");
       updateUI();
@@ -1110,7 +1149,7 @@
     function renderChat() {
       const container = document.getElementById('chatContainer');
       container.innerHTML = chatMessages.map(m => `
-        <div class="chat-message ${currentUser && m.sender === getDisplayName(currentUser) ? 'sent' : 'received'}">
+        <div class="chat-message ${currentUser && m.sender.includes(currentUser.name) ? 'sent' : 'received'}">
           <small class="fw-semibold d-block mb-1 text-info" style="font-size: 0.75rem;">${m.sender}</small>
           ${m.text ? `<p class="m-0">${m.text}</p>` : ''}
           ${m.img ? `<img src="${m.img}" class="img-fluid rounded-3 mt-2" style="max-height: 180px;">` : ''}
@@ -1119,27 +1158,20 @@
       container.scrollTop = container.scrollHeight;
     }
 
-    // إرسال رسالة الشات الحية لجدول chat_messages
+    // إرسال رسالة الشات الحية مع حفظ اسم المستخدم وصفته بوضوح
     async function sendChatMessage() {
       const input = document.getElementById('chatInput');
       if (!input.value.trim()) return;
 
-      const senderName = currentUser ? getDisplayName(currentUser) : 'زائر';
+      const senderDisplay = currentUser ? getDisplayName(currentUser) : 'زائر (طالب)';
       
-      // إرسال كـ UUID أو نص حسب تصميم جدول chat_messages
       const { error } = await _supabase.from('chat_messages').insert([
-        { sender: currentUser ? currentUser.id : '00000000-0000-0000-0000-000000000000', content: input.value }
+        { sender: senderDisplay, content: input.value }
       ]);
 
       if (error) {
-        // احتياطي في حال كان عمود sender نصياً بالجدول
-        const altInsert = await _supabase.from('chat_messages').insert([
-          { sender: senderName, content: input.value }
-        ]);
-        if (altInsert.error) {
-          alert("فشل إرسال الرسالة: " + altInsert.error.message);
-          return;
-        }
+        alert("فشل إرسال الرسالة: " + error.message);
+        return;
       }
       
       input.value = '';
@@ -1151,9 +1183,9 @@
       if (file) {
         const reader = new FileReader();
         reader.onload = async function(event) {
-          const senderName = currentUser ? getDisplayName(currentUser) : 'زائر';
+          const senderDisplay = currentUser ? getDisplayName(currentUser) : 'زائر (طالب)';
           await _supabase.from('chat_messages').insert([
-            { sender: currentUser ? currentUser.id : senderName, content: '[صورة مرفقة]', image_url: event.target.result }
+            { sender: senderDisplay, content: '[صورة مرفقة]', image_url: event.target.result }
           ]);
           fetchSupabaseData();
         };
