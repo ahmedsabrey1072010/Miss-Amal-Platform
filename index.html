@@ -237,17 +237,6 @@
     }
     .btn-custom-primary:hover { background: var(--primary-hover); color: white; }
 
-    .btn-custom-outline {
-      background: transparent;
-      color: var(--primary);
-      border: 1.5px solid var(--primary);
-      border-radius: var(--radius-md);
-      padding: 8px 16px;
-      font-weight: 600;
-      font-size: 0.88rem;
-    }
-    .btn-custom-outline:hover { background: var(--primary); color: white; }
-
     /* Modern Image Upload Button */
     .upload-btn-wrapper {
       position: relative;
@@ -388,10 +377,9 @@
           <i class="fa-solid fa-moon" id="themeIcon"></i>
         </button>
         
-        <!-- Auth Controls (Shown ONLY when NOT logged in) -->
-        <div id="authButtons" class="d-flex align-items-center gap-2">
+        <!-- Single Auth Button (Shown ONLY when NOT logged in) -->
+        <div id="authContainer">
           <button class="btn btn-custom-primary" onclick="showAuthModal('login')">تسجيل الدخول</button>
-          <button class="btn btn-custom-outline" onclick="showAuthModal('register')">إنشاء حساب</button>
         </div>
       </div>
     </header>
@@ -666,7 +654,7 @@
 
   </div>
 
-  <!-- Auth Modal -->
+  <!-- Unified Auth Modal -->
   <div class="modal fade" id="authModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content" style="background: var(--bg-card); border-radius: var(--radius-lg);">
@@ -675,6 +663,7 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body p-4">
+          <!-- Login Form -->
           <form id="loginForm" onsubmit="handleLogin(event)" autocomplete="off">
             <div class="mb-3">
               <label class="form-label fw-semibold">رقم الهاتف</label>
@@ -684,10 +673,16 @@
               <label class="form-label fw-semibold">كلمة المرور</label>
               <input type="password" id="loginPass" class="form-control" required autocomplete="current-password">
             </div>
-            <button type="submit" id="loginSubmitBtn" class="btn btn-custom-primary w-100 py-2">تسجيل الدخول</button>
-            <small id="loginLockMsg" class="text-danger d-block mt-2 text-center" style="display: none;"></small>
+            <button type="submit" id="loginSubmitBtn" class="btn btn-custom-primary w-100 py-2 mb-3">تسجيل الدخول</button>
+            <small id="loginLockMsg" class="text-danger d-block mb-2 text-center" style="display: none;"></small>
+            
+            <div class="text-center mt-3 pt-2 border-top">
+              <small class="text-muted">ليس لديك حساب؟</small>
+              <a href="#" class="text-primary text-decoration-none fw-semibold ms-1" onclick="showAuthModal('register')">إنشاء حساب جديد</a>
+            </div>
           </form>
 
+          <!-- Register Form -->
           <form id="registerForm" onsubmit="handleRegister(event)" style="display: none;" autocomplete="off">
             <div class="mb-3">
               <label class="form-label fw-semibold">الاسم الحقيقي</label>
@@ -728,7 +723,12 @@
               <label class="form-label fw-semibold">تأكيد كلمة المرور</label>
               <input type="password" id="regPassConfirm" class="form-control" required autocomplete="new-password">
             </div>
-            <button type="submit" class="btn btn-success w-100 py-2 fw-bold">إنشاء حساب جديد</button>
+            <button type="submit" class="btn btn-success w-100 py-2 fw-bold mb-3">إنشاء حساب جديد</button>
+            
+            <div class="text-center mt-3 pt-2 border-top">
+              <small class="text-muted">لديك حساب بالفعل؟</small>
+              <a href="#" class="text-primary text-decoration-none fw-semibold ms-1" onclick="showAuthModal('login')">تسجيل الدخول</a>
+            </div>
           </form>
         </div>
       </div>
@@ -795,8 +795,8 @@
 
     function updateUI() {
       if (currentUser && currentUser.status === 'approved') {
-        // بمجرد تسجيل الدخول: إخفاء أزرار تسجيل الدخول وإنشاء الحساب تماماً من الهيد
-        document.getElementById('authButtons').style.display = 'none';
+        // عند تسجيل الدخول: إخفاء زر تسجيل الدخول من الهيد بالكامل ليصبح فارغاً
+        document.getElementById('authContainer').style.display = 'none';
         document.getElementById('profileNavItem').style.display = 'flex';
         
         document.getElementById('profName').value = currentUser.name;
@@ -804,8 +804,8 @@
         document.getElementById('profPhone').value = currentUser.phone;
         document.getElementById('profParentPhone').value = currentUser.parent_phone || '';
       } else {
-        // في حالة عدم تسجيل الدخول: إظهار أزرار تسجيل الدخول وإنشاء الحساب بالهيد فقط
-        document.getElementById('authButtons').style.display = 'flex';
+        // في حالة عدم تسجيل الدخول: إظهار زرار تسجيل الدخول الوحيد بالهيد
+        document.getElementById('authContainer').style.display = 'block';
         document.getElementById('profileNavItem').style.display = 'none';
       }
       renderNotifications();
