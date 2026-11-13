@@ -42,7 +42,7 @@
       --bg-card: #1e293b;
       --bg-sidebar: #020617;
       --text-main: #f8fafc;
-      --text-muted: #cbd5e1;
+      --text-muted: #cbd5e1; /* تم ضبط لون النصوص الفرعية لتكون باينة وواضحة جداً في الوضع الداكن */
       --border-color: #334155;
     }
 
@@ -59,6 +59,11 @@
       min-height: 100vh;
       display: flex;
       overflow-x: hidden;
+    }
+
+    /* إصلاح عام للنصوص والفقرات لتتأثر بمتغيرات الثيم تلقائياً */
+    p {
+      color: var(--text-muted);
     }
 
     /* Sidebar Styling & Responsive Layout */
@@ -208,6 +213,9 @@
       position: relative;
       overflow: hidden;
       box-shadow: 0 10px 25px -5px rgba(79, 70, 229, 0.3);
+    }
+    .hero-card p {
+      color: rgba(255, 255, 255, 0.9) !important;
     }
 
     /* Forms & Buttons */
@@ -435,21 +443,21 @@
             <div class="custom-card h-100 text-center">
               <div class="brand-logo mx-auto mb-3"><i class="fa-solid fa-brain"></i></div>
               <h5 class="fw-bold">الذكاء الاصطناعي</h5>
-              <p class="text-muted fs-6">شرح مبسط ومشاريع عملية في تقنيات وتعلم الآلة للمرحلة الثانوية.</p>
+              <p class="fs-6">شرح مبسط ومشاريع عملية في تقنيات وتعلم الآلة للمرحلة الثانوية.</p>
             </div>
           </div>
           <div class="col-md-4">
             <div class="custom-card h-100 text-center">
               <div class="brand-logo mx-auto mb-3" style="background: linear-gradient(135deg, #10b981, #059669);"><i class="fa-solid fa-laptop-code"></i></div>
               <h5 class="fw-bold">محرر الأكواد</h5>
-              <p class="text-muted fs-6">محرر كود تفاعلي لكتابة وتجربة شفرات البرمجة مباشرة عبر المنصة.</p>
+              <p class="fs-6">محرر كود تفاعلي لكتابة وتجربة شفرات البرمجة مباشرة عبر المنصة.</p>
             </div>
           </div>
           <div class="col-md-4">
             <div class="custom-card h-100 text-center">
               <div class="brand-logo mx-auto mb-3" style="background: linear-gradient(135deg, #f59e0b, #d97706);"><i class="fa-solid fa-users"></i></div>
               <h5 class="fw-bold">مجتمع الطلاب</h5>
-              <p class="text-muted fs-6">منتدى مباشر لتبادل الصور والأسئلة والتنافس بين الطلاب المتميزين.</p>
+              <p class="fs-6">منتدى مباشر لتبادل الصور والأسئلة والتنافس بين الطلاب المتميزين.</p>
             </div>
           </div>
         </div>
@@ -555,7 +563,7 @@
         <div id="adminAuthLock" class="custom-card text-center mx-auto" style="max-width: 420px;">
           <div class="brand-logo mx-auto mb-3" style="background: linear-gradient(135deg, #f59e0b, #d97706); width: 60px; height: 60px; font-size: 1.75rem;"><i class="fa-solid fa-lock"></i></div>
           <h5 class="fw-bold">تسجيل دخول لوحة الأدمن</h5>
-          <p class="text-muted small mb-3">أدخل كلمة المرور الموحدة لإدارة المنصة بكامل الصلاحيات</p>
+          <p class="small mb-3">أدخل كلمة المرور الموحدة لإدارة المنصة بكامل الصلاحيات</p>
           <input type="password" id="adminPassInput" class="form-control my-2 text-center" placeholder="••••••••••••" autocomplete="new-password">
           <button class="btn btn-warning w-100 fw-bold py-2 mt-2" onclick="checkAdminAuth()">فتح لوحة الأدمن</button>
         </div>
@@ -1088,7 +1096,7 @@
             <h6 class="fw-bold text-primary m-0">${n.title}</h6>
             <span class="badge bg-secondary-subtle text-secondary">${n.date}</span>
           </div>
-          <p class="m-0 text-muted fs-6">${n.content}</p>
+          <p class="m-0 fs-6">${n.content}</p>
         </div>
       `).join('');
     }
