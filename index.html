@@ -173,14 +173,15 @@
     .top-header {
       background: var(--bg-card);
       border-bottom: 1px solid var(--border-color);
-      padding: 14px 24px;
+      padding: 12px 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       position: sticky;
       top: 0;
       z-index: 1000;
-      gap: 12px;
+      gap: 10px;
+      flex-wrap: wrap;
     }
 
     .main-container {
@@ -327,7 +328,7 @@
       color: var(--text-muted);
     }
 
-    /* Corrected Responsive Breakpoint for Mobile Sidebar Fixed */
+    /* Responsive Breakpoint for Mobile Sidebar Fixed */
     @media (max-width: 991px) {
       #sidebar { 
         transform: translateX(100%); 
@@ -387,12 +388,13 @@
           <i class="fa-solid fa-moon" id="themeIcon"></i>
         </button>
         
-        <!-- Auth Controls -->
+        <!-- Auth Controls (Hidden when logged in) -->
         <div id="authButtons" class="d-flex align-items-center gap-2">
           <button class="btn btn-custom-primary" onclick="showAuthModal('login')">تسجيل الدخول</button>
           <button class="btn btn-custom-outline" onclick="showAuthModal('register')">إنشاء حساب</button>
         </div>
 
+        <!-- User Profile Badge & Logout Button (Shown only when logged in) -->
         <div id="userProfileBadge" style="display: none;" class="align-items-center gap-2">
           <span class="badge bg-primary-subtle text-primary fw-semibold px-3 py-2 rounded-pill" id="userNameBadge"></span>
           <button class="btn btn-sm btn-outline-danger rounded-circle" onclick="logout()" title="تسجيل خروج"><i class="fa-solid fa-right-from-bracket"></i></button>
