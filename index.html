@@ -327,7 +327,7 @@
       color: var(--text-muted);
     }
 
-    /* Responsive Breakpoint for Mobile Sidebar Fixed */
+    /* Corrected Responsive Breakpoint for Mobile Sidebar Fixed */
     @media (max-width: 991px) {
       #sidebar { 
         transform: translateX(100%); 
@@ -1274,8 +1274,8 @@
       honorStudents.push({
         id: Date.now(),
         name: document.getElementById('honorName').value,
-        title: document.getElementById('honorTitle'].value,
-        img: document.getElementById('honorImg'].value
+        title: document.getElementById('honorTitle').value,
+        img: document.getElementById('honorImg').value
       });
       localStorage.setItem('platform_honor', JSON.stringify(honorStudents));
       renderHonor();
