@@ -382,7 +382,7 @@
       </div>
       
       <div class="d-flex align-items-center gap-2">
-        <!-- Improved Theme Toggle Button -->
+        <!-- Theme Toggle Button -->
         <button class="btn btn-sm btn-outline-secondary rounded-circle d-flex align-items-center justify-content-center" onclick="toggleTheme()" title="تبديل الوضع" style="width: 38px; height: 38px;">
           <i class="fa-solid fa-moon" id="themeIcon"></i>
         </button>
@@ -463,7 +463,8 @@
           <h5 class="fw-bold mb-3"><i class="fa-solid fa-comments text-primary me-2"></i>منتدى المحادثة المباشر</h5>
           <div class="chat-box mb-3" id="chatContainer"></div>
           <div class="input-group gap-2 align-items-center">
-            <input type="text" id="chatInput" class="form-control" placeholder="اكتب رسالتك للمجموعة هنا...">
+            <!-- تمت إضافة خصائص منع تداخل مدير كلمات المرور للمتصفح عبر autocomplete -->
+            <input type="text" id="chatInput" class="form-control" placeholder="اكتب رسالتك للمجموعة هنا..." autocomplete="off" name="chat_message_field">
             <input type="file" id="chatImageInput" accept="image/*" style="display: none;" onchange="handleImageUpload(event)">
             
             <div class="upload-btn-wrapper">
@@ -498,7 +499,7 @@
       <section id="profileSection" style="display: none;">
         <div class="custom-card mx-auto" style="max-width: 600px;">
           <h5 class="fw-bold mb-4"><i class="fa-solid fa-user-gear text-primary me-2"></i>إعدادات الملف الشخصي</h5>
-          <form onsubmit="updateProfile(event)">
+          <form onsubmit="updateProfile(event)" autocomplete="off">
             <div class="mb-3">
               <label class="form-label fw-semibold">الاسم الحقيقي</label>
               <input type="text" id="profName" class="form-control" required>
@@ -509,15 +510,16 @@
             </div>
             <div class="mb-3">
               <label class="form-label fw-semibold">رقم الهاتف المصرح به</label>
-              <input type="text" id="profPhone" class="form-control" required>
+              <!-- تم تغيير نوع الحقل إلى tel والتحقق من الهاتف المصري -->
+              <input type="tel" id="profPhone" class="form-control" inputmode="numeric" required>
             </div>
             <div class="mb-3" id="profParentGroup">
               <label class="form-label fw-semibold">رقم هاتف ولي الأمر</label>
-              <input type="text" id="profParentPhone" class="form-control">
+              <input type="tel" id="profParentPhone" class="form-control" inputmode="numeric">
             </div>
             <div class="mb-3">
               <label class="form-label fw-semibold">كلمة المرور الجديدة</label>
-              <input type="password" id="profPass" class="form-control" placeholder="أدخل كلمة مرور جديدة للتعديل">
+              <input type="password" id="profPass" class="form-control" placeholder="أدخل كلمة مرور جديدة للتعديل" autocomplete="new-password">
             </div>
             <button type="submit" class="btn btn-custom-primary w-100">حفظ البيانات الجديدة</button>
           </form>
@@ -530,7 +532,7 @@
           <div class="brand-logo mx-auto mb-3" style="background: linear-gradient(135deg, #f59e0b, #d97706); width: 60px; height: 60px; font-size: 1.75rem;"><i class="fa-solid fa-lock"></i></div>
           <h5 class="fw-bold">تسجيل دخول لوحة الأدمن</h5>
           <p class="text-muted small mb-3">أدخل كلمة المرور الموحدة لإدارة المنصة بكامل الصلاحيات</p>
-          <input type="password" id="adminPassInput" class="form-control my-2 text-center" placeholder="••••••••••••">
+          <input type="password" id="adminPassInput" class="form-control my-2 text-center" placeholder="••••••••••••" autocomplete="new-password">
           <button class="btn btn-warning w-100 fw-bold py-2 mt-2" onclick="checkAdminAuth()">فتح لوحة الأدمن</button>
         </div>
 
@@ -576,11 +578,11 @@
 
           <div class="tab-content custom-card">
             <div class="tab-pane fade show active" id="pendingTab">
-              <h6 class="fw-bold mb-3 text-warning">طلبات إنشاء الحساب بانتظار الموافقة</h6>
+              <h6 class="fw-bold mb-3 text-warning">طلبات إنشاء الحساب بانتظار الموافقة والتحقق عبر الواتساب</h6>
               <div class="table-responsive">
                 <table class="table table-hover align-middle">
                   <thead>
-                    <tr><th>الاسم الحقيقي</th><th>اسم المستخدم</th><th>الصف</th><th>رقم الهاتف</th><th>ولي الأمر</th><th>الإجراء</th></tr>
+                    <tr><th>الاسم الحقيقي</th><th>اسم المستخدم</th><th>الصف</th><th>رقم الهاتف</th><th>ولي الأمر</th><th>تفعيل الحساب</th></tr>
                   </thead>
                   <tbody id="pendingTableBody"></tbody>
                 </table>
@@ -672,25 +674,28 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body p-4">
-          <form id="loginForm" onsubmit="handleLogin(event)">
+          <!-- نموذج تسجيل الدخول مع حماية ضد القفل ومحاولات الفشل -->
+          <form id="loginForm" onsubmit="handleLogin(event)" autocomplete="off">
             <div class="mb-3">
               <label class="form-label fw-semibold">رقم الهاتف</label>
-              <input type="text" id="loginPhone" class="form-control" required>
+              <input type="tel" id="loginPhone" class="form-control" inputmode="numeric" required>
             </div>
             <div class="mb-3">
               <label class="form-label fw-semibold">كلمة المرور</label>
-              <input type="password" id="loginPass" class="form-control" required>
+              <input type="password" id="loginPass" class="form-control" required autocomplete="current-password">
             </div>
-            <button type="submit" class="btn btn-custom-primary w-100 py-2">تسجيل الدخول</button>
+            <button type="submit" id="loginSubmitBtn" class="btn btn-custom-primary w-100 py-2">تسجيل الدخول</button>
+            <small id="loginLockMsg" class="text-danger d-block mt-2 text-center" style="display: none;"></small>
           </form>
 
-          <form id="registerForm" onsubmit="handleRegister(event)" style="display: none;">
+          <!-- نموذج إنشاء حساب جديد -->
+          <form id="registerForm" onsubmit="handleRegister(event)" style="display: none;" autocomplete="off">
             <div class="mb-3">
-              <label class="form-label fw-semibold">الاسم الحقيقي (للأدمن فقط)</label>
+              <label class="form-label fw-semibold">الاسم الحقيقي</label>
               <input type="text" id="regName" class="form-control" required>
             </div>
             <div class="mb-3">
-              <label class="form-label fw-semibold">اسم المستخدم المستعار (اختياري للمنتدى والخصوصية)</label>
+              <label class="form-label fw-semibold">اسم المستخدم المستعار (اختياري للخصوصية بالمنتدى)</label>
               <input type="text" id="regUsername" class="form-control" placeholder="مثال: Ahmed_AI">
             </div>
             <div class="mb-3">
@@ -709,20 +714,20 @@
               </select>
             </div>
             <div class="mb-3">
-              <label class="form-label fw-semibold">رقم الطالب (مصري 11 رقم)</label>
-              <input type="text" id="regPhone" class="form-control" placeholder="010XXXXXXXX" required>
+              <label class="form-label fw-semibold">رقم الهاتف (مصري 11 رقم يبدأ بـ 010, 011, 012, 015)</label>
+              <input type="tel" id="regPhone" class="form-control" placeholder="010XXXXXXXX" inputmode="numeric" required>
             </div>
             <div class="mb-3" id="parentPhoneGroup">
               <label class="form-label fw-semibold">رقم ولي الأمر (مصري 11 رقم)</label>
-              <input type="text" id="regParentPhone" class="form-control" placeholder="011XXXXXXXX">
+              <input type="tel" id="regParentPhone" class="form-control" placeholder="011XXXXXXXX" inputmode="numeric">
             </div>
             <div class="mb-3">
               <label class="form-label fw-semibold">كلمة المرور</label>
-              <input type="password" id="regPass" class="form-control" required>
+              <input type="password" id="regPass" class="form-control" required autocomplete="new-password">
             </div>
             <div class="mb-3">
               <label class="form-label fw-semibold">تأكيد كلمة المرور</label>
-              <input type="password" id="regPassConfirm" class="form-control" required>
+              <input type="password" id="regPassConfirm" class="form-control" required autocomplete="new-password">
             </div>
             <button type="submit" class="btn btn-success w-100 py-2 fw-bold">إنشاء حساب جديد</button>
           </form>
@@ -755,6 +760,10 @@
 
     const ADMIN_PASS = "Sabrey1990@@";
 
+    // تتبع محاولات تسجيل الدخول الفاشلة لمنع التخمين (قفل الحساب بعد 5 محاولات)
+    let loginAttempts = JSON.parse(localStorage.getItem('platform_login_attempts')) || {};
+
+    // التحقق من صحة الرقم المصري (11 رقم وتبدأ بـ 010, 011, 012, 015)
     function isValidEgyPhone(phone) {
       return /^01[0125]\d{8}$/.test(phone);
     }
@@ -763,15 +772,13 @@
       return (user && user.username && user.username.trim() !== '') ? user.username : (user ? user.name : 'زائر');
     }
 
-    // جلب البيانات من Supabase
+    // جلب البيانات من Supabase مع الاستماع الفوري (Realtime) للرسائل
     async function fetchSupabaseData() {
-      // 1. جلب المستخدمين
       const { data: profilesData, error: profilesError } = await _supabase.from('profiles').select('*');
       if (!profilesError && profilesData) {
         users = profilesData;
       }
 
-      // 2. جلب رسائل المنتدى (متوافقة مع عمود image_url)
       const { data: lessonsData, error: lessonsError } = await _supabase.from('lessons').select('*');
       if (!lessonsError && lessonsData) {
         chatMessages = lessonsData.map(l => ({
@@ -781,6 +788,16 @@
         }));
       }
       updateUI();
+    }
+
+    // تفعيل Supabase Realtime لمزامنة رسائل المنتدى والدردشة فوراً
+    function setupRealtimeSubscription() {
+      _supabase
+        .channel('public:lessons')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'lessons' }, payload => {
+          fetchSupabaseData();
+        })
+        .subscribe();
     }
 
     function updateUI() {
@@ -808,7 +825,7 @@
     function showSection(sectionId, element) {
       const protectedSections = ['forumSection', 'editorSection', 'booksSection'];
       if (protectedSections.includes(sectionId) && (!currentUser || currentUser.status !== 'approved')) {
-        alert("عذراً، هذا القسم متاح فقط لطلاب المنصة المفعلين بعد موافقة الأدمن.");
+        alert("عذراً، هذا القسم متاح فقط لطلاب المنصة المفعلين بعد موافقة الأدمن والتفعيل عبر الواتساب.");
         return;
       }
 
@@ -881,7 +898,7 @@
       document.getElementById('parentPhoneGroup').style.display = role === 'student' ? 'block' : 'none';
     }
 
-    // تسجيل حساب جديد مباشرة إلى Supabase
+    // تسجيل حساب جديد مباشرة إلى جدول profiles في Supabase مع التحقق من الهاتف المصري
     async function handleRegister(e) {
       e.preventDefault();
       const name = document.getElementById('regName').value;
@@ -894,7 +911,12 @@
       const passConfirm = document.getElementById('regPassConfirm').value;
 
       if (!isValidEgyPhone(phone)) {
-        alert("يرجى إدخال رقم مصري مكون من 11 رقم ويشمل (010, 011, 012, 015)");
+        alert("يرجى إدخال رقم مصري صحيح مكون من 11 رقم يبدأ بـ (010, 011, 012, 015)");
+        return;
+      }
+
+      if (parentPhone && !isValidEgyPhone(parentPhone)) {
+        alert("رقم هاتف ولي الأمر غير صحيح (يجب أن يكون رقماً مصرياً مكوناً من 11 رقماً)");
         return;
       }
 
@@ -915,28 +937,61 @@
       if (error) {
         alert("خطأ أثناء الاتصال بقاعدة البيانات: " + error.message);
       } else {
-        alert("تم إرسال طلبك بنجاح وهو قيد الانتظار لموافقة الأدمن.");
+        alert("تم إرسال طلبك بنجاح. يلزم تفعيل الحساب عبر التواصل مع الأدمن (المعلمة/أحمد صبري) عبر الواتساب.");
         authModal.hide();
         fetchSupabaseData();
       }
     }
 
-    // تسجيل الدخول
+    // تسجيل الدخول مع تأمين قفل الحساب بعد 5 محاولات فاشلة
     async function handleLogin(e) {
       e.preventDefault();
       const phone = document.getElementById('loginPhone').value;
       const pass = document.getElementById('loginPass').value;
+      const lockMsg = document.getElementById('loginLockMsg');
+
+      // التحقق من حالة القفل لهذا الرقم
+      const now = Date.now();
+      if (loginAttempts[phone] && loginAttempts[phone].lockUntil > now) {
+        const remainingSecs = Math.ceil((loginAttempts[phone].lockUntil - now) / 1000);
+        lockMsg.style.display = 'block';
+        lockMsg.innerText = `تم قفل الحساب مؤقتاً بسبب كثرة محاولات الدخول الخاطئة. حاول بعد ${remainingSecs} ثانية.`;
+        return;
+      }
 
       await fetchSupabaseData();
       const user = users.find(u => u.phone === phone && u.pass === pass);
       
       if (!user) {
-        alert("خطأ في البيانات المدخلة أو الرقم غير مسجل!");
+        // تسجيل المحاولة الفاشلة وزيادة العداد
+        if (!loginAttempts[phone]) {
+          loginAttempts[phone] = { count: 0, lockUntil: 0 };
+        }
+        loginAttempts[phone].count += 1;
+
+        if (loginAttempts[phone].count >= 5) {
+          loginAttempts[phone].lockUntil = Date.now() + 60000; // قفل لمدة دقيقة كاملة
+          loginAttempts[phone].count = 0;
+          localStorage.setItem('platform_login_attempts', JSON.stringify(loginAttempts));
+          lockMsg.style.display = 'block';
+          lockMsg.innerText = "تم تجاوز 5 محاولات خاطئة. تم قفل الحساب مؤقتاً لمدة دقيقة.";
+          return;
+        }
+
+        localStorage.setItem('platform_login_attempts', JSON.stringify(loginAttempts));
+        alert(`خطأ في البيانات المدخلة أو الرقم غير مسجل! (المحاولة ${loginAttempts[phone].count} من 5)`);
         return;
       }
 
+      // إعادة تعيين محاولات الفشل عند النجاح
+      if (loginAttempts[phone]) {
+        delete loginAttempts[phone];
+        localStorage.setItem('platform_login_attempts', JSON.stringify(loginAttempts));
+      }
+      lockMsg.style.display = 'none';
+
       if (user.status === 'pending') {
-        alert("حسابك ما زال قيد الانتظار لموافقة المعلمة.");
+        alert("حسابك ما زال بانتظار موافقة الأدمن وتفعيله عبر الواتساب.");
         return;
       }
 
@@ -967,6 +1022,11 @@
       currentUser.parent_phone = document.getElementById('profParentPhone').value;
       const newPass = document.getElementById('profPass').value;
       if (newPass) currentUser.pass = newPass;
+
+      if (!isValidEgyPhone(currentUser.phone)) {
+        alert("رقم الهاتف غير صحيح!");
+        return;
+      }
 
       const { error } = await _supabase
         .from('profiles')
@@ -1049,7 +1109,7 @@
       container.scrollTop = container.scrollHeight;
     }
 
-    // إرسال رسالة المنتدى إلى Supabase (تستخدم image_url)
+    // إرسال رسالة المنتدى التفاعلي
     async function sendChatMessage() {
       const input = document.getElementById('chatInput');
       if (!input.value.trim()) return;
@@ -1140,7 +1200,8 @@
           <td>${u.phone}</td>
           <td>${u.parent_phone || '-'}</td>
           <td>
-            <button class="btn btn-success btn-sm me-1" onclick="approveUser(${u.id})">قبول</button>
+            <button class="btn btn-success btn-sm me-1" onclick="approveUser(${u.id}, '${u.phone}')">قبول وتفعيل</button>
+            <a href="https://wa.me/20${u.phone.replace(/^0/, '')}?text=مرحباً بك، تم مراجعة حسابك على منصة المس أمل شفيق للبرمجة وتم تفعيله." target="_blank" class="btn btn-outline-success btn-sm me-1" title="تواصل واتساب"><i class="fa-brands fa-whatsapp"></i> واتس</a>
             <button class="btn btn-danger btn-sm" onclick="rejectUser(${u.id})">رفض</button>
           </td>
         </tr>
@@ -1173,11 +1234,12 @@
       `).join('');
     }
 
-    async function approveUser(id) {
+    async function approveUser(id, phone) {
       const { error } = await _supabase.from('profiles').update({ status: 'approved' }).eq('id', id);
       if (!error) {
         fetchSupabaseData();
         loadAdminData();
+        alert("تم قبول الطالب وتفعيل حسابه بنجاح.");
       }
     }
 
@@ -1249,8 +1311,9 @@
       alert("تم رفع الكتاب بنجاح!");
     }
 
-    // جلب البيانات فور تحميل الصفحة
+    // جلب البيانات الفورية وتفعيل الاتصال المباشر
     fetchSupabaseData();
+    setupRealtimeSubscription();
   </script>
 </body>
 </html>
