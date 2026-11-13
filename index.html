@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" id="htmlRoot">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>منصة المس أمل شفيق السيد - البرمجة والذكاء الاصطناعي</title>
+  <title id="pageTitle">منصة المس أمل شفيق السيد - البرمجة والذكاء الاصطناعي</title>
   
   <!-- Fonts & Icons -->
   <link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.rtl.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.rtl.min.css" id="bootstrapCSS">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <!-- Supabase JS SDK -->
@@ -38,12 +38,12 @@
     }
 
     [data-theme="dark"] {
-      --bg-body: #080c14;
-      --bg-card: #111827;
-      --bg-sidebar: #030712;
-      --text-main: #f3f4f6;
-      --text-muted: #9ca3af;
-      --border-color: #1f2937;
+      --bg-body: #0b1120;
+      --bg-card: #1e293b;
+      --bg-sidebar: #020617;
+      --text-main: #f8fafc;
+      --text-muted: #cbd5e1;
+      --border-color: #334155;
     }
 
     * {
@@ -77,8 +77,19 @@
       transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
+    [dir="ltr"] #sidebar {
+      right: auto;
+      left: 0;
+      border-left: none;
+      border-right: 1px solid rgba(255, 255, 255, 0.05);
+      transform: translateX(0);
+    }
+
     #sidebar.collapsed {
       transform: translateX(100%);
+    }
+    [dir="ltr"] #sidebar.collapsed {
+      transform: translateX(-100%);
     }
 
     .sidebar-backdrop {
@@ -165,8 +176,18 @@
       transition: margin-right 0.35s cubic-bezier(0.4, 0, 0.2, 1), width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
+    [dir="ltr"] #content {
+      margin-right: 0;
+      margin-left: var(--sidebar-width);
+      width: calc(100% - var(--sidebar-width));
+    }
+
     #content.expanded {
       margin-right: 0;
+      width: 100%;
+    }
+    [dir="ltr"] #content.expanded {
+      margin-left: 0;
       width: 100%;
     }
 
@@ -197,6 +218,7 @@
       box-shadow: var(--shadow-sm);
       padding: 24px;
       margin-bottom: 24px;
+      color: var(--text-main);
     }
 
     .hero-card {
@@ -236,6 +258,49 @@
       font-size: 0.88rem;
     }
     .btn-custom-primary:hover { background: var(--primary-hover); color: white; }
+
+    /* Modern Toggle Switch for Translation */
+    .toggle-switch-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      background: var(--bg-body);
+      border: 1px solid var(--border-color);
+      padding: 6px 12px;
+      border-radius: 30px;
+    }
+    .toggle-switch {
+      position: relative;
+      width: 44px;
+      height: 24px;
+      background-color: #cbd5e1;
+      border-radius: 12px;
+      transition: background-color 0.3s;
+    }
+    .toggle-switch::after {
+      content: '';
+      position: absolute;
+      top: 3px;
+      right: 3px;
+      width: 18px;
+      height: 18px;
+      background-color: white;
+      border-radius: 50%;
+      transition: transform 0.3s;
+    }
+    input.toggle-input {
+      display: none;
+    }
+    input.toggle-input:checked + .toggle-switch {
+      background-color: var(--primary);
+    }
+    input.toggle-input:checked + .toggle-switch::after {
+      transform: translateX(-20px);
+    }
+    [dir="ltr"] input.toggle-input:checked + .toggle-switch::after {
+      transform: translateX(20px);
+    }
 
     /* Modern Image Upload Button */
     .upload-btn-wrapper {
@@ -298,6 +363,7 @@
       border-radius: var(--radius-lg);
       padding: 24px;
       text-align: center;
+      color: var(--text-main);
     }
     .honor-avatar {
       width: 88px;
@@ -317,16 +383,25 @@
       color: var(--text-muted);
     }
 
+    /* Tables text color fix in Dark Mode */
+    .table {
+      color: var(--text-main) !important;
+    }
+
     /* Responsive Breakpoints for Mobile & Tablet */
     @media (max-width: 991px) {
       #sidebar { 
         transform: translateX(100%); 
       }
+      [dir="ltr"] #sidebar {
+        transform: translateX(-100%);
+      }
       #sidebar.mobile-open { 
         transform: translateX(0) !important; 
       }
-      #content { 
+      #content, [dir="ltr"] #content { 
         margin-right: 0 !important; 
+        margin-left: 0 !important;
         width: 100% !important; 
       }
     }
@@ -342,22 +417,22 @@
       <div class="d-flex align-items-center gap-2">
         <div class="brand-logo"><i class="fa-solid fa-code"></i></div>
         <div>
-          <h6 class="fw-bold m-0 text-white" style="font-size: 0.9rem;">المس أمل شفيق</h6>
-          <small class="text-muted" style="font-size: 0.7rem;">البرمجة والذكاء الاصطناعي</small>
+          <h6 class="fw-bold m-0 text-white" style="font-size: 0.9rem;" data-tr="brandTitle">المس أمل شفيق</h6>
+          <small class="text-muted" style="font-size: 0.7rem;" data-tr="brandSub">البرمجة والذكاء الاصطناعي</small>
         </div>
       </div>
       <button class="btn btn-sm text-muted" onclick="toggleSidebar()"><i class="fa-solid fa-xmark fa-lg"></i></button>
     </div>
     
     <div class="sidebar-nav">
-      <a class="nav-link active" href="#" onclick="showSection('homeSection', this)"><i class="fa-solid fa-house"></i>الرئيسية</a>
-      <a class="nav-link" href="#" onclick="showSection('notificationsSection', this)"><i class="fa-solid fa-bell"></i>الإشعارات والأخبار</a>
-      <a class="nav-link" href="#" onclick="showSection('honorSection', this)"><i class="fa-solid fa-trophy"></i>المتميزين</a>
-      <a class="nav-link" href="#" onclick="showSection('booksSection', this)"><i class="fa-solid fa-book-open"></i>الكتب والملخصات</a>
-      <a class="nav-link" href="#" onclick="showSection('forumSection', this)"><i class="fa-solid fa-comments"></i>منتدى الطلاب</a>
-      <a class="nav-link" href="#" onclick="showSection('editorSection', this)"><i class="fa-solid fa-code"></i>محرر الأكواد</a>
-      <a class="nav-link" id="profileNavItem" style="display: none;" href="#" onclick="showSection('profileSection', this)"><i class="fa-solid fa-user-gear"></i>الملف الشخصي</a>
-      <a class="nav-link text-warning mt-3" href="#" onclick="showSection('adminSection', this)"><i class="fa-solid fa-shield-halved"></i>لوحة الأدمن</a>
+      <a class="nav-link active" href="#" onclick="showSection('homeSection', this)"><i class="fa-solid fa-house"></i><span data-tr="navHome">الرئيسية</span></a>
+      <a class="nav-link" href="#" onclick="showSection('notificationsSection', this)"><i class="fa-solid fa-bell"></i><span data-tr="navNotif">الإشعارات والأخبار</span></a>
+      <a class="nav-link" href="#" onclick="showSection('honorSection', this)"><i class="fa-solid fa-trophy"></i><span data-tr="navHonor">المتميزين</span></a>
+      <a class="nav-link" href="#" onclick="showSection('booksSection', this)"><i class="fa-solid fa-book-open"></i><span data-tr="navBooks">الكتب والملخصات</span></a>
+      <a class="nav-link" href="#" onclick="showSection('forumSection', this)"><i class="fa-solid fa-comments"></i><span data-tr="navForum">منتدى الطلاب</span></a>
+      <a class="nav-link" href="#" onclick="showSection('editorSection', this)"><i class="fa-solid fa-code"></i><span data-tr="navEditor">محرر الأكواد</span></a>
+      <a class="nav-link" id="profileNavItem" style="display: none;" href="#" onclick="showSection('profileSection', this)"><i class="fa-solid fa-user-gear"></i><span data-tr="navProfile">الملف الشخصي</span></a>
+      <a class="nav-link text-warning mt-3" href="#" onclick="showSection('adminSection', this)"><i class="fa-solid fa-shield-halved"></i><span data-tr="navAdmin">لوحة الأدمن</span></a>
     </div>
   </aside>
 
@@ -368,18 +443,25 @@
     <header class="top-header">
       <div class="d-flex align-items-center gap-2">
         <button class="btn btn-sm btn-outline-secondary" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
-        <h5 class="fw-bold m-0 d-none d-md-block" style="font-size: 1.05rem;">منصة التعليم الرقمي</h5>
+        <h5 class="fw-bold m-0 d-none d-md-block" style="font-size: 1.05rem;" data-tr="headerTitle">منصة التعليم الرقمي</h5>
       </div>
       
-      <div class="d-flex align-items-center gap-2">
+      <div class="d-flex align-items-center gap-3">
+        <!-- Translation Toggle Switch Button -->
+        <label class="toggle-switch-wrapper" title="تغيير لغة الموقع / Change Language">
+          <span style="font-size: 0.8rem; font-weight: 600;" id="langLabel">العربية</span>
+          <input type="checkbox" id="langToggleInput" class="toggle-input" onchange="toggleLanguage()">
+          <div class="toggle-switch"></div>
+        </label>
+
         <!-- Theme Toggle Button (Always visible) -->
         <button class="btn btn-sm btn-outline-secondary rounded-circle d-flex align-items-center justify-content-center" onclick="toggleTheme()" title="تبديل الوضع" style="width: 38px; height: 38px;">
           <i class="fa-solid fa-moon" id="themeIcon"></i>
         </button>
         
-        <!-- Single Login Button (Shown ONLY when NOT logged in, completely hidden when logged in) -->
+        <!-- Single Login Button (Shown ONLY when NOT logged in) -->
         <div id="authContainer">
-          <button class="btn btn-custom-primary" onclick="showAuthModal('login')">تسجيل الدخول</button>
+          <button class="btn btn-custom-primary" onclick="showAuthModal('login')" data-tr="btnLogin">تسجيل الدخول</button>
         </div>
       </div>
     </header>
@@ -390,31 +472,31 @@
       <!-- Home Section -->
       <section id="homeSection">
         <div class="hero-card mb-4 text-center">
-          <h2 class="fw-bold mb-2">طريقك لاحتراف البرمجة والذكاء الاصطناعي</h2>
-          <p class="opacity-90 mb-4 fs-6">إشراف وتدريس: المس **أمل شفيق السيد**</p>
-          <button class="btn btn-light text-primary fw-bold px-4 py-2 rounded-pill" onclick="showAuthModal('register')">ابدأ رحلتك الآن</button>
+          <h2 class="fw-bold mb-2" data-tr="heroTitle">طريقك لاحتراف البرمجة والذكاء الاصطناعي</h2>
+          <p class="opacity-90 mb-4 fs-6" data-tr="heroSub">إشراف وتدريس: المس أمل شفيق السيد</p>
+          <button class="btn btn-light text-primary fw-bold px-4 py-2 rounded-pill" onclick="showAuthModal('register')" data-tr="heroBtn">ابدأ رحلتك الآن</button>
         </div>
 
         <div class="row g-4">
           <div class="col-md-4">
             <div class="custom-card h-100 text-center">
               <div class="brand-logo mx-auto mb-3"><i class="fa-solid fa-brain"></i></div>
-              <h5 class="fw-bold">الذكاء الاصطناعي</h5>
-              <p class="text-muted fs-6">شرح مبسط ومشاريع عملية في تقنيات وتعلم الآلة للمرحلة الثانوية.</p>
+              <h5 class="fw-bold" data-tr="card1Title">الذكاء الاصطناعي</h5>
+              <p class="text-muted fs-6" data-tr="card1Desc">شرح مبسط ومشاريع عملية في تقنيات وتعلم الآلة للمرحلة الثانوية.</p>
             </div>
           </div>
           <div class="col-md-4">
             <div class="custom-card h-100 text-center">
               <div class="brand-logo mx-auto mb-3" style="background: linear-gradient(135deg, #10b981, #059669);"><i class="fa-solid fa-laptop-code"></i></div>
-              <h5 class="fw-bold">محرر الأكواد</h5>
-              <p class="text-muted fs-6">محرر كود تفاعلي لكتابة وتجربة شفرات البرمجة مباشرة عبر المنصة.</p>
+              <h5 class="fw-bold" data-tr="card2Title">محرر الأكواد</h5>
+              <p class="text-muted fs-6" data-tr="card2Desc">محرر كود تفاعلي لكتابة وتجربة شفرات البرمجة مباشرة عبر المنصة.</p>
             </div>
           </div>
           <div class="col-md-4">
             <div class="custom-card h-100 text-center">
               <div class="brand-logo mx-auto mb-3" style="background: linear-gradient(135deg, #f59e0b, #d97706);"><i class="fa-solid fa-users"></i></div>
-              <h5 class="fw-bold">مجتمع الطلاب</h5>
-              <p class="text-muted fs-6">منتدى مباشر لتبادل الصور والأسئلة والتنافس بين الطلاب المتميزين.</p>
+              <h5 class="fw-bold" data-tr="card3Title">مجتمع الطلاب</h5>
+              <p class="text-muted fs-6" data-tr="card3Desc">منتدى مباشر لتبادل الصور والأسئلة والتنافس بين الطلاب المتميزين.</p>
             </div>
           </div>
         </div>
@@ -422,21 +504,21 @@
 
       <!-- Notifications Section -->
       <section id="notificationsSection" style="display: none;">
-        <h4 class="fw-bold mb-4"><i class="fa-solid fa-bell text-primary me-2"></i>مركز الأخبار والإشعارات</h4>
+        <h4 class="fw-bold mb-4"><i class="fa-solid fa-bell text-primary me-2"></i><span data-tr="secNotifTitle">مركز الأخبار والإشعارات</span></h4>
         <div id="notificationsContainer" class="d-flex flex-column gap-3"></div>
       </section>
 
       <!-- Honor Board Section -->
       <section id="honorSection" style="display: none;">
-        <h4 class="fw-bold mb-4"><i class="fa-solid fa-trophy text-warning me-2"></i>لوحة الطلاب المتميزين</h4>
+        <h4 class="fw-bold mb-4"><i class="fa-solid fa-trophy text-warning me-2"></i><span data-tr="secHonorTitle">لوحة الطلاب المتميزين</span></h4>
         <div class="row g-4" id="honorContainer"></div>
       </section>
 
       <!-- Books Section -->
       <section id="booksSection" style="display: none;">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-          <h4 class="fw-bold m-0"><i class="fa-solid fa-book-open text-primary me-2"></i>مكتبة المذكرات والكتب</h4>
-          <input type="text" id="bookSearch" class="form-control w-25" placeholder="بحث عن كتاب..." onkeyup="filterBooks()">
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+          <h4 class="fw-bold m-0"><i class="fa-solid fa-book-open text-primary me-2"></i><span data-tr="secBooksTitle">مكتبة المذكرات والكتب</span></h4>
+          <input type="text" id="bookSearch" class="form-control w-25" placeholder="بحث عن كتاب..." data-tr-placeholder="bookSearchPh" onkeyup="filterBooks()">
         </div>
         <div class="row g-4" id="booksContainer"></div>
       </section>
@@ -444,10 +526,10 @@
       <!-- Forum Section -->
       <section id="forumSection" style="display: none;">
         <div class="custom-card">
-          <h5 class="fw-bold mb-3"><i class="fa-solid fa-comments text-primary me-2"></i>منتدى المحادثة المباشر</h5>
+          <h5 class="fw-bold mb-3"><i class="fa-solid fa-comments text-primary me-2"></i><span data-tr="secForumTitle">منتدى المحادثة المباشر</span></h5>
           <div class="chat-box mb-3" id="chatContainer"></div>
           <div class="input-group gap-2 align-items-center">
-            <input type="text" id="chatInput" class="form-control" placeholder="اكتب رسالتك للمجموعة هنا..." autocomplete="off" name="chat_message_field">
+            <input type="text" id="chatInput" class="form-control" placeholder="اكتب رسالتك للمجموعة هنا..." data-tr-placeholder="chatInputPh" autocomplete="off" name="chat_message_field">
             <input type="file" id="chatImageInput" accept="image/*" style="display: none;" onchange="handleImageUpload(event)">
             
             <div class="upload-btn-wrapper">
@@ -456,7 +538,7 @@
               </button>
             </div>
 
-            <button class="btn btn-custom-primary px-4 py-2" onclick="sendChatMessage()"><i class="fa-solid fa-paper-plane me-1"></i> إرسال</button>
+            <button class="btn btn-custom-primary px-4 py-2" onclick="sendChatMessage()"><i class="fa-solid fa-paper-plane me-1"></i> <span data-tr="sendBtn">إرسال</span></button>
           </div>
         </div>
       </section>
@@ -465,15 +547,15 @@
       <section id="editorSection" style="display: none;">
         <div class="custom-card">
           <div class="d-flex justify-content-between align-items-center mb-3">
-            <h5 class="fw-bold m-0"><i class="fa-solid fa-terminal text-primary me-2"></i>محرر الأكواد التفاعلي</h5>
+            <h5 class="fw-bold m-0"><i class="fa-solid fa-terminal text-primary me-2"></i><span data-tr="secEditorTitle">محرر الأكواد التفاعلي</span></h5>
             <select id="editorLanguage" class="form-select w-auto" onchange="switchEditorLang()">
               <option value="js">JavaScript</option>
               <option value="python">Python Simulator</option>
             </select>
           </div>
           <textarea id="codeTextarea" class="form-control font-monospace mb-3" rows="12" dir="ltr" style="background:#0f172a; color:#38bdf8; border:none;"></textarea>
-          <button class="btn btn-success fw-bold px-4 mb-3" onclick="runCode()"><i class="fa-solid fa-play me-1"></i> تشغيل الشفرة</button>
-          <h6 class="fw-bold">مخرجات التشغيل / Console Output:</h6>
+          <button class="btn btn-success fw-bold px-4 mb-3" onclick="runCode()"><i class="fa-solid fa-play me-1"></i> <span data-tr="runCodeBtn">تشغيل الشفرة</span></button>
+          <h6 class="fw-bold" data-tr="consoleOut">مخرجات التشغيل / Console Output:</h6>
           <pre id="codeOutput" class="p-3 rounded-3 bg-dark text-success font-monospace" style="min-height: 120px; border: 1px solid rgba(255,255,255,0.1);"></pre>
         </div>
       </section>
@@ -481,35 +563,35 @@
       <!-- Profile Section -->
       <section id="profileSection" style="display: none;">
         <div class="custom-card mx-auto" style="max-width: 600px;">
-          <h5 class="fw-bold mb-4"><i class="fa-solid fa-user-gear text-primary me-2"></i>إعدادات الملف الشخصي</h5>
+          <h5 class="fw-bold mb-4"><i class="fa-solid fa-user-gear text-primary me-2"></i><span data-tr="secProfileTitle">إعدادات الملف الشخصي</span></h5>
           <form onsubmit="updateProfile(event)" autocomplete="off">
             <div class="mb-3">
-              <label class="form-label fw-semibold">الاسم الحقيقي</label>
+              <label class="form-label fw-semibold" data-tr="profNameLabel">الاسم الحقيقي</label>
               <input type="text" id="profName" class="form-control" required>
             </div>
             <div class="mb-3">
-              <label class="form-label fw-semibold">اسم المستخدم المستعار (اختياري للخصوصية)</label>
+              <label class="form-label fw-semibold" data-tr="profUsernameLabel">اسم المستخدم المستعار (اختياري للخصوصية)</label>
               <input type="text" id="profUsername" class="form-control" placeholder="مثال: Coder_2026">
             </div>
             <div class="mb-3">
-              <label class="form-label fw-semibold">رقم الهاتف المصرح به</label>
+              <label class="form-label fw-semibold" data-tr="profPhoneLabel">رقم الهاتف المصرح به</label>
               <input type="tel" id="profPhone" class="form-control" inputmode="numeric" required>
             </div>
             <div class="mb-3" id="profParentGroup">
-              <label class="form-label fw-semibold">رقم هاتف ولي الأمر</label>
+              <label class="form-label fw-semibold" data-tr="profParentLabel">رقم هاتف ولي الأمر</label>
               <input type="tel" id="profParentPhone" class="form-control" inputmode="numeric">
             </div>
             <div class="mb-3">
-              <label class="form-label fw-semibold">كلمة المرور الجديدة</label>
-              <input type="password" id="profPass" class="form-control" placeholder="أدخل كلمة مرور جديدة للتعديل" autocomplete="new-password">
+              <label class="form-label fw-semibold" data-tr="profPassLabel">كلمة المرور الجديدة</label>
+              <input type="password" id="profPass" class="form-control" placeholder="أدخل كلمة مرور جديدة للتعديل" data-tr-placeholder="profPassPh" autocomplete="new-password">
             </div>
-            <button type="submit" class="btn btn-custom-primary w-100 mb-4">حفظ البيانات الجديدة</button>
+            <button type="submit" class="btn btn-custom-primary w-100 mb-4" data-tr="profSaveBtn">حفظ البيانات الجديدة</button>
           </form>
 
-          <!-- زرار تسجيل الخروج الواضح والبارز داخل الملف الشخصي -->
+          <!-- Logout Button Inside Profile -->
           <div class="border-top pt-4 text-center">
             <button type="button" class="btn btn-danger w-100 py-2 fw-bold" onclick="logout()">
-              <i class="fa-solid fa-right-from-bracket me-2"></i> تسجيل الخروج من الحساب
+              <i class="fa-solid fa-right-from-bracket me-2"></i> <span data-tr="logoutBtn">تسجيل الخروج من الحساب</span>
             </button>
           </div>
         </div>
@@ -519,59 +601,66 @@
       <section id="adminSection" style="display: none;">
         <div id="adminAuthLock" class="custom-card text-center mx-auto" style="max-width: 420px;">
           <div class="brand-logo mx-auto mb-3" style="background: linear-gradient(135deg, #f59e0b, #d97706); width: 60px; height: 60px; font-size: 1.75rem;"><i class="fa-solid fa-lock"></i></div>
-          <h5 class="fw-bold">تسجيل دخول لوحة الأدمن</h5>
-          <p class="text-muted small mb-3">أدخل كلمة المرور الموحدة لإدارة المنصة بكامل الصلاحيات</p>
+          <h5 class="fw-bold" data-tr="adminLockTitle">تسجيل دخول لوحة الأدمن</h5>
+          <p class="text-muted small mb-3" data-tr="adminLockDesc">أدخل كلمة المرور الموحدة لإدارة المنصة بكامل الصلاحيات</p>
           <input type="password" id="adminPassInput" class="form-control my-2 text-center" placeholder="••••••••••••" autocomplete="new-password">
-          <button class="btn btn-warning w-100 fw-bold py-2 mt-2" onclick="checkAdminAuth()">فتح لوحة الأدمن</button>
+          <button class="btn btn-warning w-100 fw-bold py-2 mt-2" onclick="checkAdminAuth()" data-tr="adminOpenBtn">فتح لوحة الأدمن</button>
         </div>
 
         <div id="adminDashboard" style="display: none;">
-          <div class="d-flex justify-content-between align-items-center mb-4">
+          <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
             <div>
-              <h4 class="fw-bold m-0"><i class="fa-solid fa-chart-pie text-warning me-2"></i>لوحة تحكم الأدمن</h4>
-              <small class="text-muted">مرحباً بك، تتيح لك هذه اللوحة إدارة كافة محتويات وطلاب المنصة.</small>
+              <h4 class="fw-bold m-0"><i class="fa-solid fa-chart-pie text-warning me-2"></i><span data-tr="adminDashTitle">لوحة تحكم الأدمن</span></h4>
+              <small class="text-muted" data-tr="adminDashSub">مرحباً بك، تتيح لك هذه اللوحة إدارة كافة محتويات وطلاب المنصة.</small>
             </div>
-            <button class="btn btn-outline-danger btn-sm px-3 fw-semibold" onclick="adminLogout()"><i class="fa-solid fa-right-from-bracket me-1"></i> تسجيل خروج الأدمن</button>
+            <button class="btn btn-outline-danger btn-sm px-3 fw-semibold" onclick="adminLogout()"><i class="fa-solid fa-right-from-bracket me-1"></i> <span data-tr="adminLogoutBtn">تسجيل خروج الأدمن</span></button>
           </div>
           
           <div class="row g-3 mb-4">
             <div class="col-md-4">
               <div class="custom-card border-start border-4 border-warning m-0">
-                <small class="text-muted fw-semibold">طلبات الانضمام المعلقة</small>
+                <small class="text-muted fw-semibold" data-tr="stat1Title">طلبات الانضمام المعلقة</small>
                 <h2 id="pendingCount" class="fw-bold text-warning m-0 mt-2">0</h2>
               </div>
             </div>
             <div class="col-md-4">
               <div class="custom-card border-start border-4 border-primary m-0">
-                <small class="text-muted fw-semibold">الطلاب المفعلين</small>
+                <small class="text-muted fw-semibold" data-tr="stat2Title">الطلاب المفعلين</small>
                 <h2 id="studentsCount" class="fw-bold text-primary m-0 mt-2">0</h2>
               </div>
             </div>
             <div class="col-md-4">
               <div class="custom-card border-start border-4 border-success m-0">
-                <small class="text-muted fw-semibold">سجلات حركة المنصة</small>
+                <small class="text-muted fw-semibold" data-tr="stat3Title">سجلات حركة المنصة</small>
                 <h2 id="logsCount" class="fw-bold text-success m-0 mt-2">0</h2>
               </div>
             </div>
           </div>
 
           <!-- Admin Tabs -->
-          <ul class="nav nav-pills mb-4 gap-2" id="adminTabs">
-            <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#pendingTab"><i class="fa-solid fa-user-clock me-1"></i> الطلبات المعلقة</a></li>
-            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#studentsTab"><i class="fa-solid fa-users me-1"></i> قائمة الطلاب</a></li>
-            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#logsTab"><i class="fa-solid fa-clock-rotate-left me-1"></i> السجلات</a></li>
-            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#manageNewsTab"><i class="fa-solid fa-bullhorn me-1"></i> نشر إشعار</a></li>
-            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#manageHonorTab"><i class="fa-solid fa-award me-1"></i> المتميزين</a></li>
-            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#manageBooksTab"><i class="fa-solid fa-book me-1"></i> المذكرات</a></li>
+          <ul class="nav nav-pills mb-4 gap-2 flex-wrap" id="adminTabs">
+            <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#pendingTab"><i class="fa-solid fa-user-clock me-1"></i> <span data-tr="tabPending">الطلبات المعلقة</span></a></li>
+            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#studentsTab"><i class="fa-solid fa-users me-1"></i> <span data-tr="tabStudents">قائمة الطلاب</span></a></li>
+            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#logsTab"><i class="fa-solid fa-clock-rotate-left me-1"></i> <span data-tr="tabLogs">السجلات</span></a></li>
+            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#manageNewsTab"><i class="fa-solid fa-bullhorn me-1"></i> <span data-tr="tabNews">نشر إشعار</span></a></li>
+            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#manageHonorTab"><i class="fa-solid fa-award me-1"></i> <span data-tr="tabHonor">المتميزين</span></a></li>
+            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#manageBooksTab"><i class="fa-solid fa-book me-1"></i> <span data-tr="tabBooks">المذكرات</span></a></li>
           </ul>
 
           <div class="tab-content custom-card">
             <div class="tab-pane fade show active" id="pendingTab">
-              <h6 class="fw-bold mb-3 text-warning">طلبات إنشاء الحساب بانتظار الموافقة والتحقق عبر الواتساب</h6>
+              <h6 class="fw-bold mb-3 text-warning" data-tr="pendingSubTitle">طلبات إنشاء الحساب بانتظار الموافقة والتحقق عبر الواتساب</h6>
               <div class="table-responsive">
                 <table class="table table-hover align-middle">
                   <thead>
-                    <tr><th>الاسم الحقيقي</th><th>اسم المستخدم</th><th>الصف</th><th>رقم الهاتف</th><th>ولي الأمر</th><th>تفعيل الحساب</th></tr>
+                    <tr>
+                      <th data-tr="thName">الاسم الحقيقي</th>
+                      <th data-tr="thUsername">اسم المستخدم</th>
+                      <th data-tr="thGrade">الصف</th>
+                      <th data-tr="thPhone">رقم الهاتف</th>
+                      <th data-tr="thParent">ولي الأمر</th>
+                      <th data-tr="thAction">تفعيل الحساب</th>
+                    </tr>
                   </thead>
                   <tbody id="pendingTableBody"></tbody>
                 </table>
@@ -579,11 +668,18 @@
             </div>
 
             <div class="tab-pane fade" id="studentsTab">
-              <input type="text" id="studentSearch" class="form-control w-50 mb-3" placeholder="بحث بالاسم الحقيقي أو الهاتف..." onkeyup="filterStudents()">
+              <input type="text" id="studentSearch" class="form-control w-50 mb-3" placeholder="بحث بالاسم الحقيقي أو الهاتف..." data-tr-placeholder="studentSearchPh" onkeyup="filterStudents()">
               <div class="table-responsive">
                 <table class="table table-striped align-middle">
                   <thead>
-                    <tr><th>الاسم الحقيقي</th><th>اسم المستخدم</th><th>الصف</th><th>رقم الهاتف</th><th>ولي الأمر</th><th>الإجراء</th></tr>
+                    <tr>
+                      <th data-tr="thName">الاسم الحقيقي</th>
+                      <th data-tr="thUsername">اسم المستخدم</th>
+                      <th data-tr="thGrade">الصف</th>
+                      <th data-tr="thPhone">رقم الهاتف</th>
+                      <th data-tr="thParent">ولي الأمر</th>
+                      <th data-tr="thAction">الإجراء</th>
+                    </tr>
                   </thead>
                   <tbody id="studentsTableBody"></tbody>
                 </table>
@@ -591,11 +687,16 @@
             </div>
 
             <div class="tab-pane fade" id="logsTab">
-              <h6 class="fw-bold mb-3">سجل الدخول والخروج للطلاب والمعلمين</h6>
+              <h6 class="fw-bold mb-3" data-tr="logsTitle">سجل الدخول والخروج للطلاب والمعلمين</h6>
               <div class="table-responsive">
                 <table class="table table-sm align-middle">
                   <thead>
-                    <tr><th>الاسم</th><th>الصفة</th><th>الحدث</th><th>التوقيت الكامل</th></tr>
+                    <tr>
+                      <th data-tr="logName">الاسم</th>
+                      <th data-tr="logRole">الصفة</th>
+                      <th data-tr="logEvent">الحدث</th>
+                      <th data-tr="logTime">التوقيت الكامل</th>
+                    </tr>
                   </thead>
                   <tbody id="logsTableBody"></tbody>
                 </table>
@@ -603,36 +704,36 @@
             </div>
 
             <div class="tab-pane fade" id="manageNewsTab">
-              <h6 class="fw-bold mb-3">إدارة ونشر الإشعارات والأخبار</h6>
+              <h6 class="fw-bold mb-3" data-tr="newsTitle">إدارة ونشر الإشعارات والأخبار</h6>
               <form onsubmit="addNotification(event)" class="mb-4">
-                <input type="text" id="notifTitle" class="form-control mb-2" placeholder="عنوان الإشعار" required>
-                <textarea id="notifContent" class="form-control mb-3" placeholder="محتوى الإشعار..." rows="3" required></textarea>
-                <button type="submit" class="btn btn-primary btn-sm px-4">نشر الإشعار</button>
+                <input type="text" id="notifTitle" class="form-control mb-2" placeholder="عنوان الإشعار" data-tr-placeholder="newsTitlePh" required>
+                <textarea id="notifContent" class="form-control mb-3" placeholder="محتوى الإشعار..." rows="3" data-tr-placeholder="newsContPh" required></textarea>
+                <button type="submit" class="btn btn-primary btn-sm px-4" data-tr="newsPublishBtn">نشر الإشعار</button>
               </form>
             </div>
 
             <div class="tab-pane fade" id="manageHonorTab">
-              <h6 class="fw-bold mb-3">إضافة طالب لقائمة المتميزين</h6>
+              <h6 class="fw-bold mb-3" data-tr="honorTitleM">إضافة طالب لقائمة المتميزين</h6>
               <form onsubmit="addHonorStudent(event)" class="mb-4">
-                <input type="text" id="honorName" class="form-control mb-2" placeholder="اسم الطالب" required>
-                <input type="text" id="honorTitle" class="form-control mb-2" placeholder="الإنجاز / المركز" required>
-                <input type="text" id="honorImg" class="form-control mb-3" placeholder="رابط صورة الطالب (اختياري)">
-                <button type="submit" class="btn btn-warning btn-sm px-4 text-dark fw-bold">إضافة للوحة الشرف</button>
+                <input type="text" id="honorName" class="form-control mb-2" placeholder="اسم الطالب" data-tr-placeholder="honorNamePh" required>
+                <input type="text" id="honorTitle" class="form-control mb-2" placeholder="الإنجاز / المركز" data-tr-placeholder="honorTitlePh" required>
+                <input type="text" id="honorImg" class="form-control mb-3" placeholder="رابط صورة الطالب (اختياري)" data-tr-placeholder="honorImgPh">
+                <button type="submit" class="btn btn-warning btn-sm px-4 text-dark fw-bold" data-tr="honorAddBtn">إضافة للوحة الشرف</button>
               </form>
             </div>
 
             <div class="tab-pane fade" id="manageBooksTab">
-              <h6 class="fw-bold mb-3">رفع كتاب أو مذكرة إلكترونية</h6>
+              <h6 class="fw-bold mb-3" data-tr="bookTitleM">رفع كتاب أو مذكرة إلكترونية</h6>
               <form onsubmit="addBook(event)" class="mb-4">
-                <input type="text" id="bookTitle" class="form-control mb-2" placeholder="عنوان المذكرة / الكتاب" required>
+                <input type="text" id="bookTitle" class="form-control mb-2" placeholder="عنوان المذكرة / الكتاب" data-tr-placeholder="bookTitlePh" required>
                 <select id="bookGrade" class="form-select mb-2" required>
-                  <option value="الصف الأول الثانوي">الصف الأول الثانوي</option>
-                  <option value="الصف الثاني الثانوي">الصف الثاني الثانوي</option>
-                  <option value="الصف الثالث الثانوي">الصف الثالث الثانوي</option>
-                  <option value="عام لكل المراحل">عام لكل المراحل</option>
+                  <option value="الصف الأول الثانوي" data-tr="g1">الصف الأول الثانوي</option>
+                  <option value="الصف الثاني الثانوي" data-tr="g2">الصف الثاني الثانوي</option>
+                  <option value="الصف الثالث الثانوي" data-tr="g3">الصف الثالث الثانوي</option>
+                  <option value="عام لكل المراحل" data-tr="gAll">عام لكل المراحل</option>
                 </select>
-                <input type="text" id="bookUrl" class="form-control mb-3" placeholder="رابط الملف (PDF)" required>
-                <button type="submit" class="btn btn-success btn-sm px-4">نشر الكتاب</button>
+                <input type="text" id="bookUrl" class="form-control mb-3" placeholder="رابط الملف (PDF)" data-tr-placeholder="bookUrlPh" required>
+                <button type="submit" class="btn btn-success btn-sm px-4" data-tr="bookPublishBtn">نشر الكتاب</button>
               </form>
             </div>
 
@@ -644,10 +745,13 @@
 
     <!-- Footer -->
     <footer>
-      <p class="m-0">جميع الحقوق محفوظة © للمطور <strong class="text-primary">أحمد صبري</strong></p>
-      <p class="mt-2 m-0">
+      <p class="m-0"><span data-tr="footerRights">جميع الحقوق محفوظة © للمطور</span> <strong class="text-primary">أحمد صبري</strong></p>
+      <p class="mt-2 m-0 d-flex justify-content-center gap-3 flex-wrap">
+        <a href="https://wa.me/201287255571" target="_blank" class="text-success text-decoration-none fw-semibold">
+          <i class="fa-brands fa-whatsapp me-1"></i> <span data-tr="whatsapp1">تواصل معنا عبر واتساب</span>
+        </a>
         <a href="https://wa.me/201143038021" target="_blank" class="text-success text-decoration-none fw-semibold">
-          <i class="fa-brands fa-whatsapp me-1"></i> تواصل مع الأدمن عبر واتساب (01143038021)
+          <i class="fa-brands fa-whatsapp me-1"></i> <span data-tr="whatsappAdmin">تواصل مع الأدمن عبر واتساب (01143038021)</span>
         </a>
       </p>
     </footer>
@@ -666,68 +770,68 @@
           <!-- Login Form -->
           <form id="loginForm" onsubmit="handleLogin(event)" autocomplete="off">
             <div class="mb-3">
-              <label class="form-label fw-semibold">رقم الهاتف</label>
+              <label class="form-label fw-semibold" data-tr="phoneLabel">رقم الهاتف</label>
               <input type="tel" id="loginPhone" class="form-control" inputmode="numeric" required>
             </div>
             <div class="mb-3">
-              <label class="form-label fw-semibold">كلمة المرور</label>
+              <label class="form-label fw-semibold" data-tr="passLabel">كلمة المرور</label>
               <input type="password" id="loginPass" class="form-control" required autocomplete="current-password">
             </div>
-            <button type="submit" id="loginSubmitBtn" class="btn btn-custom-primary w-100 py-2 mb-3">تسجيل الدخول</button>
+            <button type="submit" id="loginSubmitBtn" class="btn btn-custom-primary w-100 py-2 mb-3" data-tr="btnLogin">تسجيل الدخول</button>
             <small id="loginLockMsg" class="text-danger d-block mb-2 text-center" style="display: none;"></small>
             
             <div class="text-center mt-3 pt-2 border-top">
-              <small class="text-muted">إذا لم يكن لديك حساب؟</small>
-              <a href="#" class="text-primary text-decoration-none fw-semibold ms-1" onclick="showAuthModal('register')">قم بإنشاء حساب</a>
+              <small class="text-muted" data-tr="noAccount">إذا لم يكن لديك حساب؟</small>
+              <a href="#" class="text-primary text-decoration-none fw-semibold ms-1" onclick="showAuthModal('register')" data-tr="createAccountLink">قم بإنشاء حساب</a>
             </div>
           </form>
 
           <!-- Register Form -->
           <form id="registerForm" onsubmit="handleRegister(event)" style="display: none;" autocomplete="off">
             <div class="mb-3">
-              <label class="form-label fw-semibold">الاسم الحقيقي</label>
+              <label class="form-label fw-semibold" data-tr="regNameLabel">الاسم الحقيقي</label>
               <input type="text" id="regName" class="form-control" required>
             </div>
             <div class="mb-3">
-              <label class="form-label fw-semibold">اسم المستخدم المستعار (اختياري للخصوصية بالمنتدى)</label>
+              <label class="form-label fw-semibold" data-tr="regUsernameLabel">اسم المستخدم المستعار (اختياري للخصوصية بالمنتدى)</label>
               <input type="text" id="regUsername" class="form-control" placeholder="مثال: Ahmed_AI">
             </div>
             <div class="mb-3">
-              <label class="form-label fw-semibold">الصفة</label>
+              <label class="form-label fw-semibold" data-tr="regRoleLabel">الصفة</label>
               <select id="regRole" class="form-select" onchange="toggleGradeSelect()" required>
-                <option value="student">طالب</option>
-                <option value="teacher">معلم</option>
+                <option value="student" data-tr="roleStudent">طالب</option>
+                <option value="teacher" data-tr="roleTeacher">معلم</option>
               </select>
             </div>
             <div class="mb-3" id="gradeGroup">
-              <label class="form-label fw-semibold">الصف الدراسي</label>
+              <label class="form-label fw-semibold" data-tr="regGradeLabel">الصف الدراسي</label>
               <select id="regGrade" class="form-select">
-                <option value="الصف الأول الثانوي">الصف الأول الثانوي</option>
-                <option value="الصف الثاني الثانوي">الصف الثاني الثانوي</option>
-                <option value="الصف الثالث الثانوي">الصف الثالث الثانوي</option>
+                <option value="الصف الأول الثانوي" data-tr="g1">الصف الأول الثانوي</option>
+                <option value="الصف الثاني الثانوي" data-tr="g2">الصف الثاني الثانوي</option>
+                <option value="الصف الثالث الثانوي" data-tr="g3">الصف الثالث الثانوي</option>
               </select>
             </div>
             <div class="mb-3">
-              <label class="form-label fw-semibold">رقم الهاتف (مصري 11 رقم يبدأ بـ 010, 011, 012, 015)</label>
+              <label class="form-label fw-semibold" data-tr="regPhoneLabel">رقم الهاتف (مصري 11 رقم يبدأ بـ 010, 011, 012, 015)</label>
               <input type="tel" id="regPhone" class="form-control" placeholder="010XXXXXXXX" inputmode="numeric" required>
             </div>
             <div class="mb-3" id="parentPhoneGroup">
-              <label class="form-label fw-semibold">رقم ولي الأمر (مصري 11 رقم)</label>
+              <label class="form-label fw-semibold" data-tr="regParentLabel">رقم ولي الأمر (مصري 11 رقم)</label>
               <input type="tel" id="regParentPhone" class="form-control" placeholder="011XXXXXXXX" inputmode="numeric">
             </div>
             <div class="mb-3">
-              <label class="form-label fw-semibold">كلمة المرور</label>
+              <label class="form-label fw-semibold" data-tr="passLabel">كلمة المرور</label>
               <input type="password" id="regPass" class="form-control" required autocomplete="new-password">
             </div>
             <div class="mb-3">
-              <label class="form-label fw-semibold">تأكيد كلمة المرور</label>
+              <label class="form-label fw-semibold" data-tr="regPassConfirmLabel">تأكيد كلمة المرور</label>
               <input type="password" id="regPassConfirm" class="form-control" required autocomplete="new-password">
             </div>
-            <button type="submit" class="btn btn-success w-100 py-2 fw-bold mb-3">إنشاء حساب جديد</button>
+            <button type="submit" class="btn btn-success w-100 py-2 fw-bold mb-3" data-tr="btnRegister">إنشاء حساب جديد</button>
             
             <div class="text-center mt-3 pt-2 border-top">
-              <small class="text-muted">لديك حساب بالفعل؟</small>
-              <a href="#" class="text-primary text-decoration-none fw-semibold ms-1" onclick="showAuthModal('login')">قم بتسجيل الدخول</a>
+              <small class="text-muted" data-tr="hasAccount">لديك حساب بالفعل؟</small>
+              <a href="#" class="text-primary text-decoration-none fw-semibold ms-1" onclick="showAuthModal('login')" data-tr="loginLink">قم بتسجيل الدخول</a>
             </div>
           </form>
         </div>
@@ -740,6 +844,269 @@
     const SUPABASE_URL = 'https://hoddrxekayofbyqmoyyz.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_Z6u7TuaH-WhcweAyb2hsJg_X5pWJ6HS';
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    let currentLang = localStorage.getItem('platform_lang') || 'ar';
+
+    const translations = {
+      ar: {
+        brandTitle: "المس أمل شفيق",
+        brandSub: "البرمجة والذكاء الاصطناعي",
+        navHome: "الرئيسية",
+        navNotif: "الإشعارات والأخبار",
+        navHonor: "المتميزين",
+        navBooks: "الكتب والملخصات",
+        navForum: "منتدى الطلاب",
+        navEditor: "محرر الأكواد",
+        navProfile: "الملف الشخصي",
+        navAdmin: "لوحة الأدمن",
+        headerTitle: "منصة التعليم الرقمي",
+        btnLogin: "تسجيل الدخول",
+        heroTitle: "طريقك لاحتراف البرمجة والذكاء الاصطناعي",
+        heroSub: "إشراف وتدريس: المس أمل شفيق السيد",
+        heroBtn: "ابدأ رحلتك الآن",
+        card1Title: "الذكاء الاصطناعي",
+        card1Desc: "شرح مبسط ومشاريع عملية في تقنيات وتعلم الآلة للمرحلة الثانوية.",
+        card2Title: "محرر الأكواد",
+        card2Desc: "محرر كود تفاعلي لكتابة وتجربة شفرات البرمجة مباشرة عبر المنصة.",
+        card3Title: "مجتمع الطلاب",
+        card3Desc: "منتدى مباشر لتبادل الصور والأسئلة والتنافس بين الطلاب المتميزين.",
+        secNotifTitle: "مركز الأخبار والإشعارات",
+        secHonorTitle: "لوحة الطلاب المتميزين",
+        secBooksTitle: "مكتبة المذكرات والكتب",
+        bookSearchPh: "بحث عن كتاب...",
+        secForumTitle: "منتدى المحادثة المباشر",
+        chatInputPh: "اكتب رسالتك للمجموعة هنا...",
+        sendBtn: "إرسال",
+        secEditorTitle: "محرر الأكواد التفاعلي",
+        runCodeBtn: "تشغيل الشفرة",
+        consoleOut: "مخرجات التشغيل / Console Output:",
+        secProfileTitle: "إعدادات الملف الشخصي",
+        profNameLabel: "الاسم الحقيقي",
+        profUsernameLabel: "اسم المستخدم المستعار (اختياري للخصوصية)",
+        profPhoneLabel: "رقم الهاتف المصرح به",
+        profParentLabel: "رقم هاتف ولي الأمر",
+        profPassLabel: "كلمة المرور الجديدة",
+        profPassPh: "أدخل كلمة مرور جديدة للتعديل",
+        profSaveBtn: "حفظ البيانات الجديدة",
+        logoutBtn: "تسجيل الخروج من الحساب",
+        adminLockTitle: "تسجيل دخول لوحة الأدمن",
+        adminLockDesc: "أدخل كلمة المرور الموحدة لإدارة المنصة بكامل الصلاحيات",
+        adminOpenBtn: "فتح لوحة الأدمن",
+        adminDashTitle: "لوحة تحكم الأدمن",
+        adminDashSub: "مرحباً بك، تتيح لك هذه اللوحة إدارة كافة محتويات وطلاب المنصة.",
+        adminLogoutBtn: "تسجيل خروج الأدمن",
+        stat1Title: "طلبات الانضمام المعلقة",
+        stat2Title: "الطلاب المفعلين",
+        stat3Title: "سجلات حركة المنصة",
+        tabPending: "الطلبات المعلقة",
+        tabStudents: "قائمة الطلاب",
+        tabLogs: "السجلات",
+        tabNews: "نشر إشعار",
+        tabHonor: "المتميزين",
+        tabBooks: "المذكرات",
+        pendingSubTitle: "طلبات إنشاء الحساب بانتظار الموافقة والتحقق عبر الواتساب",
+        thName: "الاسم الحقيقي",
+        thUsername: "اسم المستخدم",
+        thGrade: "الصف",
+        thPhone: "رقم الهاتف",
+        thParent: "ولي الأمر",
+        thAction: "تفعيل الحساب",
+        studentSearchPh: "بحث بالاسم الحقيقي أو الهاتف...",
+        logsTitle: "سجل الدخول والخروج للطلاب والمعلمين",
+        logName: "الاسم",
+        logRole: "الصفة",
+        logEvent: "الحدث",
+        logTime: "التوقيت الكامل",
+        newsTitle: "إدارة ونشر الإشعارات والأخبار",
+        newsTitlePh: "عنوان الإشعار",
+        newsContPh: "محتوى الإشعار...",
+        newsPublishBtn: "نشر الإشعار",
+        honorTitleM: "إضافة طالب لقائمة المتميزين",
+        honorNamePh: "اسم الطالب",
+        honorTitlePh: "الإنجاز / المركز",
+        honorImgPh: "رابط صورة الطالب (اختياري)",
+        honorAddBtn: "إضافة للوحة الشرف",
+        bookTitleM: "رفع كتاب أو مذكرة إلكترونية",
+        bookTitlePh: "عنوان المذكرة / الكتاب",
+        bookUrlPh: "رابط الملف (PDF)",
+        bookPublishBtn: "نشر الكتاب",
+        g1: "الصف الأول الثانوي",
+        g2: "الصف الثاني الثانوي",
+        g3: "الصف الثالث الثانوي",
+        gAll: "عام لكل المراحل",
+        footerRights: "جميع الحقوق محفوظة © للمطور",
+        whatsapp1: "تواصل معنا عبر واتساب",
+        whatsappAdmin: "تواصل مع الأدمن عبر واتساب (01143038021)",
+        phoneLabel: "رقم الهاتف",
+        passLabel: "كلمة المرور",
+        noAccount: "إذا لم يكن لديك حساب؟",
+        createAccountLink: "قم بإنشاء حساب",
+        regNameLabel: "الاسم الحقيقي",
+        regUsernameLabel: "اسم المستخدم المستعار (اختياري للخصوصية بالمنتدى)",
+        regRoleLabel: "الصفة",
+        roleStudent: "طالب",
+        roleTeacher: "معلم",
+        regGradeLabel: "الصف الدراسي",
+        regPhoneLabel: "رقم الهاتف (مصري 11 رقم يبدأ بـ 010, 011, 012, 015)",
+        regParentLabel: "رقم ولي الأمر (مصري 11 رقم)",
+        regPassConfirmLabel: "تأكيد كلمة المرور",
+        btnRegister: "إنشاء حساب جديد",
+        hasAccount: "لديك حساب بالفعل؟",
+        loginLink: "قم بتسجيل الدخول"
+      },
+      en: {
+        brandTitle: "Ms. Amal Shafiq",
+        brandSub: "Programming & AI",
+        navHome: "Home",
+        navNotif: "News & Notifications",
+        navHonor: "Honor Board",
+        navBooks: "Library & Books",
+        navForum: "Student Forum",
+        navEditor: "Code Editor",
+        navProfile: "Profile Settings",
+        navAdmin: "Admin Dashboard",
+        headerTitle: "Digital Education Platform",
+        btnLogin: "Login",
+        heroTitle: "Your Path to Mastering Programming & AI",
+        heroSub: "Supervised by: Ms. Amal Shafiq El-Sayed",
+        heroBtn: "Start Your Journey Now",
+        card1Title: "Artificial Intelligence",
+        card1Desc: "Simplified explanations and practical machine learning projects for high school.",
+        card2Title: "Code Editor",
+        card2Desc: "Interactive code editor to write and test programming scripts directly.",
+        card3Title: "Student Community",
+        card3Desc: "Direct forum to share images, questions, and compete among top students.",
+        secNotifTitle: "News & Notifications Center",
+        secHonorTitle: "Top Students Honor Board",
+        secBooksTitle: "Notes & Books Library",
+        bookSearchPh: "Search for a book...",
+        secForumTitle: "Live Chat Forum",
+        chatInputPh: "Type your message here...",
+        sendBtn: "Send",
+        secEditorTitle: "Interactive Code Editor",
+        runCodeBtn: "Run Code",
+        consoleOut: "Console Output:",
+        secProfileTitle: "Profile Settings",
+        profNameLabel: "Real Name",
+        profUsernameLabel: "Nickname (Optional for Forum Privacy)",
+        profPhoneLabel: "Authorized Phone Number",
+        profParentLabel: "Parent Phone Number",
+        profPassLabel: "New Password",
+        profPassPh: "Enter new password to update",
+        profSaveBtn: "Save New Data",
+        logoutBtn: "Log Out From Account",
+        adminLockTitle: "Admin Dashboard Login",
+        adminLockDesc: "Enter the unified password to manage the platform with full privileges",
+        adminOpenBtn: "Open Admin Panel",
+        adminDashTitle: "Admin Control Panel",
+        adminDashSub: "Welcome, this panel allows you to manage all platform content and students.",
+        adminLogoutBtn: "Admin Logout",
+        stat1Title: "Pending Join Requests",
+        stat2Title: "Activated Students",
+        stat3Title: "Platform Activity Logs",
+        tabPending: "Pending Requests",
+        tabStudents: "Students List",
+        tabLogs: "Logs",
+        tabNews: "Publish Notice",
+        tabHonor: "Honor Board",
+        tabBooks: "Library",
+        pendingSubTitle: "Account creation requests awaiting admin approval & WhatsApp verification",
+        thName: "Real Name",
+        thUsername: "Username",
+        thGrade: "Grade",
+        thPhone: "Phone",
+        thParent: "Parent Phone",
+        thAction: "Action",
+        studentSearchPh: "Search by real name or phone...",
+        logsTitle: "Student & Teacher Activity Logs",
+        logName: "Name",
+        logRole: "Role",
+        logEvent: "Event",
+        logTime: "Full Timestamp",
+        newsTitle: "Manage & Publish Notifications",
+        newsTitlePh: "Notification Title",
+        newsContPh: "Notification content...",
+        newsPublishBtn: "Publish Notice",
+        honorTitleM: "Add Student to Honor Board",
+        honorNamePh: "Student Name",
+        honorTitlePh: "Achievement / Rank",
+        honorImgPh: "Student Image URL (Optional)",
+        honorAddBtn: "Add to Honor Board",
+        bookTitleM: "Upload eBook or Note",
+        bookTitlePh: "Book / Note Title",
+        bookUrlPh: "File URL (PDF)",
+        bookPublishBtn: "Publish Book",
+        g1: "First Year High School",
+        g2: "Second Year High School",
+        g3: "Third Year High School",
+        gAll: "All Grades",
+        footerRights: "All rights reserved © Developer",
+        whatsapp1: "Contact us via WhatsApp",
+        whatsappAdmin: "Contact Admin via WhatsApp (01143038021)",
+        phoneLabel: "Phone Number",
+        passLabel: "Password",
+        noAccount: "Don't have an account?",
+        createAccountLink: "Create an account",
+        regNameLabel: "Real Name",
+        regUsernameLabel: "Nickname (Optional for Forum Privacy)",
+        regRoleLabel: "Role",
+        roleStudent: "Student",
+        roleTeacher: "Teacher",
+        regGradeLabel: "Academic Grade",
+        regPhoneLabel: "Phone (Egyptian 11 digits starting with 010, 011, 012, 015)",
+        regParentLabel: "Parent Phone (Egyptian 11 digits)",
+        regPassConfirmLabel: "Confirm Password",
+        btnRegister: "Create New Account",
+        hasAccount: "Already have an account?",
+        loginLink: "Login"
+      }
+    };
+
+    function applyLanguage(lang) {
+      currentLang = lang;
+      localStorage.setItem('platform_lang', lang);
+      const root = document.getElementById('htmlRoot');
+      const bootstrapCSS = document.getElementById('bootstrapCSS');
+      const langToggleInput = document.getElementById('langToggleInput');
+      const langLabel = document.getElementById('langLabel');
+
+      if (lang === 'en') {
+        root.setAttribute('lang', 'en');
+        root.setAttribute('dir', 'ltr');
+        bootstrapCSS.href = 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css';
+        langToggleInput.checked = true;
+        langLabel.innerText = 'English';
+      } else {
+        root.setAttribute('lang', 'ar');
+        root.setAttribute('dir', 'rtl');
+        bootstrapCSS.href = 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.rtl.min.css';
+        langToggleInput.checked = false;
+        langLabel.innerText = 'العربية';
+      }
+
+      document.querySelectorAll('[data-tr]').forEach(el => {
+        const key = el.getAttribute('data-tr');
+        if (translations[lang][key]) {
+          el.innerText = translations[lang][key];
+        }
+      });
+
+      document.querySelectorAll('[data-tr-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-tr-placeholder');
+        if (translations[lang][key]) {
+          el.placeholder = translations[lang][key];
+        }
+      });
+    }
+
+    function toggleLanguage() {
+      const langToggleInput = document.getElementById('langToggleInput');
+      if (langToggleInput.checked) {
+        applyLanguage('en');
+      } else {
+        applyLanguage('ar');
+      }
+    }
 
     let users = [];
     let notifications = JSON.parse(localStorage.getItem('platform_notifs')) || [
@@ -815,7 +1182,7 @@
     function showSection(sectionId, element) {
       const protectedSections = ['forumSection', 'editorSection', 'booksSection'];
       if (protectedSections.includes(sectionId) && (!currentUser || currentUser.status !== 'approved')) {
-        alert("عذراً، هذا القسم متاح فقط لطلاب المنصة المفعلين بعد موافقة الأدمن والتفعيل عبر الواتساب.");
+        alert(currentLang === 'en' ? "Sorry, this section is restricted to approved students after admin verification via WhatsApp." : "عذراً، هذا القسم متاح فقط لطلاب المنصة المفعلين بعد موافقة الأدمن والتفعيل عبر الواتساب.");
         return;
       }
 
@@ -871,11 +1238,11 @@
     const authModal = new bootstrap.Modal(document.getElementById('authModal'));
     function showAuthModal(type) {
       if (type === 'login') {
-        document.getElementById('authModalTitle').innerText = 'تسجيل الدخول';
+        document.getElementById('authModalTitle').innerText = currentLang === 'en' ? 'Login' : 'تسجيل الدخول';
         document.getElementById('loginForm').style.display = 'block';
         document.getElementById('registerForm').style.display = 'none';
       } else {
-        document.getElementById('authModalTitle').innerText = 'إنشاء حساب جديد';
+        document.getElementById('authModalTitle').innerText = currentLang === 'en' ? 'Create Account' : 'إنشاء حساب جديد';
         document.getElementById('loginForm').style.display = 'none';
         document.getElementById('registerForm').style.display = 'block';
       }
@@ -900,17 +1267,17 @@
       const passConfirm = document.getElementById('regPassConfirm').value;
 
       if (!isValidEgyPhone(phone)) {
-        alert("يرجى إدخال رقم مصري صحيح مكون من 11 رقم يبدأ بـ (010, 011, 012, 015)");
+        alert(currentLang === 'en' ? "Please enter a valid Egyptian phone number (11 digits starting with 010, 011, 012, 015)" : "يرجى إدخال رقم مصري صحيح مكون من 11 رقم يبدأ بـ (010, 011, 012, 015)");
         return;
       }
 
       if (parentPhone && !isValidEgyPhone(parentPhone)) {
-        alert("رقم هاتف ولي الأمر غير صحيح (يجب أن يكون رقماً مصرياً مكوناً من 11 رقماً)");
+        alert(currentLang === 'en' ? "Invalid parent phone number (must be 11 Egyptian digits)" : "رقم هاتف ولي الأمر غير صحيح (يجب أن يكون رقماً مصرياً مكوناً من 11 رقماً)");
         return;
       }
 
       if (pass !== passConfirm) {
-        alert("كلمتا المرور غير متطابقتين!");
+        alert(currentLang === 'en' ? "Passwords do not match!" : "كلمتا المرور غير متطابقتين!");
         return;
       }
 
@@ -924,9 +1291,9 @@
       ]);
 
       if (error) {
-        alert("خطأ أثناء الاتصال بقاعدة البيانات: " + error.message);
+        alert("Database error: " + error.message);
       } else {
-        alert("تم إرسال طلبك بنجاح. يلزم تفعيل الحساب عبر التواصل مع الأدمن عبر الواتساب.");
+        alert(currentLang === 'en' ? "Your request has been submitted successfully. Account activation requires contacting the admin via WhatsApp." : "تم إرسال طلبك بنجاح. يلزم تفعيل الحساب عبر التواصل مع الأدمن عبر الواتساب.");
         authModal.hide();
         fetchSupabaseData();
       }
@@ -942,7 +1309,7 @@
       if (loginAttempts[phone] && loginAttempts[phone].lockUntil > now) {
         const remainingSecs = Math.ceil((loginAttempts[phone].lockUntil - now) / 1000);
         lockMsg.style.display = 'block';
-        lockMsg.innerText = `تم قفل الحساب مؤقتاً بسبب كثرة محاولات الدخول الخاطئة. حاول بعد ${remainingSecs} ثانية.`;
+        lockMsg.innerText = currentLang === 'en' ? `Account temporarily locked due to too many failed attempts. Try again in ${remainingSecs}s.` : `تم قفل الحساب مؤقتاً بسبب كثرة محاولات الدخول الخاطئة. حاول بعد ${remainingSecs} ثانية.`;
         return;
       }
 
@@ -960,12 +1327,12 @@
           loginAttempts[phone].count = 0;
           localStorage.setItem('platform_login_attempts', JSON.stringify(loginAttempts));
           lockMsg.style.display = 'block';
-          lockMsg.innerText = "تم تجاوز 5 محاولات خاطئة. تم قفل الحساب مؤقتاً لمدة دقيقة.";
+          lockMsg.innerText = currentLang === 'en' ? "Exceeded 5 failed attempts. Account locked for 1 minute." : "تم تجاوز 5 محاولات خاطئة. تم قفل الحساب مؤقتاً لمدة دقيقة.";
           return;
         }
 
         localStorage.setItem('platform_login_attempts', JSON.stringify(loginAttempts));
-        alert(`خطأ في البيانات المدخلة أو الرقم غير مسجل! (المحاولة ${loginAttempts[phone].count} من 5)`);
+        alert(currentLang === 'en' ? `Invalid credentials or unregistered phone! (Attempt ${loginAttempts[phone].count} of 5)` : `خطأ في البيانات المدخلة أو الرقم غير مسجل! (المحاولة ${loginAttempts[phone].count} من 5)`);
         return;
       }
 
@@ -976,20 +1343,20 @@
       lockMsg.style.display = 'none';
 
       if (user.status === 'pending') {
-        alert("حسابك ما زال بانتظار موافقة الأدمن وتفعيله عبر الواتساب.");
+        alert(currentLang === 'en' ? "Your account is pending admin approval and activation via WhatsApp." : "حسابك ما زال بانتظار موافقة الأدمن وتفعيله عبر الواتساب.");
         return;
       }
 
       currentUser = user;
       localStorage.setItem('platform_current_user', JSON.stringify(currentUser));
-      addAuditLog(user.name, user.role, "تسجيل دخول");
+      addAuditLog(user.name, user.role, currentLang === 'en' ? "Login" : "تسجيل دخول");
       updateUI();
       authModal.hide();
     }
 
     function logout() {
       if (currentUser) {
-        addAuditLog(currentUser.name, currentUser.role, "تسجيل خروج");
+        addAuditLog(currentUser.name, currentUser.role, currentLang === 'en' ? "Logout" : "تسجيل خروج");
       }
       currentUser = null;
       localStorage.removeItem('platform_current_user');
@@ -1009,7 +1376,7 @@
       if (newPass) currentUser.pass = newPass;
 
       if (!isValidEgyPhone(currentUser.phone)) {
-        alert("رقم الهاتف غير صحيح!");
+        alert(currentLang === 'en' ? "Invalid phone number!" : "رقم الهاتف غير صحيح!");
         return;
       }
 
@@ -1025,10 +1392,10 @@
         .eq('id', currentUser.id);
 
       if (error) {
-        alert("حدث خطأ أثناء التحديث: " + error.message);
+        alert("Error updating profile: " + error.message);
       } else {
         localStorage.setItem('platform_current_user', JSON.stringify(currentUser));
-        alert("تم تحديث بيانات الملف الشخصي بنجاح!");
+        alert(currentLang === 'en' ? "Profile updated successfully!" : "تم تحديث بيانات الملف الشخصي بنجاح!");
         fetchSupabaseData();
       }
     }
@@ -1037,7 +1404,7 @@
       const now = new Date();
       auditLogs.push({
         name, role, action,
-        dateTime: now.toLocaleDateString('ar-EG') + ' ' + now.toLocaleTimeString('ar-EG')
+        dateTime: now.toLocaleString()
       });
       localStorage.setItem('platform_logs', JSON.stringify(auditLogs));
     }
@@ -1076,7 +1443,7 @@
             <i class="fa-solid fa-file-pdf fa-2x text-danger mb-3"></i>
             <h6 class="fw-bold mb-2">${b.title}</h6>
             <span class="badge bg-primary-subtle text-primary mb-3" style="width: fit-content;">${b.grade}</span>
-            <a href="${b.url}" target="_blank" class="btn btn-outline-primary btn-sm mt-auto">تحميل الكتاب</a>
+            <a href="${b.url}" target="_blank" class="btn btn-outline-primary btn-sm mt-auto">${currentLang === 'en' ? 'Download Book' : 'تحميل الكتاب'}</a>
           </div>
         </div>
       `).join('');
@@ -1104,7 +1471,7 @@
       ]);
 
       if (error) {
-        alert("فشل إرسال الرسالة: " + error.message);
+        alert("Failed to send message: " + error.message);
       } else {
         input.value = '';
         fetchSupabaseData();
@@ -1137,12 +1504,12 @@
           const customConsole = { log: (...args) => logs.push(args.join(' ')) };
           const runFn = new Function('console', code);
           runFn(customConsole);
-          output.innerText = logs.join('\n') || 'تم تشغيل الشفرة بنجاح.';
+          output.innerText = logs.join('\n') || (currentLang === 'en' ? 'Code executed successfully.' : 'تم تشغيل الشفرة بنجاح.');
         } catch (err) {
-          output.innerText = 'خطأ برمجي: ' + err.message;
+          output.innerText = 'Runtime Error: ' + err.message;
         }
       } else {
-        output.innerText = "شفرة Python (محاكاة):\n" + code;
+        output.innerText = "Python Code Simulator:\n" + code;
       }
     }
 
@@ -1154,7 +1521,7 @@
         document.getElementById('adminDashboard').style.display = 'block';
         loadAdminData();
       } else {
-        alert("كلمة المرور خاطئة!");
+        alert(currentLang === 'en' ? "Incorrect password!" : "كلمة المرور خاطئة!");
       }
     }
 
@@ -1164,7 +1531,7 @@
       document.getElementById('adminPassInput').value = '';
       document.getElementById('adminAuthLock').style.display = 'block';
       document.getElementById('adminDashboard').style.display = 'none';
-      alert("تم تسجيل خروج الأدمن بنجاح وإغلاق اللوحة.");
+      alert(currentLang === 'en' ? "Admin logged out successfully." : "تم تسجيل خروج الأدمن بنجاح وإغلاق اللوحة.");
     }
 
     async function loadAdminData() {
@@ -1179,14 +1546,14 @@
       document.getElementById('pendingTableBody').innerHTML = pendingUsers.map(u => `
         <tr>
           <td><strong>${u.name}</strong></td>
-          <td><span class="text-muted">${u.username || 'بدون اسم مستعار'}</span></td>
+          <td><span class="text-muted">${u.username || (currentLang === 'en' ? 'No nickname' : 'بدون اسم مستعار')}</span></td>
           <td>${u.grade}</td>
           <td>${u.phone}</td>
           <td>${u.parent_phone || '-'}</td>
           <td>
-            <button class="btn btn-success btn-sm me-1" onclick="approveUser(${u.id}, '${u.phone}')">قبول وتفعيل</button>
-            <a href="https://wa.me/20${u.phone.replace(/^0/, '')}?text=مرحباً بك، تم مراجعة حسابك على المنصة وتم تفعيله بواسطة الأدمن." target="_blank" class="btn btn-outline-success btn-sm me-1" title="تواصل واتساب"><i class="fa-brands fa-whatsapp"></i> واتس</a>
-            <button class="btn btn-danger btn-sm" onclick="rejectUser(${u.id})">رفض</button>
+            <button class="btn btn-success btn-sm me-1" onclick="approveUser(${u.id}, '${u.phone}')">${currentLang === 'en' ? 'Approve' : 'قبول وتفعيل'}</button>
+            <a href="https://wa.me/20${u.phone.replace(/^0/, '')}?text=مرحباً بك، تم مراجعة حسابك على المنصة وتم تفعيله بواسطة الأدمن." target="_blank" class="btn btn-outline-success btn-sm me-1" title="WhatsApp"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
+            <button class="btn btn-danger btn-sm" onclick="rejectUser(${u.id})">${currentLang === 'en' ? 'Reject' : 'رفض'}</button>
           </td>
         </tr>
       `).join('');
@@ -1207,12 +1574,12 @@
       document.getElementById('studentsTableBody').innerHTML = list.map(u => `
         <tr>
           <td><strong>${u.name}</strong></td>
-          <td><span class="badge bg-secondary-subtle text-secondary">${u.username || 'اسم حقيقي'}</span></td>
+          <td><span class="badge bg-secondary-subtle text-secondary">${u.username || (currentLang === 'en' ? 'Real Name' : 'اسم حقيقي')}</span></td>
           <td>${u.grade}</td>
           <td>${u.phone}</td>
           <td>${u.parent_phone || '-'}</td>
           <td>
-            <button class="btn btn-outline-danger btn-sm" onclick="deleteStudent(${u.id})"><i class="fa-solid fa-trash me-1"></i> حذف</button>
+            <button class="btn btn-outline-danger btn-sm" onclick="deleteStudent(${u.id})"><i class="fa-solid fa-trash me-1"></i> ${currentLang === 'en' ? 'Delete' : 'حذف'}</button>
           </td>
         </tr>
       `).join('');
@@ -1223,7 +1590,7 @@
       if (!error) {
         fetchSupabaseData();
         loadAdminData();
-        alert("تم قبول الطالب وتفعيل حسابه بنجاح.");
+        alert(currentLang === 'en' ? "Student approved and account activated successfully." : "تم قبول الطالب وتفعيل حسابه بنجاح.");
       }
     }
 
@@ -1236,12 +1603,12 @@
     }
 
     async function deleteStudent(id) {
-      if (confirm("هل أنت متأكد من حذف هذا الطالب نهائياً من المنصة؟")) {
+      if (confirm(currentLang === 'en' ? "Are you sure you want to permanently delete this student?" : "هل أنت متأكد من حذف هذا الطالب نهائياً من المنصة؟")) {
         const { error } = await _supabase.from('profiles').delete().eq('id', id);
         if (!error) {
           fetchSupabaseData();
           loadAdminData();
-          alert("تم حذف الطالب بنجاح.");
+          alert(currentLang === 'en' ? "Student deleted successfully." : "تم حذف الطالب بنجاح.");
         }
       }
     }
@@ -1261,11 +1628,11 @@
         id: Date.now(),
         title: document.getElementById('notifTitle').value,
         content: document.getElementById('notifContent').value,
-        date: now.toLocaleDateString('ar-EG'),
-        time: now.toLocaleTimeString('ar-EG')
+        date: now.toLocaleDateString(),
+        time: now.toLocaleTimeString()
       });
       localStorage.setItem('platform_notifs', JSON.stringify(notifications));
-      alert("تم نشر الإشعار!");
+      alert(currentLang === 'en' ? "Notification published!" : "تم نشر الإشعار!");
       renderNotifications();
     }
 
@@ -1279,7 +1646,7 @@
       });
       localStorage.setItem('platform_honor', JSON.stringify(honorStudents));
       renderHonor();
-      alert("تمت الإضافة بنجاح!");
+      alert(currentLang === 'en' ? "Added successfully!" : "تمت الإضافة بنجاح!");
     }
 
     function addBook(e) {
@@ -1292,9 +1659,11 @@
       });
       localStorage.setItem('platform_books', JSON.stringify(books));
       renderBooks();
-      alert("تم رفع الكتاب بنجاح!");
+      alert(currentLang === 'en' ? "Book uploaded successfully!" : "تم رفع الكتاب بنجاح!");
     }
 
+    // Initialize Language & Data on Load
+    applyLanguage(currentLang);
     fetchSupabaseData();
     setupRealtimeSubscription();
   </script>
