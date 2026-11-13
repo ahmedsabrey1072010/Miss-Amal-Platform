@@ -327,7 +327,7 @@
       color: var(--text-muted);
     }
 
-    /* Responsive Breakpoint for Mobile Sidebar */
+    /* Responsive Breakpoint for Mobile Sidebar Fixed */
     @media (max-width: 991px) {
       #sidebar { 
         transform: translateX(100%); 
@@ -463,7 +463,6 @@
           <h5 class="fw-bold mb-3"><i class="fa-solid fa-comments text-primary me-2"></i>منتدى المحادثة المباشر</h5>
           <div class="chat-box mb-3" id="chatContainer"></div>
           <div class="input-group gap-2 align-items-center">
-            <!-- تمت إضافة خصائص منع تداخل مدير كلمات المرور للمتصفح عبر autocomplete -->
             <input type="text" id="chatInput" class="form-control" placeholder="اكتب رسالتك للمجموعة هنا..." autocomplete="off" name="chat_message_field">
             <input type="file" id="chatImageInput" accept="image/*" style="display: none;" onchange="handleImageUpload(event)">
             
@@ -510,7 +509,6 @@
             </div>
             <div class="mb-3">
               <label class="form-label fw-semibold">رقم الهاتف المصرح به</label>
-              <!-- تم تغيير نوع الحقل إلى tel والتحقق من الهاتف المصري -->
               <input type="tel" id="profPhone" class="form-control" inputmode="numeric" required>
             </div>
             <div class="mb-3" id="profParentGroup">
@@ -674,7 +672,6 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body p-4">
-          <!-- نموذج تسجيل الدخول مع حماية ضد القفل ومحاولات الفشل -->
           <form id="loginForm" onsubmit="handleLogin(event)" autocomplete="off">
             <div class="mb-3">
               <label class="form-label fw-semibold">رقم الهاتف</label>
@@ -688,7 +685,6 @@
             <small id="loginLockMsg" class="text-danger d-block mt-2 text-center" style="display: none;"></small>
           </form>
 
-          <!-- نموذج إنشاء حساب جديد -->
           <form id="registerForm" onsubmit="handleRegister(event)" style="display: none;" autocomplete="off">
             <div class="mb-3">
               <label class="form-label fw-semibold">الاسم الحقيقي</label>
@@ -738,7 +734,6 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    // إعدادات Supabase المتصلة بقاعدة البيانات الخاصة بك
     const SUPABASE_URL = 'https://hoddrxekayofbyqmoyyz.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_Z6u7TuaH-WhcweAyb2hsJg_X5pWJ6HS';
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -759,11 +754,8 @@
     let isAdminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
 
     const ADMIN_PASS = "Sabrey1990@@";
-
-    // تتبع محاولات تسجيل الدخول الفاشلة لمنع التخمين (قفل الحساب بعد 5 محاولات)
     let loginAttempts = JSON.parse(localStorage.getItem('platform_login_attempts')) || {};
 
-    // التحقق من صحة الرقم المصري (11 رقم وتبدأ بـ 010, 011, 012, 015)
     function isValidEgyPhone(phone) {
       return /^01[0125]\d{8}$/.test(phone);
     }
@@ -772,7 +764,6 @@
       return (user && user.username && user.username.trim() !== '') ? user.username : (user ? user.name : 'زائر');
     }
 
-    // جلب البيانات من Supabase مع الاستماع الفوري (Realtime) للرسائل
     async function fetchSupabaseData() {
       const { data: profilesData, error: profilesError } = await _supabase.from('profiles').select('*');
       if (!profilesError && profilesData) {
@@ -790,7 +781,6 @@
       updateUI();
     }
 
-    // تفعيل Supabase Realtime لمزامنة رسائل المنتدى والدردشة فوراً
     function setupRealtimeSubscription() {
       _supabase
         .channel('public:lessons')
@@ -898,7 +888,6 @@
       document.getElementById('parentPhoneGroup').style.display = role === 'student' ? 'block' : 'none';
     }
 
-    // تسجيل حساب جديد مباشرة إلى جدول profiles في Supabase مع التحقق من الهاتف المصري
     async function handleRegister(e) {
       e.preventDefault();
       const name = document.getElementById('regName').value;
@@ -943,14 +932,12 @@
       }
     }
 
-    // تسجيل الدخول مع تأمين قفل الحساب بعد 5 محاولات فاشلة
     async function handleLogin(e) {
       e.preventDefault();
       const phone = document.getElementById('loginPhone').value;
       const pass = document.getElementById('loginPass').value;
       const lockMsg = document.getElementById('loginLockMsg');
 
-      // التحقق من حالة القفل لهذا الرقم
       const now = Date.now();
       if (loginAttempts[phone] && loginAttempts[phone].lockUntil > now) {
         const remainingSecs = Math.ceil((loginAttempts[phone].lockUntil - now) / 1000);
@@ -963,14 +950,13 @@
       const user = users.find(u => u.phone === phone && u.pass === pass);
       
       if (!user) {
-        // تسجيل المحاولة الفاشلة وزيادة العداد
         if (!loginAttempts[phone]) {
           loginAttempts[phone] = { count: 0, lockUntil: 0 };
         }
         loginAttempts[phone].count += 1;
 
         if (loginAttempts[phone].count >= 5) {
-          loginAttempts[phone].lockUntil = Date.now() + 60000; // قفل لمدة دقيقة كاملة
+          loginAttempts[phone].lockUntil = Date.now() + 60000;
           loginAttempts[phone].count = 0;
           localStorage.setItem('platform_login_attempts', JSON.stringify(loginAttempts));
           lockMsg.style.display = 'block';
@@ -983,7 +969,6 @@
         return;
       }
 
-      // إعادة تعيين محاولات الفشل عند النجاح
       if (loginAttempts[phone]) {
         delete loginAttempts[phone];
         localStorage.setItem('platform_login_attempts', JSON.stringify(loginAttempts));
@@ -1109,7 +1094,6 @@
       container.scrollTop = container.scrollHeight;
     }
 
-    // إرسال رسالة المنتدى التفاعلي
     async function sendChatMessage() {
       const input = document.getElementById('chatInput');
       if (!input.value.trim()) return;
@@ -1290,8 +1274,8 @@
       honorStudents.push({
         id: Date.now(),
         name: document.getElementById('honorName').value,
-        title: document.getElementById('honorTitle').value,
-        img: document.getElementById('honorImg').value
+        title: document.getElementById('honorTitle'].value,
+        img: document.getElementById('honorImg'].value
       });
       localStorage.setItem('platform_honor', JSON.stringify(honorStudents));
       renderHonor();
@@ -1311,7 +1295,6 @@
       alert("تم رفع الكتاب بنجاح!");
     }
 
-    // جلب البيانات الفورية وتفعيل الاتصال المباشر
     fetchSupabaseData();
     setupRealtimeSubscription();
   </script>
