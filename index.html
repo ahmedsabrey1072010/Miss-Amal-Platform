@@ -795,7 +795,6 @@
 
     function updateUI() {
       if (currentUser && currentUser.status === 'approved') {
-        // عند تسجيل الدخول: إخفاء زر تسجيل الدخول من الهيد بالكامل ليصبح فارغاً
         document.getElementById('authContainer').style.display = 'none';
         document.getElementById('profileNavItem').style.display = 'flex';
         
@@ -804,7 +803,6 @@
         document.getElementById('profPhone').value = currentUser.phone;
         document.getElementById('profParentPhone').value = currentUser.parent_phone || '';
       } else {
-        // في حالة عدم تسجيل الدخول: إظهار زرار تسجيل الدخول الوحيد بالهيد
         document.getElementById('authContainer').style.display = 'block';
         document.getElementById('profileNavItem').style.display = 'none';
       }
@@ -928,7 +926,7 @@
       if (error) {
         alert("خطأ أثناء الاتصال بقاعدة البيانات: " + error.message);
       } else {
-        alert("تم إرسال طلبك بنجاح. يلزم تفعيل الحساب عبر التواصل مع الأدمن (المعلمة/أحمد صبري) عبر الواتساب.");
+        alert("تم إرسال طلبك بنجاح. يلزم تفعيل الحساب عبر التواصل مع الأدمن عبر الواتساب.");
         authModal.hide();
         fetchSupabaseData();
       }
@@ -1187,7 +1185,7 @@
           <td>${u.parent_phone || '-'}</td>
           <td>
             <button class="btn btn-success btn-sm me-1" onclick="approveUser(${u.id}, '${u.phone}')">قبول وتفعيل</button>
-            <a href="https://wa.me/20${u.phone.replace(/^0/, '')}?text=مرحباً بك، تم مراجعة حسابك على منصة المس أمل شفيق للبرمجة وتم تفعيله." target="_blank" class="btn btn-outline-success btn-sm me-1" title="تواصل واتساب"><i class="fa-brands fa-whatsapp"></i> واتس</a>
+            <a href="https://wa.me/20${u.phone.replace(/^0/, '')}?text=مرحباً بك، تم مراجعة حسابك على المنصة وتم تفعيله بواسطة الأدمن." target="_blank" class="btn btn-outline-success btn-sm me-1" title="تواصل واتساب"><i class="fa-brands fa-whatsapp"></i> واتس</a>
             <button class="btn btn-danger btn-sm" onclick="rejectUser(${u.id})">رفض</button>
           </td>
         </tr>
