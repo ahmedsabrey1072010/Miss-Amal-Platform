@@ -42,7 +42,7 @@
       --bg-card: #1e293b;
       --bg-sidebar: #020617;
       --text-main: #f8fafc;
-      --text-muted: #cbd5e1; /* تم ضبط لون النصوص الفرعية لتكون باينة وواضحة جداً في الوضع الداكن */
+      --text-muted: #cbd5e1;
       --border-color: #334155;
     }
 
@@ -61,7 +61,6 @@
       overflow-x: hidden;
     }
 
-    /* إصلاح عام للنصوص والفقرات لتتأثر بمتغيرات الثيم تلقائياً */
     p {
       color: var(--text-muted);
     }
@@ -781,6 +780,7 @@
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script>
     const SUPABASE_URL = 'https://hoddrxekayofbyqmoyyz.supabase.co';
@@ -788,9 +788,7 @@
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     let users = [];
-    let notifications = JSON.parse(localStorage.getItem('platform_notifs')) || [
-      { id: 1, title: "بداية المراجعات النهائية", content: "سوف يتم رفع ملخصات الذكاء الاصطناعي أسبوعياً بنفس هذا القسم.", date: "2026-11-10", time: "23:00" }
-    ];
+    let notifications = [];
     let honorStudents = JSON.parse(localStorage.getItem('platform_honor')) || [
       { id: 1, name: "أحمد صبري", title: "المركز الأول في البرمجة والتطوير", img: "https://via.placeholder.com/100" }
     ];
@@ -814,11 +812,25 @@
     }
 
     async function fetchSupabaseData() {
+      // جلب بيانات البروفايل
       const { data: profilesData, error: profilesError } = await _supabase.from('profiles').select('*');
       if (!profilesError && profilesData) {
         users = profilesData;
       }
 
+      // جلب الإشعارات من جدول notifications
+      const { data: notifsData, error: notifsError } = await _supabase.from('notifications').select('*').order('created_at', { ascending: false });
+      if (!notifsError && notifsData) {
+        notifications = notifsData.map(n => ({
+          title: n.title,
+          content: n.content,
+          date: new Date(n.created_at).toLocaleDateString('ar-EG')
+        }));
+      } else if (notifsError) {
+        console.error("Error fetching notifications:", notifsError.message);
+      }
+
+      // جلب رسائل الدردشة/الدروس
       const { data: lessonsData, error: lessonsError } = await _supabase.from('lessons').select('*');
       if (!lessonsError && lessonsData) {
         chatMessages = lessonsData.map(l => ({
@@ -831,9 +843,18 @@
     }
 
     function setupRealtimeSubscription() {
+      // اشتراك حي للدردشة
       _supabase
         .channel('public:lessons')
         .on('postgres_changes', { event: '*', schema: 'public', table: 'lessons' }, payload => {
+          fetchSupabaseData();
+        })
+        .subscribe();
+
+      // اشتراك حي للإشعارات لكي تتحدث وتظهر تلقائياً للجميع فور إضافتها
+      _supabase
+        .channel('public:notifications')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'notifications' }, payload => {
           fetchSupabaseData();
         })
         .subscribe();
@@ -1090,6 +1111,10 @@
 
     function renderNotifications() {
       const container = document.getElementById('notificationsContainer');
+      if (notifications.length === 0) {
+        container.innerHTML = `<p class="text-center text-muted">لا توجد إشعارات حالياً.</p>`;
+        return;
+      }
       container.innerHTML = notifications.map(n => `
         <div class="custom-card m-0">
           <div class="d-flex justify-content-between align-items-center mb-2">
@@ -1300,19 +1325,24 @@
       renderActiveStudentsTable(approvedUsers);
     }
 
-    function addNotification(e) {
+    // تعديل دالة إضافة الإشعار لترسل مباشرة إلى جدول notifications في Supabase
+    async function addNotification(e) {
       e.preventDefault();
-      const now = new Date();
-      notifications.unshift({
-        id: Date.now(),
-        title: document.getElementById('notifTitle').value,
-        content: document.getElementById('notifContent').value,
-        date: now.toLocaleDateString('ar-EG'),
-        time: now.toLocaleTimeString('ar-EG')
-      });
-      localStorage.setItem('platform_notifs', JSON.stringify(notifications));
-      alert("تم نشر الإشعار!");
-      renderNotifications();
+      const title = document.getElementById('notifTitle').value;
+      const content = document.getElementById('notifContent').value;
+
+      const { error } = await _supabase.from('notifications').insert([
+        { title, content }
+      ]);
+
+      if (error) {
+        alert("فشل نشر الإشعار: " + error.message);
+      } else {
+        alert("تم نشر الإشعار بنجاح وسيظهر للجميع فوراً!");
+        document.getElementById('notifTitle').value = '';
+        document.getElementById('notifContent').value = '';
+        fetchSupabaseData();
+      }
     }
 
     function addHonorStudent(e) {
