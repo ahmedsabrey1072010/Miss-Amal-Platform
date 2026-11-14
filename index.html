@@ -31,9 +31,9 @@
       --danger: #ef4444;
 
       --sidebar-width: 280px;
-      --radius-lg: 16px;
+      --radius-lg: 18px;
       --radius-md: 12px;
-      --shadow-sm: 0 4px 12px rgba(0,0,0,0.03);
+      --shadow-sm: 0 4px 15px rgba(0,0,0,0.03);
     }
 
     [data-theme="dark"] {
@@ -45,7 +45,7 @@
       --border-color: #1e293b;
     }
 
-    * { box-sizing: border-box; transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s ease, color 0.3s ease, transform 0.2s ease; }
+    * { box-sizing: border-box; transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease; }
 
     body {
       font-family: var(--font-main);
@@ -59,7 +59,6 @@
 
     p { color: var(--text-muted); }
 
-    /* Sidebar الرئيسية ذات الأيقونات الملونة والمرتبة */
     #sidebar {
       width: var(--sidebar-width);
       background-color: var(--bg-sidebar);
@@ -106,14 +105,13 @@
       font-weight: 500; display: flex; align-items: center; gap: 14px; margin-bottom: 6px; font-size: 0.95rem;
     }
     .sidebar-nav .nav-link i { font-size: 1.2rem; width: 24px; text-align: center; }
-    .sidebar-nav .nav-link:hover { color: #ffffff; background: rgba(255, 255, 255, 0.06); transform: translateX(-4px); }
+    .sidebar-nav .nav-link:hover { color: #ffffff; background: rgba(255, 255, 255, 0.06); }
     .sidebar-nav .nav-link.active {
       color: #ffffff;
       background: linear-gradient(135deg, var(--primary), var(--primary-hover));
       box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
     }
 
-    /* لوحة الأدمن الداخلية المنظمة */
     .admin-layout { display: flex; gap: 20px; align-items: flex-start; }
     .admin-sidebar {
       width: 250px; background: var(--bg-card); border: 1px solid var(--border-color);
@@ -123,7 +121,7 @@
       display: flex; align-items: center; gap: 12px; padding: 11px 15px; border-radius: var(--radius-md);
       color: var(--text-main); text-decoration: none; font-weight: 500; font-size: 0.9rem; margin-bottom: 6px;
     }
-    .admin-sidebar .admin-nav-link:hover { background: var(--bg-body); color: var(--primary); transform: translateX(-3px); }
+    .admin-sidebar .admin-nav-link:hover { background: var(--bg-body); color: var(--primary); }
     .admin-sidebar .admin-nav-link.active { background: var(--primary); color: #fff; box-shadow: 0 4px 12px rgba(99,102,241,0.3); }
     .admin-content-area { flex: 1; min-width: 0; }
 
@@ -162,24 +160,27 @@
       background-color: var(--bg-card); border-color: var(--primary);
       box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15); color: var(--text-main);
     }
+    .form-control:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
 
     .btn-custom-primary {
       background: var(--primary); color: white; border: none;
       border-radius: var(--radius-md); padding: 10px 20px; font-weight: 600; font-size: 0.9rem;
       box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
     }
-    .btn-custom-primary:hover { background: var(--primary-hover); color: white; transform: translateY(-1px); }
+    .btn-custom-primary:hover:not(:disabled) { background: var(--primary-hover); color: white; }
+    .btn-custom-primary:disabled { opacity: 0.6; cursor: not-allowed; }
 
-    /* تنسيق زر الثيم الأنيق والمتحرك */
     .theme-toggle-btn {
       width: 44px; height: 44px; border-radius: 50%;
       background: var(--bg-body); border: 1px solid var(--border-color);
       color: var(--text-main); display: flex; align-items: center; justify-content: center;
-      cursor: pointer; box-shadow: var(--shadow-sm); position: relative; overflow: hidden;
+      cursor: pointer; box-shadow: var(--shadow-sm);
     }
-    .theme-toggle-btn:hover { transform: rotate(15deg) scale(1.05); border-color: var(--primary); color: var(--primary); }
+    .theme-toggle-btn:hover { transform: scale(1.08); border-color: var(--primary); color: var(--primary); }
 
-    /* المنتدى وتنسيق الرسائل (رسائلك يمين، الآخرين شمال) */
     .chat-box {
       height: 500px; overflow-y: auto; background: var(--bg-body);
       border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 20px; display: flex; flex-direction: column; gap: 14px;
@@ -191,6 +192,8 @@
       margin-right: auto; margin-left: 0; background: var(--primary); color: white;
       border-bottom-left-radius: 18px; border-bottom-right-radius: 4px; align-items: flex-start;
     }
+    .chat-message.sent .text-info { color: #e0e7ff !important; }
+
     .chat-message.received {
       margin-left: auto; margin-right: 0; background: var(--bg-card); color: var(--text-main);
       border: 1px solid var(--border-color); border-bottom-left-radius: 4px; border-bottom-right-radius: 18px; align-items: flex-start;
@@ -245,7 +248,6 @@
     
     <div class="sidebar-nav">
       <a class="nav-link active" href="#" onclick="showSection('homeSection', this)"><i class="fa-solid fa-house text-primary"></i>الرئيسية</a>
-      <a class="nav-link" href="#" onclick="showSection('honorSection', this)"><i class="fa-solid fa-trophy text-warning"></i>المتميزين</a>
       <a class="nav-link" href="#" onclick="showSection('booksSection', this)"><i class="fa-solid fa-book-open text-danger"></i>الكتب والملخصات</a>
       <a class="nav-link" href="#" onclick="showSection('videosSection', this)"><i class="fa-solid fa-video text-info"></i>الفيديوهات التعليمية</a>
       <a class="nav-link" href="#" onclick="showSection('forumSection', this)"><i class="fa-solid fa-comments text-success"></i>منتدى الطلاب</a>
@@ -281,19 +283,26 @@
 
     <main class="main-container">
 
-      <!-- Home Section (مع إدماج خانة الإشعارات والأخبار داخلها) -->
+      <!-- Home Section -->
       <section id="homeSection">
         <div class="hero-card mb-4 text-center">
           <h2 class="fw-bold mb-2">طريقك لاحتراف البرمجة والذكاء الاصطناعي</h2>
-          <p class="opacity-90 mb-4 fs-6">إشراف وتدريس: المس أمل شفيق السيد</p>
+          <p class="opacity-90 mb-3 fs-6">إشراف وتدريس: المس أمل شفيق السيد</p>
+          <p class="fs-6 text-white mb-4" style="max-width: 650px; margin: 0 auto;">انضم إلينا اليوم، وأنشئ حسابك لتستفيد من محركات الأكواد التفاعلية، كتب المنهج والمذكرات، منتدى النقاش المباشر، ومتابعة مستمرة لتفوقك الدراسي.</p>
           <button class="btn btn-light text-primary fw-bold px-4 py-2 rounded-pill shadow" onclick="showAuthModal('register')">ابدأ رحلتك الآن</button>
         </div>
 
-        <!-- خانة الإشعارات والأخبار كقسم أساسي في الصفحة الرئيسية -->
         <div class="custom-card mb-4">
           <h5 class="fw-bold mb-3 text-primary"><i class="fa-solid fa-bullhorn me-2"></i>أحدث الإشعارات والأخبار التعليمية</h5>
           <div id="homeNotificationsContainer" class="d-flex flex-column gap-3">
             <p class="text-muted m-0">جاري تحميل الإشعارات...</p>
+          </div>
+        </div>
+
+        <div class="custom-card mb-4">
+          <h4 class="fw-bold mb-4 text-warning"><i class="fa-solid fa-trophy me-2"></i>لوحة الطلاب المتميزين</h4>
+          <div class="row g-4" id="homeHonorContainer">
+            <p class="text-muted text-center">جاري تحميل لوحة الشرف...</p>
           </div>
         </div>
 
@@ -322,13 +331,7 @@
         </div>
       </section>
 
-      <!-- Honor Board Section -->
-      <section id="honorSection" style="display: none;">
-        <h4 class="fw-bold mb-4"><i class="fa-solid fa-trophy text-warning me-2"></i>لوحة الطلاب المتميزين</h4>
-        <div class="row g-4" id="honorContainer"></div>
-      </section>
-
-      <!-- Books Section (مع تجميل أزرار الفتح والتحميل) -->
+      <!-- Books Section -->
       <section id="booksSection" style="display: none;">
         <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
           <h4 class="fw-bold m-0"><i class="fa-solid fa-book-open text-danger me-2"></i>مكتبة المذكرات والكتب</h4>
@@ -337,7 +340,7 @@
         <div class="row g-4" id="booksContainer"></div>
       </section>
 
-      <!-- Educational Videos Section (بدل التحدي اليومي) -->
+      <!-- Educational Videos Section -->
       <section id="videosSection" style="display: none;">
         <h4 class="fw-bold mb-4"><i class="fa-solid fa-video text-info me-2"></i>الفيديوهات التعليمية والشروحات</h4>
         <div class="row g-4" id="videosContainer">
@@ -345,7 +348,7 @@
         </div>
       </section>
 
-      <!-- Forum / Chat Section (رسائلك يمين، الآخرين شمال وبشكل منسق) -->
+      <!-- Forum / Chat Section -->
       <section id="forumSection" style="display: none;">
         <div class="custom-card">
           <h5 class="fw-bold mb-3"><i class="fa-solid fa-comments text-success me-2"></i>منتدى المحادثة المباشر</h5>
@@ -366,11 +369,11 @@
         </div>
       </section>
 
-      <!-- محرر Python المحسن والقوي جداً -->
+      <!-- محرر Python -->
       <section id="pythonEditorSection" style="display: none;">
         <div class="custom-card">
           <h5 class="fw-bold mb-3"><i class="fa-brands fa-python text-warning me-2"></i>محرر ومنفذ كود Python المتقدم</h5>
-          <p class="small text-muted mb-2">يدعم تعريف المتغيرات، الدوال، العمليات الحسابية، ودالة print بشكل سليم وقوي.</p>
+          <p class="small text-muted mb-2">يدعم المتغيرات، الدوال، العمليات الحسابية، وطباعة النصوص بدقة وسهولة.</p>
           <textarea id="pythonCodeInput" class="form-control font-monospace mb-3" rows="11" dir="ltr" style="background:#0f172a; color:#facc15; border:none;" placeholder="name = 'أحمد'&#10;print('مرحباً ' + name)"></textarea>
           <button class="btn btn-warning text-dark fw-bold px-4 mb-3" onclick="runPythonCode()"><i class="fa-solid fa-play me-1"></i> تشغيل شفرة Python</button>
           <h6 class="fw-bold">مخرجات التنفيذ (Python Output):</h6>
@@ -378,11 +381,11 @@
         </div>
       </section>
 
-      <!-- محرر JavaScript الأساسي والأقوى -->
+      <!-- محرر JavaScript -->
       <section id="jsEditorSection" style="display: none;">
         <div class="custom-card">
-          <h5 class="fw-bold mb-3"><i class="fa-brands fa-js text-warning me-2"></i>محرر ومنفذ JavaScript الأساسي الشامل</h5>
-          <p class="small text-muted mb-2">بيئة تشغيل متكاملة لاختبار أساسيات الجافاسكريبت، الدوال، المصفوفات، وعرض نتائج الـ console بدقة.</p>
+          <h5 class="fw-bold mb-3"><i class="fa-brands fa-js text-warning me-2"></i>محرر ومنفذ JavaScript الشامل</h5>
+          <p class="small text-muted mb-2">بيئة تشغيل متكاملة لاختبار أساسيات الجافاسكريبت، الدوال، المصفوفات، وعرض نتائج الـ console.</p>
           <textarea id="jsCodeInput" class="form-control font-monospace mb-3" rows="11" dir="ltr" style="background:#0f172a; color:#38bdf8; border:none;" placeholder="function sum(a, b) { return a + b; }&#10;console.log('الناتج =', sum(10, 20));"></textarea>
           <button class="btn btn-primary fw-bold px-4 mb-3" onclick="runJsCode()"><i class="fa-solid fa-play me-1"></i> تنفيذ JavaScript</button>
           <h6 class="fw-bold">مخرجات الكونسول (Console Output):</h6>
@@ -394,7 +397,7 @@
       <section id="htmlEditorSection" style="display: none;">
         <div class="custom-card">
           <h5 class="fw-bold mb-3"><i class="fa-solid fa-laptop-code text-info me-2"></i>محرر ومعاينة صفحات الـ HTML & CSS</h5>
-          <p class="small text-muted mb-2">صمم صفحات الويب وشاهد النتيجة تظهر حية ومباشرة (محفوظة على جهازك تلقائياً).</p>
+          <p class="small text-muted mb-2">صمم صفحات الويب وشاهد النتيجة حية ومباشرة (محفوظة على جهازك تلقائياً).</p>
           <div class="row g-3">
             <div class="col-md-6">
               <label class="form-label fw-semibold">شفرة HTML / CSS:</label>
@@ -410,41 +413,48 @@
 
       <!-- Profile Section -->
       <section id="profileSection" style="display: none;">
-        <div class="custom-card mx-auto" style="max-width: 600px;">
-          <h5 class="fw-bold mb-4"><i class="fa-solid fa-user-gear text-primary me-2"></i>إعدادات الملف الشخصي</h5>
+        <div class="custom-card mx-auto" style="max-width: 650px;">
+          <div class="text-center mb-4">
+            <div class="brand-logo mx-auto mb-3 shadow" style="width: 70px; height: 70px; font-size: 2rem;"><i class="fa-solid fa-user-astronaut"></i></div>
+            <h4 class="fw-bold">إعدادات الملف الشخصي</h4>
+            <p class="text-muted small">قم بتحديث بياناتك الشخصية وأرقام التواصل الخاصة بك بكل سهولة</p>
+          </div>
+
           <form onsubmit="updateProfile(event)" autocomplete="off">
-            <div class="mb-3">
-              <label class="form-label fw-semibold">الاسم الحقيقي</label>
-              <input type="text" id="profName" class="form-control" required>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">الاسم الحقيقي</label>
+                <input type="text" id="profName" class="form-control" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">اسم المستخدم المستعار</label>
+                <input type="text" id="profUsername" class="form-control" placeholder="مثال: Coder_2026">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">رقم الهاتف المصرح به</label>
+                <input type="tel" id="profPhone" class="form-control" inputmode="numeric" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label fw-semibold">رقم هاتف ولي الأمر</label>
+                <input type="tel" id="profParentPhone" class="form-control" inputmode="numeric">
+              </div>
+              <div class="col-12">
+                <label class="form-label fw-semibold">كلمة المرور الجديدة (اختياري)</label>
+                <input type="password" id="profPass" class="form-control" placeholder="أدخل كلمة مرور جديدة للتعديل" autocomplete="new-password">
+              </div>
             </div>
-            <div class="mb-3">
-              <label class="form-label fw-semibold">اسم المستخدم المستعار (اختياري)</label>
-              <input type="text" id="profUsername" class="form-control" placeholder="مثال: Coder_2026">
-            </div>
-            <div class="mb-3">
-              <label class="form-label fw-semibold">رقم الهاتف المصرح به</label>
-              <input type="tel" id="profPhone" class="form-control" inputmode="numeric" required>
-            </div>
-            <div class="mb-3">
-              <label class="form-label fw-semibold">رقم هاتف ولي الأمر</label>
-              <input type="tel" id="profParentPhone" class="form-control" inputmode="numeric">
-            </div>
-            <div class="mb-3">
-              <label class="form-label fw-semibold">كلمة المرور الجديدة</label>
-              <input type="password" id="profPass" class="form-control" placeholder="أدخل كلمة مرور جديدة للتعديل" autocomplete="new-password">
-            </div>
-            <button type="submit" class="btn btn-custom-primary w-100 mb-4">حفظ البيانات الجديدة</button>
+            <button type="submit" class="btn btn-custom-primary w-100 py-2 mt-4 fw-bold">حفظ التعديلات الجديدة</button>
           </form>
 
-          <div class="border-top pt-4 text-center">
-            <button type="button" class="btn btn-danger w-100 py-2 fw-bold" onclick="logout()">
+          <div class="border-top mt-4 pt-4 text-center">
+            <button type="button" class="btn btn-outline-danger w-100 py-2 fw-semibold" onclick="logout()">
               <i class="fa-solid fa-right-from-bracket me-2"></i> تسجيل الخروج من الحساب
             </button>
           </div>
         </div>
       </section>
 
-      <!-- لوحة الأدمن (مع قائمة جانبية داخلية مرتبة ومنظمة) -->
+      <!-- لوحة الأدمن -->
       <section id="adminSection" style="display: none;">
         <div id="adminAuthLock" class="custom-card text-center mx-auto" style="max-width: 420px;">
           <div class="brand-logo mx-auto mb-3 bg-warning d-flex align-items-center justify-content-center text-dark fs-4" style="width: 60px; height: 60px; border-radius: 50%;"><i class="fa-solid fa-lock"></i></div>
@@ -484,7 +494,6 @@
             </div>
           </div>
 
-          <!-- القائمة الجانبية الداخلية للأدمن لعدم الازدحام -->
           <div class="admin-layout">
             <div class="admin-sidebar">
               <h6 class="fw-bold px-2 mb-3 text-muted" style="font-size:0.8rem;">خيارات الإدارة</h6>
@@ -590,9 +599,9 @@
                 </div>
               </div>
 
-              <!-- Tab 7: Videos (جدول الفيديوهات التعليمية) -->
+              <!-- Tab 7: Videos -->
               <div class="admin-tab-pane" id="manageVideosTab" style="display: none;">
-                <h6 class="fw-bold mb-3">إضافة فيديو تعليمي جديد (YouTube / رابط مباشر)</h6>
+                <h6 class="fw-bold mb-3">إضافة فيديو تعليمي جديد</h6>
                 <form onsubmit="addVideo(event)" class="mb-4 pb-4 border-bottom">
                   <input type="text" id="videoTitle" class="form-control mb-2" placeholder="عنوان الشرح أو الدرس" required>
                   <input type="url" id="videoUrl" class="form-control mb-3" placeholder="رابط يوتيوب أو فيديو (https://...)" required>
@@ -646,8 +655,8 @@
               <label class="form-label fw-semibold">كلمة المرور</label>
               <input type="password" id="loginPass" class="form-control" required autocomplete="current-password">
             </div>
-            <button type="submit" class="btn btn-custom-primary w-100 py-2 mb-3">تسجيل الدخول</button>
-            <small id="loginLockMsg" class="text-danger d-block mb-2 text-center" style="display: none;"></small>
+            <button type="submit" class="btn btn-custom-primary w-100 py-2 mb-2">تسجيل الدخول</button>
+            <div id="loginLockMsg" class="alert alert-danger py-2 px-3 small text-center fw-semibold mb-2" style="display: none;"></div>
             
             <div class="text-center mt-3 pt-2 border-top">
               <small class="text-muted">إذا لم يكن لديك حساب؟</small>
@@ -735,6 +744,7 @@
 
     const ADMIN_PASS = "Sabrey1990@@";
     let loginAttempts = JSON.parse(localStorage.getItem('platform_login_attempts')) || {};
+    let loginCountdownInterval = null;
 
     function isValidEgyPhone(phone) {
       return /^01[0125]\d{8}$/.test(phone);
@@ -764,7 +774,6 @@
       const { data: booksData } = await _supabase.from('books').select('*').order('created_at', { ascending: false });
       if (booksData) books = booksData;
 
-      // جلب الفيديوهات التعليمية من جدول educational_videos في سابا بيز
       const { data: videosData } = await _supabase.from('educational_videos').select('*').order('created_at', { ascending: false });
       if (videosData) videos = videosData;
 
@@ -807,7 +816,7 @@
         document.getElementById('profileNavItem').style.display = 'none';
       }
       renderHomeNotifications();
-      renderHonor();
+      renderHomeHonor();
       renderBooks(books);
       renderVideos(videos);
       renderChat();
@@ -895,14 +904,62 @@
       document.getElementById('parentPhoneGroup').style.display = role === 'student' ? 'block' : 'none';
     }
 
+    function startLoginLockCountdown(phone) {
+      const lockMsg = document.getElementById('loginLockMsg');
+      const submitBtn = document.querySelector('#loginForm button[type="submit"]');
+      const passInput = document.getElementById('loginPass');
+
+      if (loginCountdownInterval) clearInterval(loginCountdownInterval);
+
+      const updateTimer = () => {
+        const now = Date.now();
+        const lockData = loginAttempts[phone];
+        if (lockData && lockData.lockUntil > now) {
+          const remainingSecs = Math.ceil((lockData.lockUntil - now) / 1000);
+          lockMsg.style.display = 'block';
+          lockMsg.innerText = `تم قفل تسجيل الدخول لهذا الرقم مؤقتاً. يرجى الانتظار ${remainingSecs} ثانية...`;
+          submitBtn.disabled = true;
+          passInput.disabled = true;
+        } else {
+          clearInterval(loginCountdownInterval);
+          lockMsg.style.display = 'none';
+          submitBtn.disabled = false;
+          passInput.disabled = false;
+          if (loginAttempts[phone]) {
+            loginAttempts[phone].lockUntil = 0;
+            localStorage.setItem('platform_login_attempts', JSON.stringify(loginAttempts));
+          }
+        }
+      };
+
+      updateTimer();
+      loginCountdownInterval = setInterval(updateTimer, 1000);
+    }
+
+    document.getElementById('loginPhone').addEventListener('input', function() {
+      const phone = this.value.trim();
+      const submitBtn = document.querySelector('#loginForm button[type="submit"]');
+      const passInput = document.getElementById('loginPass');
+      const lockMsg = document.getElementById('loginLockMsg');
+
+      if (loginAttempts[phone] && loginAttempts[phone].lockUntil > Date.now()) {
+        startLoginLockCountdown(phone);
+      } else {
+        if (loginCountdownInterval) clearInterval(loginCountdownInterval);
+        lockMsg.style.display = 'none';
+        submitBtn.disabled = false;
+        passInput.disabled = false;
+      }
+    });
+
     async function handleRegister(e) {
       e.preventDefault();
-      const name = document.getElementById('regName').value;
-      const username = document.getElementById('regUsername').value;
+      const name = document.getElementById('regName').value.trim();
+      const username = document.getElementById('regUsername').value.trim();
       const role = document.getElementById('regRole').value;
       const grade = role === 'student' ? document.getElementById('regGrade').value : 'معلم';
-      const phone = document.getElementById('regPhone').value;
-      const parentPhone = document.getElementById('regParentPhone').value;
+      const phone = document.getElementById('regPhone').value.trim();
+      const parentPhone = document.getElementById('regParentPhone').value.trim();
       const pass = document.getElementById('regPass').value;
       const passConfirm = document.getElementById('regPassConfirm').value;
 
@@ -915,13 +972,36 @@
         return;
       }
 
+      // منع إرسال أكثر من طلب أو التسجيل بنفس الرقم
+      const { data: existingUsers, error: checkError } = await _supabase
+        .from('profiles')
+        .select('id, status')
+        .eq('phone', phone);
+
+      if (checkError) {
+        alert("حدث خطأ أثناء التحقق من الرقم: " + checkError.message);
+        return;
+      }
+
+      if (existingUsers && existingUsers.length > 0) {
+        const existingAccount = existingUsers[0];
+        if (existingAccount.status === 'approved') {
+          alert("هذا الرقم مسجل بالفعل على المنصة، يمكنك تسجيل الدخول مباشرة.");
+        } else {
+          alert("هذا الرقم تحت المراجعة الآن من قِبل الأدمن، لا يمكن إرسال أكثر من طلب.");
+        }
+        return;
+      }
+
       const { error } = await _supabase.from('profiles').insert([
         { name, username, role, grade, phone, parent_phone: parentPhone, pass, status: 'pending' }
       ]);
 
-      if (error) alert("خطأ أثناء التسجيل: " + error.message);
-      else {
+      if (error) {
+        alert("خطأ أثناء التسجيل: " + error.message);
+      } else {
         alert("تم إرسال طلبك بنجاح. يلزم تفعيل الحساب من خلال التواصل عبر الواتساب.");
+        document.getElementById('registerForm').reset();
         authModal.hide();
         fetchSupabaseData();
       }
@@ -929,15 +1009,12 @@
 
     async function handleLogin(e) {
       e.preventDefault();
-      const phone = document.getElementById('loginPhone').value;
+      const phone = document.getElementById('loginPhone').value.trim();
       const pass = document.getElementById('loginPass').value;
-      const lockMsg = document.getElementById('loginLockMsg');
 
       const now = Date.now();
       if (loginAttempts[phone] && loginAttempts[phone].lockUntil > now) {
-        const remainingSecs = Math.ceil((loginAttempts[phone].lockUntil - now) / 1000);
-        lockMsg.style.display = 'block';
-        lockMsg.innerText = `تم قفل الحساب مؤقتاً. حاول بعد ${remainingSecs} ثانية.`;
+        startLoginLockCountdown(phone);
         return;
       }
 
@@ -947,22 +1024,29 @@
       if (!user) {
         if (!loginAttempts[phone]) loginAttempts[phone] = { count: 0, lockUntil: 0 };
         loginAttempts[phone].count += 1;
+
         if (loginAttempts[phone].count >= 5) {
-          loginAttempts[phone].lockUntil = Date.now() + 60000;
+          loginAttempts[phone].lockUntil = Date.now() + 30000; // 30 ثانية
           loginAttempts[phone].count = 0;
           localStorage.setItem('platform_login_attempts', JSON.stringify(loginAttempts));
-          lockMsg.style.display = 'block';
-          lockMsg.innerText = "تم تجاوز 5 محاولات خاطئة. تم قفل الحساب مؤقتاً لمدة دقيقة.";
+          startLoginLockCountdown(phone);
           return;
         }
+
+        const remainingTries = 5 - loginAttempts[phone].count;
         localStorage.setItem('platform_login_attempts', JSON.stringify(loginAttempts));
-        alert("خطأ في البيانات أو الرقم غير مسجل!");
+        alert(`خطأ في البيانات أو الرقم غير مسجل! متبقي لك ${remainingTries} محاولات قبل قفل الإدخال لمدة 30 ثانية.`);
         return;
       }
 
       if (user.status === 'pending') {
-        alert("حسابك ما زال بانتظار موافقة الأدمن وتفعيله.");
+        alert("حسابك ما زال تحت المراجعة وبانتظار موافقة الأدمن وتفعيله.");
         return;
+      }
+
+      if (loginAttempts[phone]) {
+        delete loginAttempts[phone];
+        localStorage.setItem('platform_login_attempts', JSON.stringify(loginAttempts));
       }
 
       currentUser = user;
@@ -1023,10 +1107,10 @@
       `).join('');
     }
 
-    function renderHonor() {
-      const container = document.getElementById('honorContainer');
+    function renderHomeHonor() {
+      const container = document.getElementById('homeHonorContainer');
       if (honorStudents.length === 0) {
-        container.innerHTML = `<p class="text-center text-muted">لا توجد سجلات في لوحة الشرف حالياً.</p>`;
+        container.innerHTML = `<p class="text-center text-muted col-12">لا توجد سجلات في لوحة الشرف حالياً.</p>`;
         return;
       }
       container.innerHTML = honorStudents.map(h => `
@@ -1118,7 +1202,6 @@
       }
     }
 
-    // --- مححر JavaScript الشامل والقوي ---
     function runJsCode() {
       const code = document.getElementById('jsCodeInput').value;
       const output = document.getElementById('jsOutput');
@@ -1137,7 +1220,6 @@
       }
     }
 
-    // --- محرر Python المحسن والقوي جداً ---
     function runPythonCode() {
       const code = document.getElementById('pythonCodeInput').value.trim();
       const output = document.getElementById('pythonOutput');
@@ -1183,7 +1265,6 @@
       }
     }
 
-    // --- محرر HTML & CSS ---
     function saveStudentSiteCode() {
       const code = document.getElementById('studentSiteCode').value;
       const studentId = currentUser ? currentUser.id : 'guest';
