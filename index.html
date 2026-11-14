@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>منصة المس أمل شفيق السيد - البرمجة والذكاء الاصطناعي</title>
   
-  <!-- أيقونة الموقع في تبويب المتصفح (Favicon) -->
+  <!-- أيقونة الموقع في تبويب المتصفح -->
   <link rel="icon" type="image/jpeg" href="watermarked_img_7360017269884422966.jpg">
   
   <!-- Fonts & Icons -->
@@ -37,7 +37,6 @@
       --radius-lg: 16px;
       --radius-md: 12px;
       --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
-      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.06);
     }
 
     [data-theme="dark"] {
@@ -49,10 +48,7 @@
       --border-color: #334155;
     }
 
-    * {
-      box-sizing: border-box;
-      transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
-    }
+    * { box-sizing: border-box; transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease; }
 
     body {
       font-family: var(--font-main);
@@ -66,11 +62,11 @@
 
     p { color: var(--text-muted); }
 
-    /* Sidebar Styling & Responsive Layout */
+    /* Sidebar مع ميزة التمرير (Scroll) */
     #sidebar {
       width: var(--sidebar-width);
       background-color: var(--bg-sidebar);
-      min-height: 100vh;
+      height: 100vh;
       position: fixed;
       top: 0;
       right: 0;
@@ -105,17 +101,31 @@
     }
 
     .brand-logo {
-      width: 42px;
-      height: 42px;
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
       border-radius: var(--radius-md);
-      object-fit: cover;
-      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 1.2rem;
     }
 
+    /* تفعيل السكرول للسايدبار ليتحمل خيارات كثيرة */
     .sidebar-nav {
       padding: 16px 12px;
       flex: 1;
       overflow-y: auto;
+      max-height: calc(100vh - 80px);
+    }
+
+    .sidebar-nav::-webkit-scrollbar {
+      width: 5px;
+    }
+    .sidebar-nav::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
     }
 
     .sidebar-nav .nav-link {
@@ -167,7 +177,6 @@
 
     .main-container { padding: 32px; flex: 1; }
 
-    /* Cards */
     .custom-card {
       background: var(--bg-card);
       border: 1px solid var(--border-color);
@@ -189,7 +198,6 @@
     }
     .hero-card p { color: rgba(255, 255, 255, 0.9) !important; }
 
-    /* Forms & Buttons */
     .form-control, .form-select {
       background-color: var(--bg-body);
       border: 1px solid var(--border-color);
@@ -217,7 +225,7 @@
     }
     .btn-custom-primary:hover { background: var(--primary-hover); color: white; }
 
-    /* Chat Styling */
+    /* تنظيم محادثات المنتدى (رسائلك يمين، الآخرين شمال) */
     .chat-box {
       height: 480px;
       overflow-y: auto;
@@ -236,9 +244,30 @@
       border-radius: 16px;
       font-size: 0.95rem;
       word-break: break-word;
+      display: flex;
+      flex-direction: column;
     }
-    .chat-message.sent { margin-left: auto; background: var(--primary); color: white; border-bottom-left-radius: 4px; }
-    .chat-message.received { margin-right: auto; background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border-color); border-bottom-right-radius: 4px; }
+    /* رسالة المستخدم الحالي على اليمين بلون مختلف */
+    .chat-message.sent {
+      margin-right: auto;
+      margin-left: 0;
+      background: var(--primary);
+      color: white;
+      border-bottom-left-radius: 16px;
+      border-bottom-right-radius: 4px;
+      align-items: flex-start;
+    }
+    /* رسائل الآخرين على الشمال */
+    .chat-message.received {
+      margin-left: auto;
+      margin-right: 0;
+      background: var(--bg-card);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+      border-bottom-left-radius: 4px;
+      border-bottom-right-radius: 16px;
+      align-items: flex-start;
+    }
 
     .honor-card {
       background: var(--bg-card);
@@ -297,11 +326,11 @@
 
   <div class="sidebar-backdrop" id="sidebarBackdrop" onclick="toggleSidebar()"></div>
 
-  <!-- Sidebar -->
+  <!-- Sidebar القابلة للتمرير -->
   <aside id="sidebar">
     <div class="sidebar-header">
       <div class="d-flex align-items-center gap-2">
-        <img src="watermarked_img_7360017269884422966.jpg" alt="Logo" class="brand-logo">
+        <div class="brand-logo"><i class="fa-solid fa-code"></i></div>
         <div>
           <h6 class="fw-bold m-0 text-white" style="font-size: 0.9rem;">المس أمل شفيق</h6>
           <small class="text-muted" style="font-size: 0.7rem;">البرمجة والذكاء الاصطناعي</small>
@@ -402,10 +431,10 @@
         <div class="row g-4" id="booksContainer"></div>
       </section>
 
-      <!-- Forum / Chat Section -->
+      <!-- Forum / Chat Section (رسائلك يمين، رسائل الآخرين شمال) -->
       <section id="forumSection" style="display: none;">
         <div class="custom-card">
-          <h5 class="fw-bold mb-3"><i class="fa-solid fa-comments text-primary me-2"></i>منتدى المحادثة المباشر (Supabase Realtime)</h5>
+          <h5 class="fw-bold mb-3"><i class="fa-solid fa-comments text-primary me-2"></i>منتدى المحادثة المباشر</h5>
           <div class="chat-box mb-3" id="chatContainer"></div>
           
           <div class="input-group gap-2 align-items-center">
@@ -423,7 +452,7 @@
         </div>
       </section>
 
-      <!-- Editor Section (JS/Python) -->
+      <!-- Editor Section -->
       <section id="editorSection" style="display: none;">
         <div class="custom-card">
           <div class="d-flex justify-content-between align-items-center mb-3">
@@ -440,7 +469,7 @@
         </div>
       </section>
 
-      <!-- Site Editor Section (HTML/CSS) -->
+      <!-- Site Editor Section -->
       <section id="siteEditorSection" style="display: none;">
         <div class="custom-card">
           <h5 class="fw-bold mb-3"><i class="fa-solid fa-laptop-code text-primary me-2"></i>محرر المواقع الشخصي (محفوظ محلياً)</h5>
@@ -648,7 +677,6 @@
               </div>
             </div>
 
-            <!-- إجابات التحدي اليومي للطلاب -->
             <div class="tab-pane fade" id="manageChallengeTab">
               <h6 class="fw-bold mb-3">تحديد السؤال اليومي للمنصة</h6>
               <div class="input-group mb-4 pb-4 border-bottom">
@@ -1125,15 +1153,19 @@
       renderBooks(books.filter(b => b.title.toLowerCase().includes(query) || b.grade.toLowerCase().includes(query)));
     }
 
+    // منطق عرض محادثات المنتدى (رسائلك يمين، الآخرين شمال)
     function renderChat() {
       const container = document.getElementById('chatContainer');
-      container.innerHTML = chatMessages.map(m => `
-        <div class="chat-message ${currentUser && m.sender.includes(currentUser.name) ? 'sent' : 'received'}">
-          <small class="fw-semibold d-block mb-1 text-info" style="font-size: 0.75rem;">${m.sender}</small>
-          ${m.text ? `<p class="m-0">${m.text}</p>` : ''}
-          ${m.img ? `<img src="${m.img}" class="img-fluid rounded-3 mt-2" style="max-height: 180px;">` : ''}
-        </div>
-      `).join('');
+      container.innerHTML = chatMessages.map(m => {
+        const isMyMessage = currentUser && m.sender.includes(currentUser.name);
+        return `
+          <div class="chat-message ${isMyMessage ? 'sent' : 'received'}">
+            <small class="fw-semibold d-block mb-1 text-info" style="font-size: 0.75rem;">${m.sender}</small>
+            ${m.text ? `<p class="m-0">${m.text}</p>` : ''}
+            ${m.img ? `<img src="${m.img}" class="img-fluid rounded-3 mt-2" style="max-height: 180px;">` : ''}
+          </div>
+        `;
+      }).join('');
       container.scrollTop = container.scrollHeight;
     }
 
