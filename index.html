@@ -47,72 +47,219 @@
 
     * { box-sizing: border-box; transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease; }
 
-    body { font-family: var(--font-main); background-color: var(--bg-body); color: var(--text-main); margin: 0; min-height: 100vh; display: flex; overflow-x: hidden; }
+    body {
+      font-family: var(--font-main);
+      background-color: var(--bg-body);
+      color: var(--text-main);
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      overflow-x: hidden;
+    }
+
     p { color: var(--text-muted); }
 
-    /* Sidebar */
+    /* Sidebar Styling & Responsive Layout */
     #sidebar {
-      width: var(--sidebar-width); background-color: var(--bg-sidebar); min-height: 100vh;
-      position: fixed; top: 0; right: 0; z-index: 1050; display: flex; flex-direction: column;
-      border-left: 1px solid rgba(255, 255, 255, 0.05); transform: translateX(0); transition: transform 0.35s ease;
+      width: var(--sidebar-width);
+      background-color: var(--bg-sidebar);
+      min-height: 100vh;
+      position: fixed;
+      top: 0;
+      right: 0;
+      z-index: 1050;
+      display: flex;
+      flex-direction: column;
+      border-left: 1px solid rgba(255, 255, 255, 0.05);
+      transform: translateX(0);
+      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     }
+
     #sidebar.collapsed { transform: translateX(100%); }
 
-    .sidebar-backdrop { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 1040; display: none; }
+    .sidebar-backdrop {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1040;
+      display: none;
+    }
     .sidebar-backdrop.show { display: block; }
 
-    .sidebar-header { padding: 24px 20px; border-bottom: 1px solid rgba(255,255,255,0.07); display: flex; align-items: center; justify-content: space-between; }
-    
-    /* اللوجو القديم بالتصميم الاحترافي المتدرج */
-    .brand-logo {
-      width: 40px; height: 40px; background: linear-gradient(135deg, var(--primary), var(--accent));
-      border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center;
-      color: #fff; font-size: 1.2rem; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+    .sidebar-header {
+      padding: 24px 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
 
-    .sidebar-nav { padding: 16px 12px; flex: 1; overflow-y: auto; }
-    .sidebar-nav .nav-link {
-      color: #94a3b8; padding: 12px 16px; border-radius: var(--radius-md);
-      font-weight: 500; display: flex; align-items: center; gap: 12px; margin-bottom: 6px; font-size: 0.95rem;
-    }
-    .sidebar-nav .nav-link i { font-size: 1.1rem; width: 24px; text-align: center; }
-    .sidebar-nav .nav-link:hover { color: #ffffff; background: rgba(255, 255, 255, 0.06); }
-    .sidebar-nav .nav-link.active {
-      color: #ffffff; background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+    /* اللوجو القديم بالتصميم الاحترافي المتدرج */
+    .brand-logo {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 1.2rem;
       box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
     }
 
-    /* Main Content */
-    #content {
-      margin-right: var(--sidebar-width); flex: 1; display: flex; flex-direction: column;
-      min-height: 100vh; width: calc(100% - var(--sidebar-width)); transition: all 0.35s ease;
+    .sidebar-nav {
+      padding: 16px 12px;
+      flex: 1;
+      overflow-y: auto;
     }
+
+    .sidebar-nav .nav-link {
+      color: #94a3b8;
+      padding: 12px 16px;
+      border-radius: var(--radius-md);
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 6px;
+      font-size: 0.95rem;
+    }
+
+    .sidebar-nav .nav-link i { font-size: 1.1rem; width: 24px; text-align: center; }
+    .sidebar-nav .nav-link:hover { color: #ffffff; background: rgba(255, 255, 255, 0.06); }
+    .sidebar-nav .nav-link.active {
+      color: #ffffff;
+      background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+    }
+
+    /* Main Content Layout */
+    #content {
+      margin-right: var(--sidebar-width);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      width: calc(100% - var(--sidebar-width));
+      transition: margin-right 0.35s ease, width 0.35s ease;
+    }
+
     #content.expanded { margin-right: 0; width: 100%; }
 
-    .top-header { background: var(--bg-card); border-bottom: 1px solid var(--border-color); padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 1000; }
+    .top-header {
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border-color);
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
     .main-container { padding: 32px; flex: 1; }
 
-    .custom-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 24px; color: var(--text-main); }
-    .hero-card { background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%); color: white; border-radius: 20px; padding: 48px 32px; }
+    .custom-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      margin-bottom: 24px;
+      color: var(--text-main);
+    }
+
+    .hero-card {
+      background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
+      color: white;
+      border-radius: 20px;
+      padding: 48px 32px;
+    }
     .hero-card p { color: rgba(255, 255, 255, 0.9) !important; }
 
-    .form-control, .form-select { background-color: var(--bg-body); border: 1px solid var(--border-color); color: var(--text-main); border-radius: var(--radius-md); padding: 11px 16px; }
-    .form-control:focus, .form-select:focus { background-color: var(--bg-card); border-color: var(--primary); color: var(--text-main); }
+    .form-control, .form-select {
+      background-color: var(--bg-body);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      border-radius: var(--radius-md);
+      padding: 11px 16px;
+    }
+    .form-control:focus, .form-select:focus {
+      background-color: var(--bg-card);
+      border-color: var(--primary);
+      color: var(--text-main);
+    }
 
-    .btn-custom-primary { background: var(--primary); color: white; border: none; border-radius: var(--radius-md); padding: 8px 16px; font-weight: 600; }
+    .btn-custom-primary {
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: var(--radius-md);
+      padding: 8px 16px;
+      font-weight: 600;
+    }
     .btn-custom-primary:hover { background: var(--primary-hover); color: white; }
 
-    /* Chat / Forum Bubble Alignment */
-    .chat-box { height: 480px; overflow-y: auto; background: var(--bg-body); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 20px; display: flex; flex-direction: column; gap: 12px; }
-    .chat-message { max-width: 70%; padding: 12px 18px; border-radius: 16px; font-size: 0.95rem; word-break: break-word; position: relative; }
-    .chat-message.sent { margin-left: auto; background: var(--primary); color: white; border-bottom-left-radius: 4px; }
-    .chat-message.received { margin-right: auto; background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border-color); border-bottom-right-radius: 4px; }
+    /* تنسيق المحادثة (المنتدى): رسائل المستخدم الحالي على اليمين والآخرين على اليسار */
+    .chat-box {
+      height: 480px;
+      overflow-y: auto;
+      background: var(--bg-body);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
 
-    .honor-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 24px; text-align: center; }
-    .honor-avatar { width: 88px; height: 88px; border-radius: 50%; object-fit: cover; border: 3px solid var(--warning); margin-bottom: 16px; }
+    .chat-message {
+      max-width: 70%;
+      padding: 12px 18px;
+      border-radius: 16px;
+      font-size: 0.95rem;
+      word-break: break-word;
+      position: relative;
+    }
+    .chat-message.sent {
+      margin-left: auto;
+      background: var(--primary);
+      color: white;
+      border-bottom-left-radius: 4px;
+    }
+    .chat-message.received {
+      margin-right: auto;
+      background: var(--bg-card);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+      border-bottom-right-radius: 4px;
+    }
 
-    footer { background: var(--bg-card); border-top: 1px solid var(--border-color); padding: 24px 32px; text-align: center; }
-    .footer-contact-btn { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 50rem; font-weight: 600; text-decoration: none; border: 1px solid var(--border-color); background: var(--bg-body); color: var(--text-main); }
+    .honor-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      text-align: center;
+    }
+    .honor-avatar {
+      width: 88px; height: 88px; border-radius: 50%; object-fit: cover;
+      border: 3px solid var(--warning); margin-bottom: 16px;
+    }
+
+    footer {
+      background: var(--bg-card);
+      border-top: 1px solid var(--border-color);
+      padding: 24px 32px;
+      text-align: center;
+    }
+    .footer-contact-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 8px 16px; border-radius: 50rem; font-weight: 600;
+      text-decoration: none; border: 1px solid var(--border-color);
+      background: var(--bg-body); color: var(--text-main);
+    }
 
     @media (max-width: 991px) {
       #sidebar { transform: translateX(100%); }
@@ -135,7 +282,7 @@
           <small class="text-muted" style="font-size: 0.7rem;">البرمجة والذكاء الاصطناعي</small>
         </div>
       </div>
-      <button class="btn btn-sm text-muted" onclick="toggleSidebar()"><i class="fa-solid fa-xmark fa-lg"></i></button>
+      <button class="btn btn-sm text-muted d-lg-none" onclick="toggleSidebar()"><i class="fa-solid fa-xmark fa-lg"></i></button>
     </div>
     
     <div class="sidebar-nav">
@@ -145,13 +292,10 @@
       <a class="nav-link" href="#" onclick="showSection('booksSection', this)"><i class="fa-solid fa-book-open"></i>الكتب والملخصات</a>
       <a class="nav-link" href="#" onclick="showSection('forumSection', this)"><i class="fa-solid fa-comments"></i>منتدى الطلاب</a>
       
-      <!-- محرر الأكواد البرمجية (جافا سكريبت وبايثون) -->
-      <a class="nav-link" href="#" onclick="showSection('codeEditorSection', this)"><i class="fa-brands fa-js text-warning"></i>محرر الأكواد (JS / Python)</a>
-      
-      <!-- محرر المواقع (إتش تي إم إل، سي إس إس، جافا سكريبت) -->
-      <a class="nav-link" href="#" onclick="showSection('webEditorSection', this)"><i class="fa-brands fa-html5 text-danger"></i>محرر المواقع (HTML/CSS)</a>
-      
-      <a class="nav-link" href="#" onclick="showSection('challengeSection', this)"><i class="fa-solid fa-bolt text-accent"></i>التحدي اليومي</a>
+      <!-- الأقسام المنفصلة لمحرر الأكواد ومحرر المواقع -->
+      <a class="nav-link" href="#" onclick="showSection('codeEditorSection', this)"><i class="fa-solid fa-terminal text-warning"></i>محرر الأكواد (JS / Python)</a>
+      <a class="nav-link" href="#" onclick="showSection('webEditorSection', this)"><i class="fa-solid fa-laptop-code text-accent"></i>محرر المواقع (HTML/CSS)</a>
+      <a class="nav-link" href="#" onclick="showSection('challengeSection', this)"><i class="fa-solid fa-bolt text-warning"></i>التحدي اليومي</a>
       
       <a class="nav-link" id="profileNavItem" style="display: none;" href="#" onclick="showSection('profileSection', this)"><i class="fa-solid fa-user-gear"></i>الملف الشخصي</a>
       <a class="nav-link text-warning mt-3" href="#" onclick="showSection('adminSection', this)"><i class="fa-solid fa-shield-halved"></i>لوحة الأدمن</a>
@@ -216,7 +360,7 @@
           <h5 class="fw-bold mb-3"><i class="fa-solid fa-comments text-primary me-2"></i>منتدى المحادثة المباشر (ضغطة مطولة للحذف)</h5>
           <div class="chat-box mb-3" id="chatContainer"></div>
           <div class="input-group gap-2 align-items-center">
-            <input type="text" id="chatInput" class="form-control" placeholder="اكتب رسالتك..." autocomplete="off">
+            <input type="text" id="chatInput" class="form-control" placeholder="اكتب رسالتك للمجموعة..." autocomplete="off">
             <input type="file" id="chatImageInput" accept="image/*" style="display: none;" onchange="handleImageUpload(event)">
             <button class="btn btn-outline-secondary" onclick="document.getElementById('chatImageInput').click()"><i class="fa-solid fa-image text-primary"></i></button>
             <button class="btn btn-custom-primary px-4 py-2" onclick="sendChatMessage()"><i class="fa-solid fa-paper-plane me-1"></i> إرسال</button>
@@ -224,11 +368,11 @@
         </div>
       </section>
 
-      <!-- 1. محرر الأكواد البرمجية (JavaScript & Python) -->
+      <!-- 1. محرر الأكواد (JS & Python) -->
       <section id="codeEditorSection" style="display: none;">
         <div class="custom-card">
           <div class="d-flex justify-content-between align-items-center mb-3">
-            <h5 class="fw-bold m-0"><i class="fa-brands fa-js text-warning me-2"></i>محرر الأكواد (JavaScript & Python)</h5>
+            <h5 class="fw-bold m-0"><i class="fa-solid fa-terminal text-warning me-2"></i>محرر الأكواد (JavaScript / Python)</h5>
             <select id="codeLangSelect" class="form-select w-auto">
               <option value="js">JavaScript</option>
               <option value="python">Python Simulator</option>
@@ -241,11 +385,11 @@
         </div>
       </section>
 
-      <!-- 2. محرر المواقع (HTML, CSS, JS) -->
+      <!-- 2. محرر المواقع (HTML / CSS / JS) -->
       <section id="webEditorSection" style="display: none;">
         <div class="custom-card">
-          <h5 class="fw-bold mb-3"><i class="fa-brands fa-html5 text-danger me-2"></i>محرر ومصمم المواقع الشخصي (HTML, CSS, JS)</h5>
-          <p class="small text-muted mb-2">اكتب كود الـ HTML والمواقع وسيعرض المعاينة فوراً (محفوظ على جهازك تلقائياً):</p>
+          <h5 class="fw-bold mb-3"><i class="fa-solid fa-laptop-code text-accent me-2"></i>محرر ومصمم المواقع الشخصي (HTML / CSS / JS)</h5>
+          <p class="small text-muted mb-2">اكتب كود الـ HTML وسيعرض المعاينة الحية فوراً (محفوظ تلقائياً لحسابك):</p>
           <div class="row g-3">
             <div class="col-lg-6">
               <textarea id="webCodeArea" class="form-control font-monospace" rows="12" dir="ltr" style="background:#0f172a; color:#38bdf8;" oninput="saveWebEditorCode()"></textarea>
@@ -302,7 +446,7 @@
           
           <ul class="nav nav-pills mb-4 gap-2 flex-wrap" id="adminTabs">
             <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#pendingTab">الطلبات المعلقة</a></li>
-            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#studentsTab">قائمة الطلاب (هواتف محمية)</a></li>
+            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#studentsTab">قائمة الطلاب (هواتف محمية للخصوصية)</a></li>
             <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#manageChallengeTab">التحدي اليومي</a></li>
             <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#manageNewsTab">الإشعارات</a></li>
             <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#manageHonorTab">المتميزين</a></li>
@@ -578,7 +722,7 @@
       renderBooks(books.filter(b => b.title.toLowerCase().includes(q) || b.grade.toLowerCase().includes(q)));
     }
 
-    // منتدى الدردشة: محاذاة يميسر وحذف بالضغط المطول
+    // منتدي الدردشة: رسائل المستخدم يمين والأخرين يسار مع حذف بالضغط المطول
     function renderChat() {
       const c = document.getElementById('chatContainer');
       c.innerHTML = chatMessages.map(m => {
@@ -614,7 +758,7 @@
       }
     }
 
-    // محرري الأكواد (محرر الكونسول JS/Python ومحرر الويب HTML/CSS)
+    // تشغيل محرر الأكواد التقليدي (JS / Python)
     function runCode() {
       const lang = document.getElementById('codeLangSelect').value;
       const code = document.getElementById('codeTextarea').value;
@@ -630,13 +774,13 @@
       }
     }
 
+    // تشغيل وصفظ محرر المواقع (HTML / CSS)
     function saveWebEditorCode() {
       const code = document.getElementById('webCodeArea').value;
       localStorage.setItem(currentUser ? `web_code_${currentUser.id}` : 'web_code_guest', code);
       document.getElementById('webPreviewFrame').srcdoc = code;
     }
 
-    // تحميل الكود عند فتح مححر الويب
     window.addEventListener('DOMContentLoaded', () => {
       const savedWeb = localStorage.getItem('web_code_guest') || '<h1>مرحباً بك في محرر المواقع!</h1>';
       document.getElementById('webCodeArea').value = savedWeb;
@@ -684,7 +828,7 @@
       const approved = users.filter(u => u.status === 'approved');
 
       document.getElementById('pendingTableBody').innerHTML = p.map(u => `<tr><td>${u.name}</td><td>${u.grade}</td><td>${u.phone}</td><td><button class="btn btn-success btn-sm" onclick="approveUser(${u.id})">قبول</button></td></tr>`).join('');
-      document.getElementById('studentsTableBody').innerHTML = approved.map(u => `<tr><td>${u.name}</td><td>${u.grade}</td><td><i>(محمي)</i></td><td><i>(محمي)</i></td><td><button class="btn btn-danger btn-sm" onclick="deleteStudent(${u.id})">حذف</button></td></tr>`).join('');
+      document.getElementById('studentsTableBody').innerHTML = approved.map(u => `<tr><td>${u.name}</td><td>${u.grade}</td><td><i>(محمي للخصوصية)</i></td><td><i>(محمي للخصوصية)</i></td><td><button class="btn btn-danger btn-sm" onclick="deleteStudent(${u.id})">حذف</button></td></tr>`).join('');
       document.getElementById('adminChallengeResponsesBody').innerHTML = challengeResponses.map(r => `<tr><td>${r.name}</td><td>${r.selected_option}</td><td>${r.is_correct ? 'صح' : 'خطأ'}</td></tr>`).join('');
     }
 
