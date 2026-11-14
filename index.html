@@ -173,13 +173,14 @@
     .btn-custom-primary:hover:not(:disabled) { background: var(--primary-hover); color: white; }
     .btn-custom-primary:disabled { opacity: 0.6; cursor: not-allowed; }
 
-    .theme-toggle-btn {
-      width: 44px; height: 44px; border-radius: 50%;
+    .header-icon-btn {
+      width: 42px; height: 42px; border-radius: 50%;
       background: var(--bg-body); border: 1px solid var(--border-color);
       color: var(--text-main); display: flex; align-items: center; justify-content: center;
       cursor: pointer; box-shadow: var(--shadow-sm);
     }
-    .theme-toggle-btn:hover { transform: scale(1.08); border-color: var(--primary); color: var(--primary); }
+    .header-icon-btn:hover { transform: scale(1.08); border-color: var(--primary); color: var(--primary); }
+    .header-icon-btn.admin-btn:hover { border-color: var(--warning); color: var(--warning); }
 
     .chat-box {
       height: 500px; overflow-y: auto; background: var(--bg-body);
@@ -233,7 +234,7 @@
 
   <div class="sidebar-backdrop" id="sidebarBackdrop" onclick="toggleSidebar()"></div>
 
-  <!-- Sidebar الرئيسية -->
+  <!-- Sidebar الرئيسية (نظيفة ومخصصة للطلاب) -->
   <aside id="sidebar">
     <div class="sidebar-header">
       <div class="d-flex align-items-center gap-2">
@@ -257,7 +258,6 @@
       <a class="nav-link" href="#" onclick="showSection('htmlEditorSection', this)"><i class="fa-solid fa-laptop-code text-info"></i>محرر HTML & CSS</a>
       
       <a class="nav-link" id="profileNavItem" style="display: none;" href="#" onclick="showSection('profileSection', this)"><i class="fa-solid fa-user-gear text-secondary"></i>الملف الشخصي</a>
-      <a class="nav-link text-warning mt-3" href="#" onclick="showSection('adminSection', this)"><i class="fa-solid fa-shield-halved text-warning"></i>لوحة الأدمن</a>
     </div>
   </aside>
 
@@ -271,7 +271,13 @@
       </div>
       
       <div class="d-flex align-items-center gap-2">
-        <button class="theme-toggle-btn" onclick="toggleTheme()" title="تبديل الوضع الليلي والنهاري">
+        <!-- زر لوحة الأدمن الصغير بجانب الوضع الليلي -->
+        <button class="header-icon-btn admin-btn" onclick="openAdminAccess()" title="لوحة تحكم الأدمن">
+          <i class="fa-solid fa-shield-halved text-warning"></i>
+        </button>
+
+        <!-- زر الوضع الليلي والنهاري -->
+        <button class="header-icon-btn" onclick="toggleTheme()" title="تبديل الوضع الليلي والنهاري">
           <i class="fa-solid fa-moon" id="themeIcon"></i>
         </button>
         
@@ -456,15 +462,7 @@
 
       <!-- لوحة الأدمن -->
       <section id="adminSection" style="display: none;">
-        <div id="adminAuthLock" class="custom-card text-center mx-auto" style="max-width: 420px;">
-          <div class="brand-logo mx-auto mb-3 bg-warning d-flex align-items-center justify-content-center text-dark fs-4" style="width: 60px; height: 60px; border-radius: 50%;"><i class="fa-solid fa-lock"></i></div>
-          <h5 class="fw-bold">تسجيل دخول لوحة الأدمن</h5>
-          <p class="small mb-3">أدخل كلمة المرور الموحدة لإدارة المنصة بكامل الصلاحيات</p>
-          <input type="password" id="adminPassInput" class="form-control my-2 text-center" placeholder="••••••••••••" autocomplete="new-password">
-          <button class="btn btn-warning w-100 fw-bold py-2 mt-2" onclick="checkAdminAuth()">فتح لوحة الأدمن</button>
-        </div>
-
-        <div id="adminDashboard" style="display: none;">
+        <div id="adminDashboard">
           <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
             <div>
               <h4 class="fw-bold m-0"><i class="fa-solid fa-chart-pie text-warning me-2"></i>لوحة تحكم الأدمن</h4>
@@ -637,6 +635,26 @@
 
   </div>
 
+  <!-- Admin Password Modal (المربع المنبثق لدخول الأدمن) -->
+  <div class="modal fade" id="adminAuthModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+      <div class="modal-content" style="background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid var(--border-color);">
+        <div class="modal-header border-bottom-0 pb-0">
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body text-center px-4 pb-4 pt-0">
+          <div class="brand-logo mx-auto mb-3 bg-warning d-flex align-items-center justify-content-center text-dark fs-4" style="width: 56px; height: 56px; border-radius: 50%;"><i class="fa-solid fa-lock"></i></div>
+          <h6 class="fw-bold mb-1">دخول لوحة الأدمن</h6>
+          <p class="small text-muted mb-3">أدخل كلمة المرور الموحدة للمتابعة</p>
+          <form onsubmit="checkAdminAuth(event)">
+            <input type="password" id="adminPassInput" class="form-control mb-3 text-center" placeholder="••••••••••••" autocomplete="new-password" required>
+            <button type="submit" class="btn btn-warning w-100 fw-bold py-2">دخول</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Unified Auth Modal -->
   <div class="modal fade" id="authModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
@@ -746,6 +764,9 @@
     let loginAttempts = JSON.parse(localStorage.getItem('platform_login_attempts')) || {};
     let loginCountdownInterval = null;
 
+    const authModal = new bootstrap.Modal(document.getElementById('authModal'));
+    const adminAuthModal = new bootstrap.Modal(document.getElementById('adminAuthModal'));
+
     function isValidEgyPhone(phone) {
       return /^01[0125]\d{8}$/.test(phone);
     }
@@ -822,33 +843,33 @@
       renderChat();
     }
 
-    function showSection(sectionId, element) {
+    function showSection(sectionId, element, skipMobileToggle = false) {
       const protectedSections = ['forumSection', 'pythonEditorSection', 'jsEditorSection', 'htmlEditorSection', 'booksSection', 'videosSection'];
       if (protectedSections.includes(sectionId) && (!currentUser || currentUser.status !== 'approved')) {
         alert("عذراً، هذا القسم متاح فقط لطلاب المنصة المفعلين بعد موافقة الأدمن.");
         return;
       }
 
-      if (sectionId === 'adminSection') {
-        if (isAdminLoggedIn) {
-          document.getElementById('adminAuthLock').style.display = 'none';
-          document.getElementById('adminDashboard').style.display = 'block';
-          loadAdminData();
-        } else {
-          document.getElementById('adminAuthLock').style.display = 'block';
-          document.getElementById('adminDashboard').style.display = 'none';
-        }
+      if (sectionId === 'adminSection' && !isAdminLoggedIn) {
+        openAdminAccess();
+        return;
       }
       
       document.querySelectorAll('.main-container > section').forEach(sec => sec.style.display = 'none');
       document.getElementById(sectionId).style.display = 'block';
       
+      document.querySelectorAll('#sidebar .nav-link').forEach(link => link.classList.remove('active'));
       if (element) {
-        document.querySelectorAll('#sidebar .nav-link').forEach(link => link.classList.remove('active'));
         element.classList.add('active');
       }
 
-      if (window.innerWidth <= 991) toggleSidebar();
+      if (sectionId === 'adminSection') {
+        loadAdminData();
+      }
+
+      if (!skipMobileToggle && window.innerWidth <= 991 && document.getElementById('sidebar').classList.contains('mobile-open')) {
+        toggleSidebar();
+      }
     }
 
     function switchAdminTab(tabId, element) {
@@ -884,7 +905,38 @@
       }
     }
 
-    const authModal = new bootstrap.Modal(document.getElementById('authModal'));
+    // فتح نافذة باسورد الأدمن أو الدخول المباشر إذا كان مسجلاً
+    function openAdminAccess() {
+      if (isAdminLoggedIn) {
+        showSection('adminSection', null, true);
+      } else {
+        document.getElementById('adminPassInput').value = '';
+        adminAuthModal.show();
+        setTimeout(() => document.getElementById('adminPassInput').focus(), 400);
+      }
+    }
+
+    function checkAdminAuth(e) {
+      if (e) e.preventDefault();
+      if (document.getElementById('adminPassInput').value === ADMIN_PASS) {
+        isAdminLoggedIn = true;
+        sessionStorage.setItem('admin_logged_in', 'true');
+        adminAuthModal.hide();
+        showSection('adminSection', null, true);
+      } else {
+        alert("كلمة المرور خاطئة!");
+        document.getElementById('adminPassInput').value = '';
+      }
+    }
+
+    function adminLogout() {
+      isAdminLoggedIn = false;
+      sessionStorage.removeItem('admin_logged_in');
+      document.getElementById('adminPassInput').value = '';
+      const homeLink = document.querySelector('#sidebar .nav-link');
+      showSection('homeSection', homeLink, true);
+    }
+
     function showAuthModal(type) {
       if (type === 'login') {
         document.getElementById('authModalTitle').innerText = 'تسجيل الدخول';
@@ -972,7 +1024,6 @@
         return;
       }
 
-      // منع إرسال أكثر من طلب أو التسجيل بنفس الرقم
       const { data: existingUsers, error: checkError } = await _supabase
         .from('profiles')
         .select('id, status')
@@ -1026,7 +1077,7 @@
         loginAttempts[phone].count += 1;
 
         if (loginAttempts[phone].count >= 5) {
-          loginAttempts[phone].lockUntil = Date.now() + 30000; // 30 ثانية
+          loginAttempts[phone].lockUntil = Date.now() + 30000;
           loginAttempts[phone].count = 0;
           localStorage.setItem('platform_login_attempts', JSON.stringify(loginAttempts));
           startLoginLockCountdown(phone);
@@ -1061,7 +1112,8 @@
       currentUser = null;
       localStorage.removeItem('platform_current_user');
       updateUI();
-      showSection('homeSection');
+      const homeLink = document.querySelector('#sidebar .nav-link');
+      showSection('homeSection', homeLink, true);
     }
 
     async function updateProfile(e) {
@@ -1270,26 +1322,6 @@
       const studentId = currentUser ? currentUser.id : 'guest';
       localStorage.setItem(`student_site_code_${studentId}`, code);
       document.getElementById('sitePreview').srcdoc = code;
-    }
-
-    function checkAdminAuth() {
-      if (document.getElementById('adminPassInput').value === ADMIN_PASS) {
-        isAdminLoggedIn = true;
-        sessionStorage.setItem('admin_logged_in', 'true');
-        document.getElementById('adminAuthLock').style.display = 'none';
-        document.getElementById('adminDashboard').style.display = 'block';
-        loadAdminData();
-      } else {
-        alert("كلمة المرور خاطئة!");
-      }
-    }
-
-    function adminLogout() {
-      isAdminLoggedIn = false;
-      sessionStorage.removeItem('admin_logged_in');
-      document.getElementById('adminPassInput').value = '';
-      document.getElementById('adminAuthLock').style.display = 'block';
-      document.getElementById('adminDashboard').style.display = 'none';
     }
 
     async function loadAdminData() {
