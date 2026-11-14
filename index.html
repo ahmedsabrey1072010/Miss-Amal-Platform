@@ -45,218 +45,74 @@
       --border-color: #334155;
     }
 
-    * {
-      box-sizing: border-box;
-      transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
-    }
+    * { box-sizing: border-box; transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease; }
 
-    body {
-      font-family: var(--font-main);
-      background-color: var(--bg-body);
-      color: var(--text-main);
-      margin: 0;
-      min-height: 100vh;
-      display: flex;
-      overflow-x: hidden;
-    }
-
+    body { font-family: var(--font-main); background-color: var(--bg-body); color: var(--text-main); margin: 0; min-height: 100vh; display: flex; overflow-x: hidden; }
     p { color: var(--text-muted); }
 
-    /* Sidebar Styling & Responsive Layout */
+    /* Sidebar */
     #sidebar {
-      width: var(--sidebar-width);
-      background-color: var(--bg-sidebar);
-      min-height: 100vh;
-      position: fixed;
-      top: 0;
-      right: 0;
-      z-index: 1050;
-      display: flex;
-      flex-direction: column;
-      border-left: 1px solid rgba(255, 255, 255, 0.05);
-      transform: translateX(0);
-      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      width: var(--sidebar-width); background-color: var(--bg-sidebar); min-height: 100vh;
+      position: fixed; top: 0; right: 0; z-index: 1050; display: flex; flex-direction: column;
+      border-left: 1px solid rgba(255, 255, 255, 0.05); transform: translateX(0); transition: transform 0.35s ease;
     }
-
     #sidebar.collapsed { transform: translateX(100%); }
 
-    .sidebar-backdrop {
-      position: fixed;
-      top: 0; left: 0; width: 100vw; height: 100vh;
-      background: rgba(0, 0, 0, 0.5);
-      z-index: 1040;
-      display: none;
-    }
+    .sidebar-backdrop { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 1040; display: none; }
     .sidebar-backdrop.show { display: block; }
 
-    .sidebar-header {
-      padding: 24px 20px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+    .sidebar-header { padding: 24px 20px; border-bottom: 1px solid rgba(255,255,255,0.07); display: flex; align-items: center; justify-content: space-between; }
+    
+    /* اللوجو القديم بالتصميم الاحترافي المتدرج */
+    .brand-logo {
+      width: 40px; height: 40px; background: linear-gradient(135deg, var(--primary), var(--accent));
+      border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 1.2rem; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
     }
 
-    .brand-logo-img {
-      width: 48px;
-      height: 48px;
-      border-radius: var(--radius-md);
-      object-fit: cover;
-      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
-    }
-
-    .sidebar-nav {
-      padding: 16px 12px;
-      flex: 1;
-      overflow-y: auto;
-    }
-
+    .sidebar-nav { padding: 16px 12px; flex: 1; overflow-y: auto; }
     .sidebar-nav .nav-link {
-      color: #94a3b8;
-      padding: 12px 16px;
-      border-radius: var(--radius-md);
-      font-weight: 500;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 6px;
-      font-size: 0.95rem;
+      color: #94a3b8; padding: 12px 16px; border-radius: var(--radius-md);
+      font-weight: 500; display: flex; align-items: center; gap: 12px; margin-bottom: 6px; font-size: 0.95rem;
     }
-
     .sidebar-nav .nav-link i { font-size: 1.1rem; width: 24px; text-align: center; }
     .sidebar-nav .nav-link:hover { color: #ffffff; background: rgba(255, 255, 255, 0.06); }
     .sidebar-nav .nav-link.active {
-      color: #ffffff;
-      background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+      color: #ffffff; background: linear-gradient(135deg, var(--primary), var(--primary-hover));
       box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
     }
 
-    /* Main Content Layout */
+    /* Main Content */
     #content {
-      margin-right: var(--sidebar-width);
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      width: calc(100% - var(--sidebar-width));
-      transition: margin-right 0.35s cubic-bezier(0.4, 0, 0.2, 1), width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      margin-right: var(--sidebar-width); flex: 1; display: flex; flex-direction: column;
+      min-height: 100vh; width: calc(100% - var(--sidebar-width)); transition: all 0.35s ease;
     }
     #content.expanded { margin-right: 0; width: 100%; }
 
-    .top-header {
-      background: var(--bg-card);
-      border-bottom: 1px solid var(--border-color);
-      padding: 12px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-    }
-
+    .top-header { background: var(--bg-card); border-bottom: 1px solid var(--border-color); padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 1000; }
     .main-container { padding: 32px; flex: 1; }
 
-    .custom-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-lg);
-      padding: 24px;
-      margin-bottom: 24px;
-      color: var(--text-main);
-    }
-
-    .hero-card {
-      background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
-      color: white;
-      border-radius: 20px;
-      padding: 48px 32px;
-    }
+    .custom-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 24px; color: var(--text-main); }
+    .hero-card { background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%); color: white; border-radius: 20px; padding: 48px 32px; }
     .hero-card p { color: rgba(255, 255, 255, 0.9) !important; }
 
-    .form-control, .form-select {
-      background-color: var(--bg-body);
-      border: 1px solid var(--border-color);
-      color: var(--text-main);
-      border-radius: var(--radius-md);
-      padding: 11px 16px;
-    }
-    .form-control:focus, .form-select:focus {
-      background-color: var(--bg-card);
-      border-color: var(--primary);
-      color: var(--text-main);
-    }
+    .form-control, .form-select { background-color: var(--bg-body); border: 1px solid var(--border-color); color: var(--text-main); border-radius: var(--radius-md); padding: 11px 16px; }
+    .form-control:focus, .form-select:focus { background-color: var(--bg-card); border-color: var(--primary); color: var(--text-main); }
 
-    .btn-custom-primary {
-      background: var(--primary);
-      color: white;
-      border: none;
-      border-radius: var(--radius-md);
-      padding: 8px 16px;
-      font-weight: 600;
-    }
+    .btn-custom-primary { background: var(--primary); color: white; border: none; border-radius: var(--radius-md); padding: 8px 16px; font-weight: 600; }
     .btn-custom-primary:hover { background: var(--primary-hover); color: white; }
 
-    /* Forum / Chat Bubble Alignment */
-    .chat-box {
-      height: 480px;
-      overflow-y: auto;
-      background: var(--bg-body);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-lg);
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
+    /* Chat / Forum Bubble Alignment */
+    .chat-box { height: 480px; overflow-y: auto; background: var(--bg-body); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+    .chat-message { max-width: 70%; padding: 12px 18px; border-radius: 16px; font-size: 0.95rem; word-break: break-word; position: relative; }
+    .chat-message.sent { margin-left: auto; background: var(--primary); color: white; border-bottom-left-radius: 4px; }
+    .chat-message.received { margin-right: auto; background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border-color); border-bottom-right-radius: 4px; }
 
-    .chat-message {
-      max-width: 70%;
-      padding: 12px 18px;
-      border-radius: 16px;
-      font-size: 0.95rem;
-      word-break: break-word;
-      position: relative;
-    }
-    .chat-message.sent {
-      margin-left: auto;
-      background: var(--primary);
-      color: white;
-      border-bottom-left-radius: 4px;
-    }
-    .chat-message.received {
-      margin-right: auto;
-      background: var(--bg-card);
-      color: var(--text-main);
-      border: 1px solid var(--border-color);
-      border-bottom-right-radius: 4px;
-    }
+    .honor-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 24px; text-align: center; }
+    .honor-avatar { width: 88px; height: 88px; border-radius: 50%; object-fit: cover; border: 3px solid var(--warning); margin-bottom: 16px; }
 
-    .honor-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-lg);
-      padding: 24px;
-      text-align: center;
-    }
-    .honor-avatar {
-      width: 88px; height: 88px; border-radius: 50%; object-fit: cover;
-      border: 3px solid var(--warning); margin-bottom: 16px;
-    }
-
-    footer {
-      background: var(--bg-card);
-      border-top: 1px solid var(--border-color);
-      padding: 24px 32px;
-      text-align: center;
-    }
-
-    .footer-contact-btn {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 8px 16px; border-radius: 50rem; font-weight: 600;
-      text-decoration: none; border: 1px solid var(--border-color);
-      background: var(--bg-body); color: var(--text-main);
-    }
+    footer { background: var(--bg-card); border-top: 1px solid var(--border-color); padding: 24px 32px; text-align: center; }
+    .footer-contact-btn { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 50rem; font-weight: 600; text-decoration: none; border: 1px solid var(--border-color); background: var(--bg-body); color: var(--text-main); }
 
     @media (max-width: 991px) {
       #sidebar { transform: translateX(100%); }
@@ -273,7 +129,7 @@
   <aside id="sidebar">
     <div class="sidebar-header">
       <div class="d-flex align-items-center gap-2">
-        <img src="1794672387571.jpg" alt="لوجو المنصة" class="brand-logo-img">
+        <div class="brand-logo"><i class="fa-solid fa-code"></i></div>
         <div>
           <h6 class="fw-bold m-0 text-white" style="font-size: 0.9rem;">المس أمل شفيق</h6>
           <small class="text-muted" style="font-size: 0.7rem;">البرمجة والذكاء الاصطناعي</small>
@@ -289,9 +145,13 @@
       <a class="nav-link" href="#" onclick="showSection('booksSection', this)"><i class="fa-solid fa-book-open"></i>الكتب والملخصات</a>
       <a class="nav-link" href="#" onclick="showSection('forumSection', this)"><i class="fa-solid fa-comments"></i>منتدى الطلاب</a>
       
-      <!-- خانة محرر الأكواد والويب (مستقلة وبارزة في السايد بار) -->
-      <a class="nav-link" href="#" onclick="showSection('editorSection', this)"><i class="fa-solid fa-code text-accent"></i>محرر الأكواد والويب</a>
-      <a class="nav-link" href="#" onclick="showSection('challengeSection', this)"><i class="fa-solid fa-bolt"></i>التحدي اليومي</a>
+      <!-- محرر الأكواد البرمجية (جافا سكريبت وبايثون) -->
+      <a class="nav-link" href="#" onclick="showSection('codeEditorSection', this)"><i class="fa-brands fa-js text-warning"></i>محرر الأكواد (JS / Python)</a>
+      
+      <!-- محرر المواقع (إتش تي إم إل، سي إس إس، جافا سكريبت) -->
+      <a class="nav-link" href="#" onclick="showSection('webEditorSection', this)"><i class="fa-brands fa-html5 text-danger"></i>محرر المواقع (HTML/CSS)</a>
+      
+      <a class="nav-link" href="#" onclick="showSection('challengeSection', this)"><i class="fa-solid fa-bolt text-accent"></i>التحدي اليومي</a>
       
       <a class="nav-link" id="profileNavItem" style="display: none;" href="#" onclick="showSection('profileSection', this)"><i class="fa-solid fa-user-gear"></i>الملف الشخصي</a>
       <a class="nav-link text-warning mt-3" href="#" onclick="showSection('adminSection', this)"><i class="fa-solid fa-shield-halved"></i>لوحة الأدمن</a>
@@ -350,10 +210,10 @@
         <div class="row g-4" id="booksContainer"></div>
       </section>
 
-      <!-- Forum Section (Chat Bubble Alignment & Delete) -->
+      <!-- Forum Section -->
       <section id="forumSection" style="display: none;">
         <div class="custom-card">
-          <h5 class="fw-bold mb-3"><i class="fa-solid fa-comments text-primary me-2"></i>منتدى المحادثة المباشر (ضغطة مطولة أو يمين للحذف)</h5>
+          <h5 class="fw-bold mb-3"><i class="fa-solid fa-comments text-primary me-2"></i>منتدى المحادثة المباشر (ضغطة مطولة للحذف)</h5>
           <div class="chat-box mb-3" id="chatContainer"></div>
           <div class="input-group gap-2 align-items-center">
             <input type="text" id="chatInput" class="form-control" placeholder="اكتب رسالتك..." autocomplete="off">
@@ -364,34 +224,35 @@
         </div>
       </section>
 
-      <!-- Editor Section (Dedicated Website Builder & Console) -->
-      <section id="editorSection" style="display: none;">
+      <!-- 1. محرر الأكواد البرمجية (JavaScript & Python) -->
+      <section id="codeEditorSection" style="display: none;">
         <div class="custom-card">
-          <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-            <h5 class="fw-bold m-0"><i class="fa-solid fa-code text-primary me-2"></i>محرر الأكواد وبناء المواقع الشخصي</h5>
-            <select id="editorLanguage" class="form-select w-auto" onchange="switchEditorMode()">
-              <option value="web">موقع ويب متكامل (HTML, CSS, JS)</option>
-              <option value="js">JavaScript Console</option>
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="fw-bold m-0"><i class="fa-brands fa-js text-warning me-2"></i>محرر الأكواد (JavaScript & Python)</h5>
+            <select id="codeLangSelect" class="form-select w-auto">
+              <option value="js">JavaScript</option>
               <option value="python">Python Simulator</option>
             </select>
           </div>
+          <textarea id="codeTextarea" class="form-control font-monospace mb-3" rows="10" dir="ltr" style="background:#0f172a; color:#38bdf8; border:none;"></textarea>
+          <button class="btn btn-success fw-bold px-4 mb-3" onclick="runCode()"><i class="fa-solid fa-play me-1"></i> تشغيل الشفرة</button>
+          <h6 class="fw-bold">مخرجات التشغيل / Console Output:</h6>
+          <pre id="codeOutput" class="p-3 rounded-3 bg-dark text-success font-monospace" style="min-height: 100px;"></pre>
+        </div>
+      </section>
 
-          <div id="webBuilderMode">
-            <p class="small text-muted mb-2">اكتب كود الـ HTML/CSS/JS وشاهد النتيجة فوراً (محفوظ تلقائياً لحسابك):</p>
-            <div class="row g-3">
-              <div class="col-lg-6">
-                <textarea id="webCodeArea" class="form-control font-monospace" rows="12" dir="ltr" style="background:#0f172a; color:#38bdf8;" oninput="saveWebEditorCode()"></textarea>
-              </div>
-              <div class="col-lg-6">
-                <iframe id="webPreviewFrame" class="w-100 rounded-3 border" style="height: 320px; background:#fff;"></iframe>
-              </div>
+      <!-- 2. محرر المواقع (HTML, CSS, JS) -->
+      <section id="webEditorSection" style="display: none;">
+        <div class="custom-card">
+          <h5 class="fw-bold mb-3"><i class="fa-brands fa-html5 text-danger me-2"></i>محرر ومصمم المواقع الشخصي (HTML, CSS, JS)</h5>
+          <p class="small text-muted mb-2">اكتب كود الـ HTML والمواقع وسيعرض المعاينة فوراً (محفوظ على جهازك تلقائياً):</p>
+          <div class="row g-3">
+            <div class="col-lg-6">
+              <textarea id="webCodeArea" class="form-control font-monospace" rows="12" dir="ltr" style="background:#0f172a; color:#38bdf8;" oninput="saveWebEditorCode()"></textarea>
             </div>
-          </div>
-
-          <div id="consoleMode" style="display: none;">
-            <textarea id="codeTextarea" class="form-control font-monospace mb-3" rows="10" dir="ltr" style="background:#0f172a; color:#38bdf8; border:none;"></textarea>
-            <button class="btn btn-success fw-bold px-4 mb-3" onclick="runCode()"><i class="fa-solid fa-play me-1"></i> تشغيل الشفرة</button>
-            <pre id="codeOutput" class="p-3 rounded-3 bg-dark text-success font-monospace" style="min-height: 100px;"></pre>
+            <div class="col-lg-6">
+              <iframe id="webPreviewFrame" class="w-100 rounded-3 border" style="height: 320px; background:#fff;"></iframe>
+            </div>
           </div>
         </div>
       </section>
@@ -425,7 +286,7 @@
         </div>
       </section>
 
-      <!-- Admin Section (Hiding Phone Numbers & Showing Challenge Stats) -->
+      <!-- Admin Section -->
       <section id="adminSection" style="display: none;">
         <div id="adminAuthLock" class="custom-card text-center mx-auto" style="max-width: 420px;">
           <h5 class="fw-bold">تسجيل دخول لوحة الأدمن</h5>
@@ -591,7 +452,7 @@
     }
 
     function showSection(sectionId, element) {
-      const protectedSecs = ['forumSection', 'editorSection', 'booksSection', 'challengeSection'];
+      const protectedSecs = ['forumSection', 'codeEditorSection', 'webEditorSection', 'booksSection', 'challengeSection'];
       if(protectedSecs.includes(sectionId) && (!currentUser || currentUser.status !== 'approved')) {
         alert("عذراً، هذا القسم متاح فقط لطلاب المنصة المفعلين.");
         return;
@@ -717,7 +578,7 @@
       renderBooks(books.filter(b => b.title.toLowerCase().includes(q) || b.grade.toLowerCase().includes(q)));
     }
 
-    // منتدي الدردشة: محاذاة يميسر وحذف بالضغط المطول
+    // منتدى الدردشة: محاذاة يميسر وحذف بالضغط المطول
     function renderChat() {
       const c = document.getElementById('chatContainer');
       c.innerHTML = chatMessages.map(m => {
@@ -753,16 +614,19 @@
       }
     }
 
-    // محرر الويب والأكواد
-    function switchEditorMode() {
-      const mode = document.getElementById('editorLanguage').value;
-      if(mode === 'web') {
-        document.getElementById('webBuilderMode').style.display = 'block';
-        document.getElementById('consoleMode').style.display = 'none';
-        loadWebEditorCode();
+    // محرري الأكواد (محرر الكونسول JS/Python ومحرر الويب HTML/CSS)
+    function runCode() {
+      const lang = document.getElementById('codeLangSelect').value;
+      const code = document.getElementById('codeTextarea').value;
+      const out = document.getElementById('codeOutput');
+      if (lang === 'js') {
+        try {
+          let logs = [];
+          new Function('console', code)({ log: (...args) => logs.push(args.join(' ')) });
+          out.innerText = logs.join('\n') || 'تم التنفيذ بنجاح.';
+        } catch(err) { out.innerText = 'خطأ: ' + err.message; }
       } else {
-        document.getElementById('webBuilderMode').style.display = 'none';
-        document.getElementById('consoleMode').style.display = 'block';
+        out.innerText = "محاكاة تشغيل Python:\n" + code;
       }
     }
 
@@ -772,21 +636,12 @@
       document.getElementById('webPreviewFrame').srcdoc = code;
     }
 
-    function loadWebEditorCode() {
-      const code = localStorage.getItem(currentUser ? `web_code_${currentUser.id}` : 'web_code_guest') || '<h1>مرحباً بك!</h1>';
-      document.getElementById('webCodeArea').value = code;
-      document.getElementById('webPreviewFrame').srcdoc = code;
-    }
-
-    function runCode() {
-      const code = document.getElementById('codeTextarea').value;
-      const out = document.getElementById('codeOutput');
-      try {
-        let logs = [];
-        new Function('console', code)({ log: (...args) => logs.push(args.join(' ')) });
-        out.innerText = logs.join('\n') || 'تم التنفيذ بنجاح.';
-      } catch(err) { out.innerText = 'خطأ: ' + err.message; }
-    }
+    // تحميل الكود عند فتح مححر الويب
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedWeb = localStorage.getItem('web_code_guest') || '<h1>مرحباً بك في محرر المواقع!</h1>';
+      document.getElementById('webCodeArea').value = savedWeb;
+      document.getElementById('webPreviewFrame').srcdoc = savedWeb;
+    });
 
     function renderDailyChallenge() {
       if(!dailyChallenge) return;
