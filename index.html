@@ -16,15 +16,15 @@
   <style>
     :root {
       --font-main: 'Readex Pro', sans-serif;
-      --bg-body: #f4f6f9;
+      --bg-body: #f8fafc;
       --bg-card: #ffffff;
       --bg-sidebar: #0f172a;
       --text-main: #1e293b;
       --text-muted: #64748b;
       --border-color: #e2e8f0;
       
-      --primary: #4f46e5;
-      --primary-hover: #4338ca;
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
       --accent: #06b6d4;
       --success: #10b981;
       --warning: #f59e0b;
@@ -33,19 +33,19 @@
       --sidebar-width: 280px;
       --radius-lg: 16px;
       --radius-md: 12px;
-      --shadow-sm: 0 1px 3px rgba(0,0,0,0.04);
+      --shadow-sm: 0 4px 12px rgba(0,0,0,0.03);
     }
 
     [data-theme="dark"] {
-      --bg-body: #0b1120;
-      --bg-card: #1e293b;
+      --bg-body: #050b14;
+      --bg-card: #0f172a;
       --bg-sidebar: #020617;
       --text-main: #f8fafc;
-      --text-muted: #cbd5e1;
-      --border-color: #334155;
+      --text-muted: #94a3b8;
+      --border-color: #1e293b;
     }
 
-    * { box-sizing: border-box; transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease; }
+    * { box-sizing: border-box; transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s ease, color 0.3s ease, transform 0.2s ease; }
 
     body {
       font-family: var(--font-main);
@@ -59,7 +59,7 @@
 
     p { color: var(--text-muted); }
 
-    /* Sidebar الرئيسية */
+    /* Sidebar الرئيسية ذات الأيقونات الملونة والمرتبة */
     #sidebar {
       width: var(--sidebar-width);
       background-color: var(--bg-sidebar);
@@ -88,10 +88,11 @@
     }
 
     .brand-logo {
-      width: 40px; height: 40px;
+      width: 42px; height: 42px;
       background: linear-gradient(135deg, var(--primary), var(--accent));
       border-radius: var(--radius-md);
       display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.2rem;
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
     }
 
     .sidebar-nav {
@@ -102,37 +103,28 @@
 
     .sidebar-nav .nav-link {
       color: #94a3b8; padding: 12px 16px; border-radius: var(--radius-md);
-      font-weight: 500; display: flex; align-items: center; gap: 12px; margin-bottom: 6px; font-size: 0.95rem;
+      font-weight: 500; display: flex; align-items: center; gap: 14px; margin-bottom: 6px; font-size: 0.95rem;
     }
-    .sidebar-nav .nav-link i { font-size: 1.1rem; width: 24px; text-align: center; }
-    .sidebar-nav .nav-link:hover { color: #ffffff; background: rgba(255, 255, 255, 0.06); }
+    .sidebar-nav .nav-link i { font-size: 1.2rem; width: 24px; text-align: center; }
+    .sidebar-nav .nav-link:hover { color: #ffffff; background: rgba(255, 255, 255, 0.06); transform: translateX(-4px); }
     .sidebar-nav .nav-link.active {
       color: #ffffff;
       background: linear-gradient(135deg, var(--primary), var(--primary-hover));
-      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
     }
 
-    /* تخطيط لوحة الأدمن الداخلية (Sub-Sidebar Layout) */
-    .admin-layout {
-      display: flex;
-      gap: 20px;
-      align-items: flex-start;
-    }
+    /* لوحة الأدمن الداخلية المنظمة */
+    .admin-layout { display: flex; gap: 20px; align-items: flex-start; }
     .admin-sidebar {
-      width: 240px;
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-lg);
-      padding: 12px;
-      flex-shrink: 0;
+      width: 250px; background: var(--bg-card); border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg); padding: 14px; flex-shrink: 0; box-shadow: var(--shadow-sm);
     }
     .admin-sidebar .admin-nav-link {
-      display: flex; align-items: center; gap: 10px;
-      padding: 10px 14px; border-radius: var(--radius-md);
-      color: var(--text-main); text-decoration: none; font-weight: 500; font-size: 0.9rem; margin-bottom: 4px;
+      display: flex; align-items: center; gap: 12px; padding: 11px 15px; border-radius: var(--radius-md);
+      color: var(--text-main); text-decoration: none; font-weight: 500; font-size: 0.9rem; margin-bottom: 6px;
     }
-    .admin-sidebar .admin-nav-link:hover { background: var(--bg-body); color: var(--primary); }
-    .admin-sidebar .admin-nav-link.active { background: var(--primary); color: #fff; }
+    .admin-sidebar .admin-nav-link:hover { background: var(--bg-body); color: var(--primary); transform: translateX(-3px); }
+    .admin-sidebar .admin-nav-link.active { background: var(--primary); color: #fff; box-shadow: 0 4px 12px rgba(99,102,241,0.3); }
     .admin-content-area { flex: 1; min-width: 0; }
 
     #content {
@@ -144,8 +136,8 @@
 
     .top-header {
       background: var(--bg-card); border-bottom: 1px solid var(--border-color);
-      padding: 12px 20px; display: flex; align-items: center; justify-content: space-between;
-      position: sticky; top: 0; z-index: 1000; gap: 10px; flex-wrap: wrap;
+      padding: 14px 24px; display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 1000; gap: 10px; flex-wrap: wrap; box-shadow: var(--shadow-sm);
     }
 
     .main-container { padding: 32px; flex: 1; }
@@ -156,65 +148,72 @@
     }
 
     .hero-card {
-      background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%); color: white;
+      background: linear-gradient(135deg, #6366f1 0%, #06b6d4 100%); color: white;
       border-radius: 20px; padding: 48px 32px; position: relative; overflow: hidden;
-      box-shadow: 0 10px 25px -5px rgba(79, 70, 229, 0.3);
+      box-shadow: 0 10px 30px -5px rgba(99, 102, 241, 0.4);
     }
     .hero-card p { color: rgba(255, 255, 255, 0.9) !important; }
 
     .form-control, .form-select {
       background-color: var(--bg-body); border: 1px solid var(--border-color);
-      color: var(--text-main); border-radius: var(--radius-md); padding: 11px 16px; font-size: 0.95rem;
+      color: var(--text-main); border-radius: var(--radius-md); padding: 12px 16px; font-size: 0.95rem;
     }
     .form-control:focus, .form-select:focus {
       background-color: var(--bg-card); border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15); color: var(--text-main);
+      box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15); color: var(--text-main);
     }
 
     .btn-custom-primary {
       background: var(--primary); color: white; border: none;
-      border-radius: var(--radius-md); padding: 8px 16px; font-weight: 600; font-size: 0.88rem;
+      border-radius: var(--radius-md); padding: 10px 20px; font-weight: 600; font-size: 0.9rem;
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
     }
-    .btn-custom-primary:hover { background: var(--primary-hover); color: white; }
+    .btn-custom-primary:hover { background: var(--primary-hover); color: white; transform: translateY(-1px); }
 
+    /* تنسيق زر الثيم الأنيق والمتحرك */
+    .theme-toggle-btn {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: var(--bg-body); border: 1px solid var(--border-color);
+      color: var(--text-main); display: flex; align-items: center; justify-content: center;
+      cursor: pointer; box-shadow: var(--shadow-sm); position: relative; overflow: hidden;
+    }
+    .theme-toggle-btn:hover { transform: rotate(15deg) scale(1.05); border-color: var(--primary); color: var(--primary); }
+
+    /* المنتدى وتنسيق الرسائل (رسائلك يمين، الآخرين شمال) */
     .chat-box {
-      height: 480px; overflow-y: auto; background: var(--bg-body);
-      border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 20px; display: flex; flex-direction: column; gap: 12px;
+      height: 500px; overflow-y: auto; background: var(--bg-body);
+      border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 20px; display: flex; flex-direction: column; gap: 14px;
     }
-
     .chat-message {
-      max-width: 70%; padding: 12px 18px; border-radius: 16px; font-size: 0.95rem; word-break: break-word; display: flex; flex-direction: column;
+      max-width: 75%; padding: 14px 18px; border-radius: 18px; font-size: 0.95rem; word-break: break-word; display: flex; flex-direction: column; box-shadow: var(--shadow-sm);
     }
     .chat-message.sent {
       margin-right: auto; margin-left: 0; background: var(--primary); color: white;
-      border-bottom-left-radius: 16px; border-bottom-right-radius: 4px; align-items: flex-start;
+      border-bottom-left-radius: 18px; border-bottom-right-radius: 4px; align-items: flex-start;
     }
     .chat-message.received {
       margin-left: auto; margin-right: 0; background: var(--bg-card); color: var(--text-main);
-      border: 1px solid var(--border-color); border-bottom-left-radius: 4px; border-bottom-right-radius: 16px; align-items: flex-start;
+      border: 1px solid var(--border-color); border-bottom-left-radius: 4px; border-bottom-right-radius: 18px; align-items: flex-start;
     }
 
     .honor-card {
       background: var(--bg-card); border: 1px solid var(--border-color);
-      border-radius: var(--radius-lg); padding: 24px; text-align: center; color: var(--text-main);
+      border-radius: var(--radius-lg); padding: 24px; text-align: center; color: var(--text-main); box-shadow: var(--shadow-sm);
     }
     .honor-avatar {
-      width: 88px; height: 88px; border-radius: 50%; object-fit: cover; border: 3px solid var(--warning); margin-bottom: 16px;
+      width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 3px solid var(--warning); margin-bottom: 16px; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
     }
 
     footer {
       background: var(--bg-card); border-top: 1px solid var(--border-color);
       padding: 24px 32px; text-align: center; font-size: 0.9rem; color: var(--text-muted);
     }
-
     .footer-contact-btn {
-      display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px;
+      display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px;
       border-radius: 50rem; font-weight: 600; font-size: 0.9rem; text-decoration: none; border: 1px solid var(--border-color); background: var(--bg-body); color: var(--text-main);
     }
-    .footer-contact-btn.teacher { border-color: rgba(16, 185, 129, 0.3); }
-    .footer-contact-btn.teacher:hover { background: #10b981; color: #fff; }
-    .footer-contact-btn.admin { border-color: rgba(6, 182, 212, 0.3); }
-    .footer-contact-btn.admin:hover { background: #06b6d4; color: #fff; }
+    .footer-contact-btn.teacher:hover { background: var(--success); color: #fff; border-color: var(--success); }
+    .footer-contact-btn.admin:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
 
     .table { color: var(--text-main) !important; }
 
@@ -245,20 +244,18 @@
     </div>
     
     <div class="sidebar-nav">
-      <a class="nav-link active" href="#" onclick="showSection('homeSection', this)"><i class="fa-solid fa-house"></i>الرئيسية</a>
-      <a class="nav-link" href="#" onclick="showSection('notificationsSection', this)"><i class="fa-solid fa-bell"></i>الإشعارات والأخبار</a>
-      <a class="nav-link" href="#" onclick="showSection('honorSection', this)"><i class="fa-solid fa-trophy"></i>المتميزين</a>
-      <a class="nav-link" href="#" onclick="showSection('booksSection', this)"><i class="fa-solid fa-book-open"></i>الكتب والملخصات</a>
-      <a class="nav-link" href="#" onclick="showSection('forumSection', this)"><i class="fa-solid fa-comments"></i>منتدى الطلاب</a>
+      <a class="nav-link active" href="#" onclick="showSection('homeSection', this)"><i class="fa-solid fa-house text-primary"></i>الرئيسية</a>
+      <a class="nav-link" href="#" onclick="showSection('honorSection', this)"><i class="fa-solid fa-trophy text-warning"></i>المتميزين</a>
+      <a class="nav-link" href="#" onclick="showSection('booksSection', this)"><i class="fa-solid fa-book-open text-danger"></i>الكتب والملخصات</a>
+      <a class="nav-link" href="#" onclick="showSection('videosSection', this)"><i class="fa-solid fa-video text-info"></i>الفيديوهات التعليمية</a>
+      <a class="nav-link" href="#" onclick="showSection('forumSection', this)"><i class="fa-solid fa-comments text-success"></i>منتدى الطلاب</a>
       
-      <!-- محررات الأكواد مفصولة -->
-      <a class="nav-link" href="#" onclick="showSection('pythonEditorSection', this)"><i class="fa-brands fa-python text-warning"></i>محرر Python</a>
-      <a class="nav-link" href="#" onclick="showSection('jsEditorSection', this)"><i class="fa-brands fa-js text-warning"></i>محرر JavaScript</a>
+      <a class="nav-link" href="#" onclick="showSection('pythonEditorSection', this)"><i class="fa-brands fa-python text-warning" style="font-size:1.3rem;"></i>محرر Python</a>
+      <a class="nav-link" href="#" onclick="showSection('jsEditorSection', this)"><i class="fa-brands fa-js text-warning" style="font-size:1.3rem;"></i>محرر JavaScript</a>
       <a class="nav-link" href="#" onclick="showSection('htmlEditorSection', this)"><i class="fa-solid fa-laptop-code text-info"></i>محرر HTML & CSS</a>
       
-      <a class="nav-link" href="#" onclick="showSection('dailyChallengeSection', this)"><i class="fa-solid fa-bolt"></i>التحدي اليومي</a>
-      <a class="nav-link" id="profileNavItem" style="display: none;" href="#" onclick="showSection('profileSection', this)"><i class="fa-solid fa-user-gear"></i>الملف الشخصي</a>
-      <a class="nav-link text-warning mt-3" href="#" onclick="showSection('adminSection', this)"><i class="fa-solid fa-shield-halved"></i>لوحة الأدمن</a>
+      <a class="nav-link" id="profileNavItem" style="display: none;" href="#" onclick="showSection('profileSection', this)"><i class="fa-solid fa-user-gear text-secondary"></i>الملف الشخصي</a>
+      <a class="nav-link text-warning mt-3" href="#" onclick="showSection('adminSection', this)"><i class="fa-solid fa-shield-halved text-warning"></i>لوحة الأدمن</a>
     </div>
   </aside>
 
@@ -272,7 +269,7 @@
       </div>
       
       <div class="d-flex align-items-center gap-2">
-        <button class="btn btn-sm btn-outline-secondary rounded-circle d-flex align-items-center justify-content-center" onclick="toggleTheme()" title="تبديل الوضع" style="width: 38px; height: 38px;">
+        <button class="theme-toggle-btn" onclick="toggleTheme()" title="تبديل الوضع الليلي والنهاري">
           <i class="fa-solid fa-moon" id="themeIcon"></i>
         </button>
         
@@ -284,12 +281,20 @@
 
     <main class="main-container">
 
-      <!-- Home Section -->
+      <!-- Home Section (مع إدماج خانة الإشعارات والأخبار داخلها) -->
       <section id="homeSection">
         <div class="hero-card mb-4 text-center">
           <h2 class="fw-bold mb-2">طريقك لاحتراف البرمجة والذكاء الاصطناعي</h2>
           <p class="opacity-90 mb-4 fs-6">إشراف وتدريس: المس أمل شفيق السيد</p>
-          <button class="btn btn-light text-primary fw-bold px-4 py-2 rounded-pill" onclick="showAuthModal('register')">ابدأ رحلتك الآن</button>
+          <button class="btn btn-light text-primary fw-bold px-4 py-2 rounded-pill shadow" onclick="showAuthModal('register')">ابدأ رحلتك الآن</button>
+        </div>
+
+        <!-- خانة الإشعارات والأخبار كقسم أساسي في الصفحة الرئيسية -->
+        <div class="custom-card mb-4">
+          <h5 class="fw-bold mb-3 text-primary"><i class="fa-solid fa-bullhorn me-2"></i>أحدث الإشعارات والأخبار التعليمية</h5>
+          <div id="homeNotificationsContainer" class="d-flex flex-column gap-3">
+            <p class="text-muted m-0">جاري تحميل الإشعارات...</p>
+          </div>
         </div>
 
         <div class="row g-4">
@@ -303,8 +308,8 @@
           <div class="col-md-4">
             <div class="custom-card h-100 text-center">
               <div class="brand-logo mx-auto mb-3 bg-success d-flex align-items-center justify-content-center text-white" style="width: 48px; height: 48px;"><i class="fa-solid fa-laptop-code"></i></div>
-              <h5 class="fw-bold">محرك الأكواد</h5>
-              <p class="fs-6">محور تفاعلي لكتابة وتجربة لغات البرمجة (Python, JS, HTML) مباشرة.</p>
+              <h5 class="fw-bold">محركات الأكواد</h5>
+              <p class="fs-6">محور تفاعلي متطور لتجربة لغات البرمجة (Python, JS, HTML) مباشرة عبر المنصة.</p>
             </div>
           </div>
           <div class="col-md-4">
@@ -317,31 +322,33 @@
         </div>
       </section>
 
-      <!-- Notifications Section -->
-      <section id="notificationsSection" style="display: none;">
-        <h4 class="fw-bold mb-4"><i class="fa-solid fa-bell text-primary me-2"></i>مركز الأخبار والإشعارات</h4>
-        <div id="notificationsContainer" class="d-flex flex-column gap-3"></div>
-      </section>
-
       <!-- Honor Board Section -->
       <section id="honorSection" style="display: none;">
         <h4 class="fw-bold mb-4"><i class="fa-solid fa-trophy text-warning me-2"></i>لوحة الطلاب المتميزين</h4>
         <div class="row g-4" id="honorContainer"></div>
       </section>
 
-      <!-- Books Section -->
+      <!-- Books Section (مع تجميل أزرار الفتح والتحميل) -->
       <section id="booksSection" style="display: none;">
         <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
-          <h4 class="fw-bold m-0"><i class="fa-solid fa-book-open text-primary me-2"></i>مكتبة المذكرات والكتب</h4>
+          <h4 class="fw-bold m-0"><i class="fa-solid fa-book-open text-danger me-2"></i>مكتبة المذكرات والكتب</h4>
           <input type="text" id="bookSearch" class="form-control" style="max-width: 280px;" placeholder="بحث عن كتاب أو مرحلة..." onkeyup="filterBooks()">
         </div>
         <div class="row g-4" id="booksContainer"></div>
       </section>
 
-      <!-- Forum / Chat Section -->
+      <!-- Educational Videos Section (بدل التحدي اليومي) -->
+      <section id="videosSection" style="display: none;">
+        <h4 class="fw-bold mb-4"><i class="fa-solid fa-video text-info me-2"></i>الفيديوهات التعليمية والشروحات</h4>
+        <div class="row g-4" id="videosContainer">
+          <div class="col-12 text-center text-muted">جاري تحميل الفيديوهات...</div>
+        </div>
+      </section>
+
+      <!-- Forum / Chat Section (رسائلك يمين، الآخرين شمال وبشكل منسق) -->
       <section id="forumSection" style="display: none;">
         <div class="custom-card">
-          <h5 class="fw-bold mb-3"><i class="fa-solid fa-comments text-primary me-2"></i>منتدى المحادثة المباشر</h5>
+          <h5 class="fw-bold mb-3"><i class="fa-solid fa-comments text-success me-2"></i>منتدى المحادثة المباشر</h5>
           <div class="chat-box mb-3" id="chatContainer"></div>
           
           <div class="input-group gap-2 align-items-center">
@@ -359,58 +366,45 @@
         </div>
       </section>
 
-      <!-- محرر Python مستقل ومحسن -->
+      <!-- محرر Python المحسن والقوي جداً -->
       <section id="pythonEditorSection" style="display: none;">
         <div class="custom-card">
-          <h5 class="fw-bold mb-3"><i class="fa-brands fa-python text-warning me-2"></i>محرر ومنفذ كود Python</h5>
-          <p class="small text-muted mb-2">اكتب أكواد بايثون وسيتم محاكاة تنفيذها وعرض النتيجة بشكل دقيق وسليم.</p>
-          <textarea id="pythonCodeInput" class="form-control font-monospace mb-3" rows="10" dir="ltr" style="background:#0f172a; color:#facc15; border:none;" placeholder="print('Hello from Python!')"></textarea>
+          <h5 class="fw-bold mb-3"><i class="fa-brands fa-python text-warning me-2"></i>محرر ومنفذ كود Python المتقدم</h5>
+          <p class="small text-muted mb-2">يدعم تعريف المتغيرات، الدوال، العمليات الحسابية، ودالة print بشكل سليم وقوي.</p>
+          <textarea id="pythonCodeInput" class="form-control font-monospace mb-3" rows="11" dir="ltr" style="background:#0f172a; color:#facc15; border:none;" placeholder="name = 'أحمد'&#10;print('مرحباً ' + name)"></textarea>
           <button class="btn btn-warning text-dark fw-bold px-4 mb-3" onclick="runPythonCode()"><i class="fa-solid fa-play me-1"></i> تشغيل شفرة Python</button>
           <h6 class="fw-bold">مخرجات التنفيذ (Python Output):</h6>
           <pre id="pythonOutput" class="p-3 rounded-3 bg-dark text-warning font-monospace" style="min-height: 120px; border: 1px solid rgba(255,255,255,0.1);"></pre>
         </div>
       </section>
 
-      <!-- محرر JavaScript مستقل ومحسن -->
+      <!-- محرر JavaScript الأساسي والأقوى -->
       <section id="jsEditorSection" style="display: none;">
         <div class="custom-card">
-          <h5 class="fw-bold mb-3"><i class="fa-brands fa-js text-warning me-2"></i>محرر ومنفذ JavaScript</h5>
-          <p class="small text-muted mb-2">اكتب أكواد جافاسكريبت وسيتم تنفيذها عبر بيئة آمنة وعرض نتائج الـ console.</p>
-          <textarea id="jsCodeInput" class="form-control font-monospace mb-3" rows="10" dir="ltr" style="background:#0f172a; color:#38bdf8; border:none;" placeholder="console.log('مرحباً بك في جافاسكريبت');"></textarea>
+          <h5 class="fw-bold mb-3"><i class="fa-brands fa-js text-warning me-2"></i>محرر ومنفذ JavaScript الأساسي الشامل</h5>
+          <p class="small text-muted mb-2">بيئة تشغيل متكاملة لاختبار أساسيات الجافاسكريبت، الدوال، المصفوفات، وعرض نتائج الـ console بدقة.</p>
+          <textarea id="jsCodeInput" class="form-control font-monospace mb-3" rows="11" dir="ltr" style="background:#0f172a; color:#38bdf8; border:none;" placeholder="function sum(a, b) { return a + b; }&#10;console.log('الناتج =', sum(10, 20));"></textarea>
           <button class="btn btn-primary fw-bold px-4 mb-3" onclick="runJsCode()"><i class="fa-solid fa-play me-1"></i> تنفيذ JavaScript</button>
-          <h6 class="fw-bold">مخرجات الكอนسول (Console Output):</h6>
+          <h6 class="fw-bold">مخرجات الكونسول (Console Output):</h6>
           <pre id="jsOutput" class="p-3 rounded-3 bg-dark text-success font-monospace" style="min-height: 120px; border: 1px solid rgba(255,255,255,0.1);"></pre>
         </div>
       </section>
 
-      <!-- محرر HTML & CSS محسن ومستقل -->
+      <!-- محرر HTML & CSS -->
       <section id="htmlEditorSection" style="display: none;">
         <div class="custom-card">
           <h5 class="fw-bold mb-3"><i class="fa-solid fa-laptop-code text-info me-2"></i>محرر ومعاينة صفحات الـ HTML & CSS</h5>
-          <p class="small text-muted mb-2">صمم واكتب أكواد الـ HTML والـ CSS وشاهد النتيجة تظهر حية ومباشرة (محفوظة على جهازك).</p>
+          <p class="small text-muted mb-2">صمم صفحات الويب وشاهد النتيجة تظهر حية ومباشرة (محفوظة على جهازك تلقائياً).</p>
           <div class="row g-3">
             <div class="col-md-6">
               <label class="form-label fw-semibold">شفرة HTML / CSS:</label>
-              <textarea id="studentSiteCode" class="form-control font-monospace" rows="12" dir="ltr" style="background:#0f172a; color:#f8fafc;" placeholder="<h1>موقعى الأول</h1>" oninput="saveStudentSiteCode()"></textarea>
+              <textarea id="studentSiteCode" class="form-control font-monospace" rows="12" dir="ltr" style="background:#0f172a; color:#f8fafc;" placeholder="<h1 style='color:indigo;'>موقعي الأول</h1>" oninput="saveStudentSiteCode()"></textarea>
             </div>
             <div class="col-md-6">
               <label class="form-label fw-semibold">معاينة النتيجة الحية:</label>
               <iframe id="sitePreview" style="width:100%; height:320px; background:#fff; border:1px solid var(--border-color); border-radius:8px;"></iframe>
             </div>
           </div>
-        </div>
-      </section>
-
-      <!-- Daily Challenge Section -->
-      <section id="dailyChallengeSection" style="display: none;">
-        <div class="custom-card mx-auto" style="max-width: 700px;">
-          <h5 class="fw-bold mb-3 text-primary"><i class="fa-solid fa-bolt me-2"></i>تحدي البرمجة اليومي</h5>
-          <p id="challengeQuestionText" class="fw-semibold mb-3">جارٍ تحميل السؤال اليومي...</p>
-          <div class="mb-3">
-            <input type="text" id="challengeAnswerInput" class="form-control" placeholder="اكتب إجابتك البرمجية هنا...">
-          </div>
-          <button class="btn btn-custom-primary w-100 fw-bold" onclick="submitDailyChallenge()">إرسال الإجابة وحفظها</button>
-          <div id="challengeResultMsg" class="mt-3 text-center fw-semibold"></div>
         </div>
       </section>
 
@@ -450,7 +444,7 @@
         </div>
       </section>
 
-      <!-- Admin Section (مع قائمة جانبية داخلية لتنظيم خصائص الأدمن دون زحمة) -->
+      <!-- لوحة الأدمن (مع قائمة جانبية داخلية مرتبة ومنظمة) -->
       <section id="adminSection" style="display: none;">
         <div id="adminAuthLock" class="custom-card text-center mx-auto" style="max-width: 420px;">
           <div class="brand-logo mx-auto mb-3 bg-warning d-flex align-items-center justify-content-center text-dark fs-4" style="width: 60px; height: 60px; border-radius: 50%;"><i class="fa-solid fa-lock"></i></div>
@@ -464,7 +458,7 @@
           <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
             <div>
               <h4 class="fw-bold m-0"><i class="fa-solid fa-chart-pie text-warning me-2"></i>لوحة تحكم الأدمن</h4>
-              <small class="text-muted">مرحباً بك، تحكم بكل أقسام المنصة عبر القائمة الجانبية المخصصة أدناه.</small>
+              <small class="text-muted">إدارة محتوى المنصة، الطلاب، والطلبات عبر القائمة المخصصة.</small>
             </div>
             <button class="btn btn-outline-danger btn-sm px-3 fw-semibold" onclick="adminLogout()"><i class="fa-solid fa-right-from-bracket me-1"></i> خروج الأدمن</button>
           </div>
@@ -490,17 +484,17 @@
             </div>
           </div>
 
-          <!-- نظام القائمة الجانبية الفرعية للأدمن لتنظيم الخصائص -->
+          <!-- القائمة الجانبية الداخلية للأدمن لعدم الازدحام -->
           <div class="admin-layout">
             <div class="admin-sidebar">
               <h6 class="fw-bold px-2 mb-3 text-muted" style="font-size:0.8rem;">خيارات الإدارة</h6>
-              <a href="#" class="admin-nav-link active" onclick="switchAdminTab('pendingTab', this)"><i class="fa-solid fa-user-clock"></i> الطلبات المعلقة</a>
+              <a href="#" class="admin-nav-link active" onclick="switchAdminTab('pendingTab', this)"><i class="fa-solid fa-user-clock"></i> طلبات الانضمام</a>
               <a href="#" class="admin-nav-link" onclick="switchAdminTab('studentsTab', this)"><i class="fa-solid fa-users"></i> قائمة الطلاب</a>
-              <a href="#" class="admin-nav-link" onclick="switchAdminTab('logsTab', this)"><i class="fa-solid fa-clock-rotate-left"></i> السجلات</a>
-              <a href="#" class="admin-nav-link" onclick="switchAdminTab('manageNewsTab', this)"><i class="fa-solid fa-bullhorn"></i> الإشعارات</a>
-              <a href="#" class="admin-nav-link" onclick="switchAdminTab('manageHonorTab', this)"><i class="fa-solid fa-award"></i> المتميزين</a>
-              <a href="#" class="admin-nav-link" onclick="switchAdminTab('manageBooksTab', this)"><i class="fa-solid fa-book"></i> المذكرات</a>
-              <a href="#" class="admin-nav-link" onclick="switchAdminTab('manageChallengeTab', this)"><i class="fa-solid fa-bolt"></i> إجابات التحدي</a>
+              <a href="#" class="admin-nav-link" onclick="switchAdminTab('logsTab', this)"><i class="fa-solid fa-clock-rotate-left"></i> السجلات والنشاطات</a>
+              <a href="#" class="admin-nav-link" onclick="switchAdminTab('manageNewsTab', this)"><i class="fa-solid fa-bullhorn"></i> الإشعارات والأخبار</a>
+              <a href="#" class="admin-nav-link" onclick="switchAdminTab('manageHonorTab', this)"><i class="fa-solid fa-award"></i> لوحة المتميزين</a>
+              <a href="#" class="admin-nav-link" onclick="switchAdminTab('manageBooksTab', this)"><i class="fa-solid fa-book"></i> المذكرات والكتب</a>
+              <a href="#" class="admin-nav-link" onclick="switchAdminTab('manageVideosTab', this)"><i class="fa-solid fa-video"></i> الفيديوهات التعليمية</a>
             </div>
 
             <div class="admin-content-area custom-card m-0">
@@ -543,7 +537,7 @@
 
               <!-- Tab 4: News -->
               <div class="admin-tab-pane" id="manageNewsTab" style="display: none;">
-                <h6 class="fw-bold mb-3">نشر إشعار أو خبر جديد</h6>
+                <h6 class="fw-bold mb-3">نشر إشعار أو خبر جديد في الصفحة الرئيسية</h6>
                 <form onsubmit="addNotification(event)" class="mb-4 pb-4 border-bottom">
                   <input type="text" id="notifTitle" class="form-control mb-2" placeholder="عنوان الإشعار" required>
                   <textarea id="notifContent" class="form-control mb-3" placeholder="محتوى الإشعار..." rows="3" required></textarea>
@@ -596,18 +590,18 @@
                 </div>
               </div>
 
-              <!-- Tab 7: Challenge Answers -->
-              <div class="admin-tab-pane" id="manageChallengeTab" style="display: none;">
-                <h6 class="fw-bold mb-3">تحديد السؤال اليومي للمنصة</h6>
-                <div class="input-group mb-4 pb-4 border-bottom">
-                  <input type="text" id="adminChallengeInput" class="form-control" placeholder="اكتب سؤال التحدي الجديد...">
-                  <button class="btn btn-primary" onclick="updateDailyChallengeQuestion()">حفظ السؤال</button>
-                </div>
-                <h6 class="fw-bold mb-3">إجابات الطلاب المسجلة للتحدي اليومي</h6>
+              <!-- Tab 7: Videos (جدول الفيديوهات التعليمية) -->
+              <div class="admin-tab-pane" id="manageVideosTab" style="display: none;">
+                <h6 class="fw-bold mb-3">إضافة فيديو تعليمي جديد (YouTube / رابط مباشر)</h6>
+                <form onsubmit="addVideo(event)" class="mb-4 pb-4 border-bottom">
+                  <input type="text" id="videoTitle" class="form-control mb-2" placeholder="عنوان الشرح أو الدرس" required>
+                  <input type="url" id="videoUrl" class="form-control mb-3" placeholder="رابط يوتيوب أو فيديو (https://...)" required>
+                  <button type="submit" class="btn btn-info btn-sm px-4 text-white fw-bold">نشر الفيديو</button>
+                </form>
                 <div class="table-responsive">
                   <table class="table table-hover align-middle">
-                    <thead><tr><th>اسم الطالب</th><th>الإجابة المقدمة</th><th>الحالة</th><th>التوقيت</th></tr></thead>
-                    <tbody id="adminChallengeAnswersBody"></tbody>
+                    <thead><tr><th>العنوان</th><th>الرابط</th><th>حذف</th></tr></thead>
+                    <tbody id="adminVideosTableBody"></tbody>
                   </table>
                 </div>
               </div>
@@ -724,10 +718,9 @@
     let notifications = [];
     let honorStudents = [];
     let books = [];
+    let videos = [];
     let chatMessages = [];
     let auditLogs = [];
-    let challengeAnswers = [];
-    let currentChallengeQuestion = "اكتب دالة بلغة JavaScript لحساب مجموع رقمين؟";
     
     let currentUser = JSON.parse(localStorage.getItem('platform_current_user')) || null;
     let savedTheme = localStorage.getItem('platform_theme') || 'light';
@@ -771,11 +764,12 @@
       const { data: booksData } = await _supabase.from('books').select('*').order('created_at', { ascending: false });
       if (booksData) books = booksData;
 
+      // جلب الفيديوهات التعليمية من جدول educational_videos في سابا بيز
+      const { data: videosData } = await _supabase.from('educational_videos').select('*').order('created_at', { ascending: false });
+      if (videosData) videos = videosData;
+
       const { data: logsData } = await _supabase.from('audit_logs').select('*').order('created_at', { ascending: false });
       if (logsData) auditLogs = logsData;
-
-      const { data: challengeData } = await _supabase.from('challenge_answers').select('*').order('created_at', { ascending: false });
-      if (challengeData) challengeAnswers = challengeData;
 
       const { data: messagesData } = await _supabase.from('chat_messages').select('*').order('created_at', { ascending: true });
       if (messagesData) {
@@ -793,7 +787,7 @@
     }
 
     function setupRealtimeSubscription() {
-      ['chat_messages', 'audit_logs', 'honor_students', 'notifications', 'books', 'challenge_answers', 'profiles'].forEach(table => {
+      ['chat_messages', 'audit_logs', 'honor_students', 'notifications', 'books', 'educational_videos', 'profiles'].forEach(table => {
         _supabase.channel('public:' + table)
           .on('postgres_changes', { event: '*', schema: 'public', table: table }, () => fetchSupabaseData())
           .subscribe();
@@ -812,15 +806,15 @@
         document.getElementById('authContainer').style.display = 'block';
         document.getElementById('profileNavItem').style.display = 'none';
       }
-      renderNotifications();
+      renderHomeNotifications();
       renderHonor();
       renderBooks(books);
+      renderVideos(videos);
       renderChat();
-      document.getElementById('challengeQuestionText').innerText = currentChallengeQuestion;
     }
 
     function showSection(sectionId, element) {
-      const protectedSections = ['forumSection', 'pythonEditorSection', 'jsEditorSection', 'htmlEditorSection', 'booksSection', 'dailyChallengeSection'];
+      const protectedSections = ['forumSection', 'pythonEditorSection', 'jsEditorSection', 'htmlEditorSection', 'booksSection', 'videosSection'];
       if (protectedSections.includes(sectionId) && (!currentUser || currentUser.status !== 'approved')) {
         alert("عذراً، هذا القسم متاح فقط لطلاب المنصة المفعلين بعد موافقة الأدمن.");
         return;
@@ -848,7 +842,6 @@
       if (window.innerWidth <= 991) toggleSidebar();
     }
 
-    // التنقل بين خصائص الأدمن في القائمة الجانبية الداخلية
     function switchAdminTab(tabId, element) {
       document.querySelectorAll('.admin-tab-pane').forEach(pane => pane.style.display = 'none');
       document.getElementById(tabId).style.display = 'block';
@@ -1013,15 +1006,15 @@
       await _supabase.from('audit_logs').insert([{ name, role, action }]);
     }
 
-    function renderNotifications() {
-      const container = document.getElementById('notificationsContainer');
+    function renderHomeNotifications() {
+      const container = document.getElementById('homeNotificationsContainer');
       if (notifications.length === 0) {
-        container.innerHTML = `<p class="text-center text-muted">لا توجد إشعارات حالياً.</p>`;
+        container.innerHTML = `<p class="text-muted m-0">لا توجد إشعارات أو أخبار جديدة حالياً.</p>`;
         return;
       }
       container.innerHTML = notifications.map(n => `
-        <div class="custom-card m-0">
-          <div class="d-flex justify-content-between align-items-center mb-2">
+        <div class="p-3 rounded-3" style="background: var(--bg-body); border: 1px solid var(--border-color);">
+          <div class="d-flex justify-content-between align-items-center mb-1">
             <h6 class="fw-bold text-primary m-0">${n.title}</h6>
             <span class="badge bg-secondary-subtle text-secondary">${n.date}</span>
           </div>
@@ -1058,8 +1051,26 @@
           <div class="custom-card h-100 d-flex flex-column m-0">
             <i class="fa-solid fa-file-pdf fa-2x text-danger mb-3"></i>
             <h6 class="fw-bold mb-2">${b.title}</h6>
-            <span class="badge bg-primary-subtle text-primary mb-3" style="width: fit-content;">${b.grade}</span>
-            <a href="${b.url}" target="_blank" class="btn btn-outline-primary btn-sm mt-auto"><i class="fa-solid fa-download me-1"></i> فتح / تحميل المذكرة</a>
+            <span class="badge bg-danger-subtle text-danger mb-3" style="width: fit-content;">${b.grade}</span>
+            <a href="${b.url}" target="_blank" class="btn btn-outline-danger btn-sm mt-auto fw-bold py-2"><i class="fa-solid fa-cloud-arrow-down me-1"></i> فتح أو تحميل المذكرة</a>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderVideos(list = videos) {
+      const container = document.getElementById('videosContainer');
+      if (!list || list.length === 0) {
+        container.innerHTML = `<p class="text-center text-muted col-12">لا توجد فيديوهات تعليمية منشورة حالياً.</p>`;
+        return;
+      }
+      container.innerHTML = list.map(v => `
+        <div class="col-md-6">
+          <div class="custom-card h-100 m-0">
+            <h6 class="fw-bold mb-3 text-primary"><i class="fa-solid fa-play-circle me-2"></i>${v.title}</h6>
+            <div class="ratio ratio-16x9 rounded-3 overflow-hidden border">
+              <iframe src="${v.url.replace('watch?v=', 'embed/')}" allowfullscreen></iframe>
+            </div>
           </div>
         </div>
       `).join('');
@@ -1107,7 +1118,7 @@
       }
     }
 
-    // --- محرر وتصميم محرك JavaScript المحسن ---
+    // --- مححر JavaScript الشامل والقوي ---
     function runJsCode() {
       const code = document.getElementById('jsCodeInput').value;
       const output = document.getElementById('jsOutput');
@@ -1120,13 +1131,13 @@
         };
         const runFn = new Function('console', code);
         runFn(customConsole);
-        output.innerText = logs.join('\n') || 'تم التنفيذ بنجاح (بدون مخرجات console.log).';
+        output.innerText = logs.join('\n') || 'تم التنفيذ بنجاح (لا توجد مخرجات console.log).';
       } catch (err) {
         output.innerText = 'خطأ برمجى: ' + err.message;
       }
     }
 
-    // --- محرر وتصميم محرك Python المحسن (محاكي دقيق) ---
+    // --- محرر Python المحسن والقوي جداً ---
     function runPythonCode() {
       const code = document.getElementById('pythonCodeInput').value.trim();
       const output = document.getElementById('pythonOutput');
@@ -1140,7 +1151,6 @@
           line = line.trim();
           if (!line || line.startsWith('#')) continue;
 
-          // معالجة دالة print
           if (line.startsWith('print(') && line.endsWith(')')) {
             let content = line.substring(6, line.length - 1).trim();
             if ((content.startsWith("'") && content.endsWith("'")) || (content.startsWith('"') && content.endsWith('"'))) {
@@ -1148,7 +1158,6 @@
             } else if (variables[content] !== undefined) {
               results.push(variables[content]);
             } else {
-              // محاولة حساب تعبير رياضي بسيط
               try {
                 let evaluated = eval(content);
                 results.push(evaluated);
@@ -1156,9 +1165,7 @@
                 results.push(content);
               }
             }
-          } 
-          // معالجة متغيرات بسيطة مثل x = 5 أو x = "hello"
-          else if (line.includes('=')) {
+          } else if (line.includes('=')) {
             let parts = line.split('=');
             let varName = parts[0].trim();
             let varVal = parts[1].trim();
@@ -1170,9 +1177,9 @@
           }
         }
 
-        output.innerText = results.length > 0 ? results.join('\n') : "تم تنفيذ الكود بنجاح.";
+        output.innerText = results.length > 0 ? results.join('\n') : "تم تنفيذ الشفرة بنجاح.";
       } catch (err) {
-        output.innerText = "خطأ في تنفيذ Python: " + err.message;
+        output.innerText = "خطأ في تشغيل بايثون: " + err.message;
       }
     }
 
@@ -1182,22 +1189,6 @@
       const studentId = currentUser ? currentUser.id : 'guest';
       localStorage.setItem(`student_site_code_${studentId}`, code);
       document.getElementById('sitePreview').srcdoc = code;
-    }
-
-    async function submitDailyChallenge() {
-      const answer = document.getElementById('challengeAnswerInput').value;
-      if (!answer.trim()) return alert("يرجى كتابة الإجابة أولاً.");
-      
-      const studentName = currentUser ? currentUser.name : 'زائر';
-      const { error } = await _supabase.from('challenge_answers').insert([
-        { student_name: studentName, answer: answer, status: 'تم الإرسال' }
-      ]);
-
-      if (error) alert("خطأ أثناء الحفظ: " + error.message);
-      else {
-        document.getElementById('challengeResultMsg').innerText = "تم حفظ إجابتك بنجاح ومراجعتها من قبل المعلم!";
-        document.getElementById('challengeAnswerInput').value = '';
-      }
     }
 
     function checkAdminAuth() {
@@ -1255,15 +1246,6 @@
           <td><button class="btn btn-danger btn-sm" onclick="deleteSingleLog(${l.id})"><i class="fa-solid fa-trash"></i></button></td>
         </tr>
       `).join('');
-
-      document.getElementById('adminChallengeAnswersBody').innerHTML = challengeAnswers.map(c => `
-        <tr>
-          <td><strong>${c.student_name}</strong></td>
-          <td><code>${c.answer}</code></td>
-          <td><span class="badge bg-success">${c.status}</span></td>
-          <td><small>${new Date(c.created_at).toLocaleString('ar-EG')}</small></td>
-        </tr>
-      `).join('');
     }
 
     function renderAdminManagementTables() {
@@ -1296,11 +1278,22 @@
         adminBooksBody.innerHTML = books.length ? books.map(b => `
           <tr>
             <td><strong>${b.title}</strong></td>
-            <td><span class="badge bg-primary-subtle text-primary">${b.grade}</span></td>
-            <td><a href="${b.url}" target="_blank" class="btn btn-outline-primary btn-sm">معاينة</a></td>
+            <td><span class="badge bg-danger-subtle text-danger">${b.grade}</span></td>
+            <td><a href="${b.url}" target="_blank" class="btn btn-outline-danger btn-sm">معاينة</a></td>
             <td><button class="btn btn-danger btn-sm" onclick="deleteBook(${b.id})"><i class="fa-solid fa-trash"></i></button></td>
           </tr>
         `).join('') : `<tr><td colspan="4" class="text-center text-muted">لا توجد كتب.</td></tr>`;
+      }
+
+      const adminVideosBody = document.getElementById('adminVideosTableBody');
+      if (adminVideosBody) {
+        adminVideosBody.innerHTML = videos.length ? videos.map(v => `
+          <tr>
+            <td><strong>${v.title}</strong></td>
+            <td><a href="${v.url}" target="_blank" class="btn btn-outline-info btn-sm">رابط الفيديو</a></td>
+            <td><button class="btn btn-danger btn-sm" onclick="deleteVideo(${v.id})"><i class="fa-solid fa-trash"></i></button></td>
+          </tr>
+        `).join('') : `<tr><td colspan="3" class="text-center text-muted">لا توجد فيديوهات منشورة.</td></tr>`;
       }
     }
 
@@ -1381,13 +1374,15 @@
       await _supabase.from('books').delete().eq('id', id);
       loadAdminData();
     }
-    function updateDailyChallengeQuestion() {
-      const q = document.getElementById('adminChallengeInput').value;
-      if (!q) return;
-      currentChallengeQuestion = q;
-      document.getElementById('challengeQuestionText').innerText = q;
-      alert("تم تحديث سؤال التحدي اليومي بنجاح!");
-      document.getElementById('adminChallengeInput').value = '';
+    async function addVideo(e) {
+      e.preventDefault();
+      await _supabase.from('educational_videos').insert([{ title: document.getElementById('videoTitle').value, url: document.getElementById('videoUrl').value }]);
+      document.getElementById('videoTitle').value = ''; document.getElementById('videoUrl').value = '';
+      loadAdminData();
+    }
+    async function deleteVideo(id) {
+      await _supabase.from('educational_videos').delete().eq('id', id);
+      loadAdminData();
     }
 
     fetchSupabaseData();
