@@ -468,7 +468,7 @@
       <section id="booksSection" style="display: none;">
         <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
           <h4 class="fw-bold m-0"><i class="fa-solid fa-book-open text-primary me-2"></i>مكتبة المذكرات والكتب</h4>
-          <input type="text" id="bookSearch" class="form-control w-25" placeholder="بحث عن كتاب..." onkeyup="filterBooks()">
+          <input type="text" id="bookSearch" class="form-control" style="max-width: 280px;" placeholder="بحث عن كتاب أو مرحلة..." onkeyup="filterBooks()">
         </div>
         <div class="row g-4" id="booksContainer"></div>
       </section>
@@ -593,7 +593,7 @@
             <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#logsTab"><i class="fa-solid fa-clock-rotate-left me-1"></i> السجلات</a></li>
             <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#manageNewsTab"><i class="fa-solid fa-bullhorn me-1"></i> إدارة الإشعارات</a></li>
             <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#manageHonorTab"><i class="fa-solid fa-award me-1"></i> إدارة المتميزين</a></li>
-            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#manageBooksTab"><i class="fa-solid fa-book me-1"></i> المذكرات</a></li>
+            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#manageBooksTab"><i class="fa-solid fa-book me-1"></i> إدارة المذكرات</a></li>
           </ul>
 
           <div class="tab-content custom-card">
@@ -692,9 +692,10 @@
               </div>
             </div>
 
+            <!-- إدارة وإضافة وحذف المذكرات والكتب -->
             <div class="tab-pane fade" id="manageBooksTab">
-              <h6 class="fw-bold mb-3">رفع كتاب أو مذكرة إلكترونية</h6>
-              <form onsubmit="addBook(event)" class="mb-4">
+              <h6 class="fw-bold mb-3">إضافة كتاب أو مذكرة إلكترونية (Supabase)</h6>
+              <form onsubmit="addBook(event)" class="mb-4 pb-4 border-bottom">
                 <input type="text" id="bookTitle" class="form-control mb-2" placeholder="عنوان المذكرة / الكتاب" required>
                 <select id="bookGrade" class="form-select mb-2" required>
                   <option value="الصف الأول الثانوي">الصف الأول الثانوي</option>
@@ -702,9 +703,24 @@
                   <option value="الصف الثالث الثانوي">الصف الثالث الثانوي</option>
                   <option value="عام لكل المراحل">عام لكل المراحل</option>
                 </select>
-                <input type="text" id="bookUrl" class="form-control mb-3" placeholder="رابط الملف (PDF)" required>
-                <button type="submit" class="btn btn-success btn-sm px-4">نشر الكتاب</button>
+                <input type="url" id="bookUrl" class="form-control mb-3" placeholder="رابط الملف أو Google Drive (https://...)" required>
+                <button type="submit" class="btn btn-success btn-sm px-4"><i class="fa-solid fa-plus me-1"></i> نشر المذكرة</button>
               </form>
+
+              <h6 class="fw-bold mb-3 text-danger"><i class="fa-solid fa-book me-1"></i> المذكرات والكتب المنشورة حالياً</h6>
+              <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                  <thead>
+                    <tr>
+                      <th>عنوان المذكرة</th>
+                      <th>المرحلة الدراسية</th>
+                      <th>الرابط</th>
+                      <th>حذف</th>
+                    </tr>
+                  </thead>
+                  <tbody id="adminBooksTableBody"></tbody>
+                </table>
+              </div>
             </div>
 
           </div>
@@ -819,9 +835,7 @@
     let users = [];
     let notifications = [];
     let honorStudents = [];
-    let books = JSON.parse(localStorage.getItem('platform_books')) || [
-      { id: 1, title: "مذكرة خوارزميات الذكاء الاصطناعي", grade: "الصف الثاني الثانوي", url: "#" }
-    ];
+    let books = [];
     let chatMessages = [];
     let auditLogs = [];
     
@@ -858,7 +872,7 @@
       const { data: profilesData } = await _supabase.from('profiles').select('*');
       if (profilesData) users = profilesData;
 
-      // جلب الإشعارات مع الاحتفاظ بالـ id للحذف
+      // جلب الإشعارات
       const { data: notifsData } = await _supabase.from('notifications').select('*').order('created_at', { ascending: false });
       if (notifsData) {
         notifications = notifsData.map(n => ({
@@ -869,10 +883,16 @@
         }));
       }
 
-      // جلب لوحة الشرف من Supabase
+      // جلب لوحة الشرف
       const { data: honorData, error: honorError } = await _supabase.from('honor_students').select('*').order('created_at', { ascending: false });
       if (!honorError && honorData) {
         honorStudents = honorData;
+      }
+
+      // جلب المذكرات والكتب من Supabase
+      const { data: booksData, error: booksError } = await _supabase.from('books').select('*').order('created_at', { ascending: false });
+      if (!booksError && booksData) {
+        books = booksData;
       }
 
       // جلب سجلات النظام (Audit Logs)
@@ -927,6 +947,11 @@
         .channel('public:notifications')
         .on('postgres_changes', { event: '*', schema: 'public', table: 'notifications' }, () => fetchSupabaseData())
         .subscribe();
+
+      _supabase
+        .channel('public:books')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'books' }, () => fetchSupabaseData())
+        .subscribe();
     }
 
     function updateUI() {
@@ -944,7 +969,7 @@
       }
       renderNotifications();
       renderHonor();
-      renderBooks();
+      renderBooks(books);
       renderChat();
     }
 
@@ -1183,18 +1208,28 @@
       `).join('');
     }
 
-    function renderBooks() {
+    function renderBooks(list = books) {
       const container = document.getElementById('booksContainer');
-      container.innerHTML = books.map(b => `
+      if (!list || list.length === 0) {
+        container.innerHTML = `<p class="text-center text-muted">لا توجد كتب أو مذكرات متاحة حالياً.</p>`;
+        return;
+      }
+      container.innerHTML = list.map(b => `
         <div class="col-md-4">
           <div class="custom-card h-100 d-flex flex-column m-0">
             <i class="fa-solid fa-file-pdf fa-2x text-danger mb-3"></i>
             <h6 class="fw-bold mb-2">${b.title}</h6>
             <span class="badge bg-primary-subtle text-primary mb-3" style="width: fit-content;">${b.grade}</span>
-            <a href="${b.url}" target="_blank" class="btn btn-outline-primary btn-sm mt-auto">تحميل الكتاب</a>
+            <a href="${b.url}" target="_blank" class="btn btn-outline-primary btn-sm mt-auto"><i class="fa-solid fa-download me-1"></i> فتح / تحميل المذكرة</a>
           </div>
         </div>
       `).join('');
+    }
+
+    function filterBooks() {
+      const query = document.getElementById('bookSearch').value.toLowerCase();
+      const filtered = books.filter(b => b.title.toLowerCase().includes(query) || b.grade.toLowerCase().includes(query));
+      renderBooks(filtered);
     }
 
     function renderChat() {
@@ -1324,7 +1359,7 @@
       `).join('');
     }
 
-    // تحديث جداول الإدارة الخاصة بالإشعارات والمتميزين في لوحة الأدمن فقط
+    // تحديث جداول الإدارة الخاصة بالإشعارات والمتميزين والمذكرات في لوحة الأدمن فقط
     function renderAdminManagementTables() {
       const adminNewsBody = document.getElementById('adminNewsTableBody');
       if (adminNewsBody) {
@@ -1356,6 +1391,24 @@
               <td><span class="text-warning fw-semibold">${h.achievement}</span></td>
               <td>
                 <button class="btn btn-danger btn-sm" onclick="deleteHonorStudent(${h.id})"><i class="fa-solid fa-trash"></i> حذف</button>
+              </td>
+            </tr>
+          `).join('');
+        }
+      }
+
+      const adminBooksBody = document.getElementById('adminBooksTableBody');
+      if (adminBooksBody) {
+        if (books.length === 0) {
+          adminBooksBody.innerHTML = `<tr><td colspan="4" class="text-center text-muted">لا توجد مذكرات أو كتب منشورة حالياً.</td></tr>`;
+        } else {
+          adminBooksBody.innerHTML = books.map(b => `
+            <tr>
+              <td><strong>${b.title}</strong></td>
+              <td><span class="badge bg-primary-subtle text-primary">${b.grade}</span></td>
+              <td><a href="${b.url}" target="_blank" class="btn btn-outline-primary btn-sm"><i class="fa-solid fa-up-right-from-square"></i> معاينة الرابط</a></td>
+              <td>
+                <button class="btn btn-danger btn-sm" onclick="deleteBook(${b.id})"><i class="fa-solid fa-trash"></i> حذف</button>
               </td>
             </tr>
           `).join('');
@@ -1508,18 +1561,39 @@
       }
     }
 
-    function addBook(e) {
+    // إضافة كتاب أو مذكرة لقاعدة بيانات Supabase
+    async function addBook(e) {
       e.preventDefault();
-      books.push({
-        id: Date.now(),
-        title: document.getElementById('bookTitle').value,
-        grade: document.getElementById('bookGrade').value,
-        url: document.getElementById('bookUrl').value
-      });
-      localStorage.setItem('platform_books', JSON.stringify(books));
-      renderBooks();
-      addAuditLog('الأدمن', 'مدير النظام', `إضافة مذكرة/كتاب: ${document.getElementById('bookTitle').value}`);
-      alert("تم رفع الكتاب بنجاح!");
+      const title = document.getElementById('bookTitle').value;
+      const grade = document.getElementById('bookGrade').value;
+      const url = document.getElementById('bookUrl').value;
+
+      const { error } = await _supabase.from('books').insert([
+        { title, grade, url }
+      ]);
+
+      if (error) {
+        alert("خطأ أثناء رفع المذكرة: " + error.message);
+      } else {
+        await addAuditLog('الأدمن', 'مدير النظام', `إضافة مذكرة/كتاب: ${title}`);
+        alert("تم نشر المذكرة بنجاح!");
+        document.getElementById('bookTitle').value = '';
+        document.getElementById('bookUrl').value = '';
+        loadAdminData();
+      }
+    }
+
+    // حذف كتاب أو مذكرة من Supabase (متاح للأدمن فقط)
+    async function deleteBook(id) {
+      if (confirm("هل أنت متأكد من حذف هذه المذكرة نهائياً؟")) {
+        const { error } = await _supabase.from('books').delete().eq('id', id);
+        if (error) {
+          alert("خطأ أثناء حذف المذكرة: " + error.message);
+        } else {
+          await addAuditLog('الأدمن', 'مدير النظام', `حذف مذكرة برقم: ${id}`);
+          loadAdminData();
+        }
+      }
     }
 
     fetchSupabaseData();
