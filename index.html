@@ -622,11 +622,14 @@
             </div>
 
             <div class="tab-pane fade" id="logsTab">
-              <h6 class="fw-bold mb-3">سجل الدخول والخروج للطلاب والمعلمين</h6>
+              <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                <h6 class="fw-bold m-0">سجل حركة المنصة والنشاطات (Audit Logs)</h6>
+                <button class="btn btn-danger btn-sm" onclick="clearAllAuditLogs()"><i class="fa-solid fa-trash-can me-1"></i> مسح جميع السجلات</button>
+              </div>
               <div class="table-responsive">
                 <table class="table table-sm align-middle">
                   <thead>
-                    <tr><th>الاسم</th><th>الصفة</th><th>الحدث</th><th>التوقيت الكامل</th></tr>
+                    <tr><th>الاسم</th><th>الصفة</th><th>الحدث</th><th>التوقيت الكامل</th><th>الإجراء</th></tr>
                   </thead>
                   <tbody id="logsTableBody"></tbody>
                 </table>
@@ -785,14 +788,12 @@
       { id: 1, title: "مذكرة خوارزميات الذكاء الاصطناعي", grade: "الصف الثاني الثانوي", url: "#" }
     ];
     let chatMessages = [];
-    let auditLogs = JSON.parse(localStorage.getItem('platform_logs')) || [];
+    let auditLogs = [];
     
-    // استرجاع حالة المستخدم الأخيرة وتفضيلاته من localStorage للحفاظ عليها
     let currentUser = JSON.parse(localStorage.getItem('platform_current_user')) || null;
     let savedTheme = localStorage.getItem('platform_theme') || 'light';
     let isAdminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
 
-    // تطبيق الثيم المحفوظ مسبقاً (داكن أو فاتح) عند بدء التشغيل
     document.body.setAttribute('data-theme', savedTheme);
     window.addEventListener('DOMContentLoaded', () => {
       const themeIcon = document.getElementById('themeIcon');
@@ -822,7 +823,7 @@
       const { data: profilesData } = await _supabase.from('profiles').select('*');
       if (profilesData) users = profilesData;
 
-      // جلب الإشعارات وحفظها محلياً
+      // جلب الإشعارات
       const { data: notifsData } = await _supabase.from('notifications').select('*').order('created_at', { ascending: false });
       if (notifsData) {
         notifications = notifsData.map(n => ({
@@ -830,17 +831,18 @@
           content: n.content,
           date: new Date(n.created_at).toLocaleDateString('ar-EG')
         }));
-        localStorage.setItem('platform_notifications', JSON.stringify(notifications));
-      } else {
-        const localNotifs = localStorage.getItem('platform_notifications');
-        if (localNotifs) notifications = JSON.parse(localNotifs);
       }
 
-      // جلب رسائل الشات الحية من جدول chat_messages وحفظها محلياً كنسخة احتياطية
+      // جلب سجلات النظام (Audit Logs) من جدول Supabase
+      const { data: logsData, error: logsError } = await _supabase.from('audit_logs').select('*').order('created_at', { ascending: false });
+      if (!logsError && logsData) {
+        auditLogs = logsData;
+      }
+
+      // جلب رسائل الشات الحية
       const { data: messagesData, error: msgError } = await _supabase.from('chat_messages').select('*').order('created_at', { ascending: true });
       if (!msgError && messagesData) {
         chatMessages = messagesData.map(m => {
-          // محاولة مطابقة معرف المرسل مع جدول المستخدمين لإحضار اسمه وصفته بدقة
           let senderDisplay = 'زائر';
           const foundUser = users.find(u => u.phone === m.sender || u.id == m.sender);
           if (foundUser) {
@@ -855,10 +857,6 @@
             img: m.image_url || null
           };
         });
-        localStorage.setItem('platform_chat', JSON.stringify(chatMessages));
-      } else {
-        const localChat = localStorage.getItem('platform_chat');
-        if (localChat) chatMessages = JSON.parse(localChat);
       }
 
       updateUI();
@@ -873,8 +871,8 @@
         .subscribe();
 
       _supabase
-        .channel('public:notifications')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'notifications' }, payload => {
+        .channel('public:audit_logs')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'audit_logs' }, payload => {
           fetchSupabaseData();
         })
         .subscribe();
@@ -930,7 +928,6 @@
       }
     }
 
-    // حفظ وضع الثيم (داكن / فاتح) في localStorage
     function toggleTheme() {
       const body = document.body;
       const themeIcon = document.getElementById('themeIcon');
@@ -1053,15 +1050,16 @@
       }
 
       currentUser = user;
-      // حفظ بيانات المستخدم الحالي لجلسة مستمرة لا تضيع
       localStorage.setItem('platform_current_user', JSON.stringify(currentUser));
-      addAuditLog(user.name, user.role, "تسجيل دخول");
+      await addAuditLog(user.name, user.role === 'teacher' ? 'معلم' : 'طالب', "تسجيل دخول");
       updateUI();
       authModal.hide();
     }
 
-    function logout() {
-      if (currentUser) addAuditLog(currentUser.name, currentUser.role, "تسجيل خروج");
+    async function logout() {
+      if (currentUser) {
+        await addAuditLog(currentUser.name, currentUser.role === 'teacher' ? 'معلم' : 'طالب', "تسجيل خروج");
+      }
       currentUser = null;
       localStorage.removeItem('platform_current_user');
       updateUI();
@@ -1096,10 +1094,9 @@
       }
     }
 
-    function addAuditLog(name, role, action) {
-      const now = new Date();
-      auditLogs.push({ name, role, action, dateTime: now.toLocaleDateString('ar-EG') + ' ' + now.toLocaleTimeString('ar-EG') });
-      localStorage.setItem('platform_logs', JSON.stringify(auditLogs));
+    // دالة إضافة سجل جديد لجدول Supabase مباشرة
+    async function addAuditLog(name, role, action) {
+      await _supabase.from('audit_logs').insert([{ name, role, action }]);
     }
 
     function renderNotifications() {
@@ -1158,7 +1155,6 @@
       container.scrollTop = container.scrollHeight;
     }
 
-    // إرسال رسالة الشات الحية مع حفظ اسم المستخدم وصفته بوضوح
     async function sendChatMessage() {
       const input = document.getElementById('chatInput');
       if (!input.value.trim()) return;
@@ -1260,12 +1256,16 @@
 
       renderActiveStudentsTable(approvedUsers);
 
+      // عرض السجلات مع زرار الحذف الفردي
       document.getElementById('logsTableBody').innerHTML = auditLogs.map(l => `
         <tr>
-          <td>${l.name}</td>
-          <td>${l.role}</td>
+          <td>${l.name || 'غير معروف'}</td>
+          <td>${l.role || 'غير محدد'}</td>
           <td>${l.action}</td>
-          <td><span class="badge bg-dark">${l.dateTime}</span></td>
+          <td><span class="badge bg-dark">${new Date(l.created_at).toLocaleString('ar-EG')}</span></td>
+          <td>
+            <button class="btn btn-danger btn-sm" onclick="deleteSingleLog(${l.id})"><i class="fa-solid fa-trash"></i> حذف</button>
+          </td>
         </tr>
       `).join('');
     }
@@ -1287,6 +1287,7 @@
 
     async function approveUser(id) {
       await _supabase.from('profiles').update({ status: 'approved' }).eq('id', id);
+      await addAuditLog('الأدمن', 'مدير النظام', `تفعيل حساب المستخدم صاحب المعرف: ${id}`);
       fetchSupabaseData();
       loadAdminData();
       alert("تم تفعيل الطالب بنجاح.");
@@ -1294,15 +1295,45 @@
 
     async function rejectUser(id) {
       await _supabase.from('profiles').delete().eq('id', id);
+      await addAuditLog('الأدمن', 'مدير النظام', `رفض وحذف طلب التسجيل للمعرف: ${id}`);
       fetchSupabaseData();
       loadAdminData();
     }
 
     async function deleteStudent(id) {
-      if (confirm("هل أنت متأكد من الحذف؟")) {
+      if (confirm("هل أنت متأكد من حذف هذا الطالب؟")) {
         await _supabase.from('profiles').delete().eq('id', id);
+        await addAuditLog('الأدمن', 'مدير النظام', `حذف طالب صاحب المعرف: ${id}`);
         fetchSupabaseData();
         loadAdminData();
+      }
+    }
+
+    // دالة حذف سجل واحد من جدول الـ audit_logs
+    async function deleteSingleLog(id) {
+      if (confirm("هل أنت متأكد من حذف هذا السجل؟")) {
+        const { error } = await _supabase.from('audit_logs').delete().eq('id', id);
+        if (error) {
+          alert("خطأ أثناء الحذف: " + error.message);
+        } else {
+          fetchSupabaseData();
+          loadAdminData();
+        }
+      }
+    }
+
+    // دالة مسح جميع السجلات دفعة واحدة
+    async function clearAllAuditLogs() {
+      if (confirm("تحذير: هل تريد مسح جميع سجلات النظام نهائياً؟")) {
+        // حذف الكل عبر مطابقة شرط يعود بـ true دائماً
+        const { error } = await _supabase.from('audit_logs').delete().neq('id', 0);
+        if (error) {
+          alert("خطأ أثناء مسح السجلات: " + error.message);
+        } else {
+          fetchSupabaseData();
+          loadAdminData();
+          alert("تم تفريغ السجلات بنجاح.");
+        }
       }
     }
 
@@ -1318,13 +1349,14 @@
       const content = document.getElementById('notifContent').value;
 
       await _supabase.from('notifications').insert([{ title, content }]);
+      await addAuditLog('الأدمن', 'مدير النظام', `نشر إشعار جديد: ${title}`);
       alert("تم نشر الإشعار بنجاح!");
       document.getElementById('notifTitle').value = '';
       document.getElementById('notifContent').value = '';
       fetchSupabaseData();
     }
 
-    function addHonorStudent(e) {
+    async function addHonorStudent(e) {
       e.preventDefault();
       honorStudents.push({
         id: Date.now(),
@@ -1334,10 +1366,11 @@
       });
       localStorage.setItem('platform_honor', JSON.stringify(honorStudents));
       renderHonor();
+      await addAuditLog('الأدمن', 'مدير النظام', `إضافة طالب لوحة الشرف: ${document.getElementById('honorName').value}`);
       alert("تمت الإضافة بنجاح!");
     }
 
-    function addBook(e) {
+    async function addBook(e) {
       e.preventDefault();
       books.push({
         id: Date.now(),
@@ -1347,6 +1380,7 @@
       });
       localStorage.setItem('platform_books', JSON.stringify(books));
       renderBooks();
+      await addAuditLog('الأدمن', 'مدير النظام', `إضافة مذكرة/كتاب: ${document.getElementById('bookTitle').value}`);
       alert("تم رفع الكتاب بنجاح!");
     }
 
