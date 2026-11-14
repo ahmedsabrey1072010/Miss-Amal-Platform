@@ -110,16 +110,11 @@
       justify-content: space-between;
     }
 
-    .brand-logo {
-      width: 40px;
-      height: 40px;
-      background: linear-gradient(135deg, var(--primary), var(--accent));
+    .brand-logo-img {
+      width: 48px;
+      height: 48px;
       border-radius: var(--radius-md);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-      font-size: 1.2rem;
+      object-fit: cover;
       box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
     }
 
@@ -374,7 +369,7 @@
   <aside id="sidebar">
     <div class="sidebar-header">
       <div class="d-flex align-items-center gap-2">
-        <div class="brand-logo"><i class="fa-solid fa-code"></i></div>
+        <img src="watermarked_img_7360017269884422966.jpg" alt="لوجو المنصة" class="brand-logo-img">
         <div>
           <h6 class="fw-bold m-0 text-white" style="font-size: 0.9rem;">المس أمل شفيق</h6>
           <small class="text-muted" style="font-size: 0.7rem;">البرمجة والذكاء الاصطناعي</small>
@@ -389,7 +384,8 @@
       <a class="nav-link" href="#" onclick="showSection('honorSection', this)"><i class="fa-solid fa-trophy"></i>المتميزين</a>
       <a class="nav-link" href="#" onclick="showSection('booksSection', this)"><i class="fa-solid fa-book-open"></i>الكتب والملخصات</a>
       <a class="nav-link" href="#" onclick="showSection('forumSection', this)"><i class="fa-solid fa-comments"></i>منتدى الطلاب</a>
-      <a class="nav-link" href="#" onclick="showSection('editorSection', this)"><i class="fa-solid fa-code"></i>محرر الأكواد</a>
+      <a class="nav-link" href="#" onclick="showSection('editorSection', this)"><i class="fa-solid fa-code"></i>محرر الأكواد والويب</a>
+      <a class="nav-link" href="#" onclick="showSection('challengeSection', this)"><i class="fa-solid fa-bolt"></i>التحدي اليومي</a>
       <a class="nav-link" id="profileNavItem" style="display: none;" href="#" onclick="showSection('profileSection', this)"><i class="fa-solid fa-user-gear"></i>الملف الشخصي</a>
       <a class="nav-link text-warning mt-3" href="#" onclick="showSection('adminSection', this)"><i class="fa-solid fa-shield-halved"></i>لوحة الأدمن</a>
     </div>
@@ -430,23 +426,23 @@
         <div class="row g-4">
           <div class="col-md-4">
             <div class="custom-card h-100 text-center">
-              <div class="brand-logo mx-auto mb-3"><i class="fa-solid fa-brain"></i></div>
+              <div class="brand-logo mx-auto mb-3" style="width:50px;height:50px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:var(--primary);color:#fff;font-size:1.4rem;"><i class="fa-solid fa-brain"></i></div>
               <h5 class="fw-bold">الذكاء الاصطناعي</h5>
               <p class="fs-6">شرح مبسط ومشاريع عملية في تقنيات وتعلم الآلة للمرحلة الثانوية.</p>
             </div>
           </div>
           <div class="col-md-4">
             <div class="custom-card h-100 text-center">
-              <div class="brand-logo mx-auto mb-3" style="background: linear-gradient(135deg, #10b981, #059669);"><i class="fa-solid fa-laptop-code"></i></div>
-              <h5 class="fw-bold">محرر الأكواد</h5>
-              <p class="fs-6">محرر كود تفاعلي لكتابة وتجربة شفرات البرمجة مباشرة عبر المنصة.</p>
+              <div class="brand-logo mx-auto mb-3" style="width:50px;height:50px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:#10b981;color:#fff;font-size:1.4rem;"><i class="fa-solid fa-laptop-code"></i></div>
+              <h5 class="fw-bold">محرر الأكواد والويب</h5>
+              <p class="fs-6">محرر متطور لتطوير ومعاينة صفحات الويب وتجربة الشفرات البرمجية مباشرة.</p>
             </div>
           </div>
           <div class="col-md-4">
             <div class="custom-card h-100 text-center">
-              <div class="brand-logo mx-auto mb-3" style="background: linear-gradient(135deg, #f59e0b, #d97706);"><i class="fa-solid fa-users"></i></div>
-              <h5 class="fw-bold">مجتمع الطلاب</h5>
-              <p class="fs-6">منتدى مباشر لتبادل الصور والأسئلة والتنافس بين الطلاب المتميزين.</p>
+              <div class="brand-logo mx-auto mb-3" style="width:50px;height:50px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:#f59e0b;color:#fff;font-size:1.4rem;"><i class="fa-solid fa-users"></i></div>
+              <h5 class="fw-bold">مجتمع الطلاب والتحديات</h5>
+              <p class="fs-6">منتدى تفاعلي مباشر والتحدي اليومي لتقوية مهاراتك البرمجية بانتظام.</p>
             </div>
           </div>
         </div>
@@ -473,10 +469,10 @@
         <div class="row g-4" id="booksContainer"></div>
       </section>
 
-      <!-- Forum / Chat Section -->
+      <!-- Forum / Chat Section (Bubble Alignment + Delete/Edit) -->
       <section id="forumSection" style="display: none;">
         <div class="custom-card">
-          <h5 class="fw-bold mb-3"><i class="fa-solid fa-comments text-primary me-2"></i>منتدى المحادثة المباشر (Supabase Realtime)</h5>
+          <h5 class="fw-bold mb-3"><i class="fa-solid fa-comments text-primary me-2"></i>منتدى المحادثة المباشر (ضغطة مطولة للحذف/التعديل)</h5>
           <div class="chat-box mb-3" id="chatContainer"></div>
           
           <div class="input-group gap-2 align-items-center">
@@ -494,20 +490,59 @@
         </div>
       </section>
 
-      <!-- Editor Section -->
+      <!-- Editor Section (Console + Dedicated Website Builder) -->
       <section id="editorSection" style="display: none;">
         <div class="custom-card">
-          <div class="d-flex justify-content-between align-items-center mb-3">
-            <h5 class="fw-bold m-0"><i class="fa-solid fa-terminal text-primary me-2"></i>محرر الأكواد التفاعلي</h5>
-            <select id="editorLanguage" class="form-select w-auto" onchange="switchEditorLang()">
-              <option value="js">JavaScript</option>
-              <option value="python">Python Simulator</option>
-            </select>
+          <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+            <h5 class="fw-bold m-0"><i class="fa-solid fa-code text-primary me-2"></i>محرر الأكواد وبناء المواقع الشخصي</h5>
+            <div class="d-flex gap-2">
+              <select id="editorLanguage" class="form-select" onchange="switchEditorMode()">
+                <option value="web">موقع ويب متكامل (HTML, CSS, JS)</option>
+                <option value="js">JavaScript Console</option>
+                <option value="python">Python Simulator</option>
+              </select>
+            </div>
           </div>
-          <textarea id="codeTextarea" class="form-control font-monospace mb-3" rows="12" dir="ltr" style="background:#0f172a; color:#38bdf8; border:none;"></textarea>
-          <button class="btn btn-success fw-bold px-4 mb-3" onclick="runCode()"><i class="fa-solid fa-play me-1"></i> تشغيل الشفرة</button>
-          <h6 class="fw-bold">مخرجات التشغيل / Console Output:</h6>
-          <pre id="codeOutput" class="p-3 rounded-3 bg-dark text-success font-monospace" style="min-height: 120px; border: 1px solid rgba(255,255,255,0.1);"></pre>
+
+          <!-- وضع الويب (مشفر ومربوط بـ LocalStorage والحساب) -->
+          <div id="webBuilderMode">
+            <p class="small text-muted mb-2">قم بكتابة كود الـ HTML/CSS/JS وشاهد النتيجة فوراً (محفوظ تلقائياً لحسابك):</p>
+            <div class="row g-3">
+              <div class="col-lg-6">
+                <label class="form-label small fw-bold">كود الموقع:</label>
+                <textarea id="webCodeArea" class="form-control font-monospace" rows="12" dir="ltr" style="background:#0f172a; color:#38bdf8;" oninput="saveWebEditorCode()"></textarea>
+              </div>
+              <div class="col-lg-6">
+                <label class="form-label small fw-bold">معاينة الموقع المباشرة:</label>
+                <iframe id="webPreviewFrame" class="w-100 rounded-3 border" style="height: 320px; background:#fff;"></iframe>
+              </div>
+            </div>
+          </div>
+
+          <!-- وضع الكونسول التقليدي -->
+          <div id="consoleMode" style="display: none;">
+            <textarea id="codeTextarea" class="form-control font-monospace mb-3" rows="10" dir="ltr" style="background:#0f172a; color:#38bdf8; border:none;"></textarea>
+            <button class="btn btn-success fw-bold px-4 mb-3" onclick="runCode()"><i class="fa-solid fa-play me-1"></i> تشغيل الشفرة</button>
+            <h6 class="fw-bold">مخرجات التشغيل / Console Output:</h6>
+            <pre id="codeOutput" class="p-3 rounded-3 bg-dark text-success font-monospace" style="min-height: 100px; border: 1px solid rgba(255,255,255,0.1);"></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- Daily Challenge Section -->
+      <section id="challengeSection" style="display: none;">
+        <div class="custom-card mx-auto" style="max-width: 700px;">
+          <h4 class="fw-bold mb-3 text-primary"><i class="fa-solid fa-bolt me-2"></i>التحدي اليومي البرمجي</h4>
+          <p class="text-muted small mb-4">أجب عن السؤال البرمجي اليومي واحصل على تقييم فوري:</p>
+          
+          <div id="dailyChallengeContainer">
+            <div class="p-3 bg-body rounded-3 border mb-3">
+              <h5 id="challengeQuestionText" class="fw-bold mb-3">جاري تحميل تحدي اليوم...</h5>
+              <div id="challengeOptionsContainer" class="d-flex flex-column gap-2"></div>
+            </div>
+            <button id="submitChallengeBtn" class="btn btn-custom-primary w-100 py-2 fw-bold" onclick="submitDailyChallenge()" style="display: none;">إرسال الإجابة الفورية</button>
+            <div id="challengeFeedback" class="mt-3 text-center fw-bold"></div>
+          </div>
         </div>
       </section>
 
@@ -547,10 +582,10 @@
         </div>
       </section>
 
-      <!-- Admin Section -->
+      <!-- Admin Section (Hiding Phone Numbers & Showing Challenge Stats) -->
       <section id="adminSection" style="display: none;">
         <div id="adminAuthLock" class="custom-card text-center mx-auto" style="max-width: 420px;">
-          <div class="brand-logo mx-auto mb-3" style="background: linear-gradient(135deg, #f59e0b, #d97706); width: 60px; height: 60px; font-size: 1.75rem;"><i class="fa-solid fa-lock"></i></div>
+          <div class="brand-logo mx-auto mb-3" style="background: linear-gradient(135deg, #f59e0b, #d97706); width: 60px; height: 60px; border-radius: 12px; display:flex; align-items:center; justify-content:center; color:#fff; font-size: 1.75rem;"><i class="fa-solid fa-lock"></i></div>
           <h5 class="fw-bold">تسجيل دخول لوحة الأدمن</h5>
           <p class="small mb-3">أدخل كلمة المرور الموحدة لإدارة المنصة بكامل الصلاحيات</p>
           <input type="password" id="adminPassInput" class="form-control my-2 text-center" placeholder="••••••••••••" autocomplete="new-password">
@@ -561,7 +596,7 @@
           <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
             <div>
               <h4 class="fw-bold m-0"><i class="fa-solid fa-chart-pie text-warning me-2"></i>لوحة تحكم الأدمن</h4>
-              <small class="text-muted">مرحباً بك، تتيح لك هذه اللوحة إدارة كافة محتويات وطلاب المنصة.</small>
+              <small class="text-muted">مرحباً بك، أرقام الهواتف وأولياء الأمور مخفية للخصوصية في القائمة العامة ومحفوظة في قاعدة البيانات.</small>
             </div>
             <button class="btn btn-outline-danger btn-sm px-3 fw-semibold" onclick="adminLogout()"><i class="fa-solid fa-right-from-bracket me-1"></i> تسجيل خروج الأدمن</button>
           </div>
@@ -581,16 +616,16 @@
             </div>
             <div class="col-md-4">
               <div class="custom-card border-start border-4 border-success m-0">
-                <small class="text-muted fw-semibold">سجلات حركة المنصة</small>
-                <h2 id="logsCount" class="fw-bold text-success m-0 mt-2">0</h2>
+                <small class="text-muted fw-semibold">إجابات التحدي اليومي</small>
+                <h2 id="challengeStatsCount" class="fw-bold text-success m-0 mt-2">0</h2>
               </div>
             </div>
           </div>
 
           <ul class="nav nav-pills mb-4 gap-2 flex-wrap" id="adminTabs">
             <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#pendingTab"><i class="fa-solid fa-user-clock me-1"></i> الطلبات المعلقة</a></li>
-            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#studentsTab"><i class="fa-solid fa-users me-1"></i> قائمة الطلاب</a></li>
-            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#logsTab"><i class="fa-solid fa-clock-rotate-left me-1"></i> السجلات</a></li>
+            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#studentsTab"><i class="fa-solid fa-users me-1"></i> قائمة الطلاب (خصوصية الهواتف)</a></li>
+            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#manageChallengeTab"><i class="fa-solid fa-bolt me-1"></i> إدارة التحدي اليومي</a></li>
             <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#manageNewsTab"><i class="fa-solid fa-bullhorn me-1"></i> إدارة الإشعارات</a></li>
             <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#manageHonorTab"><i class="fa-solid fa-award me-1"></i> إدارة المتميزين</a></li>
             <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#manageBooksTab"><i class="fa-solid fa-book me-1"></i> إدارة المذكرات</a></li>
@@ -602,41 +637,61 @@
               <div class="table-responsive">
                 <table class="table table-hover align-middle">
                   <thead>
-                    <tr><th>الاسم الحقيقي</th><th>اسم المستخدم</th><th>الصف</th><th>رقم الهاتف</th><th>ولي الأمر</th><th>تفعيل الحساب</th></tr>
+                    <tr><th>الاسم الحقيقي</th><th>الصف</th><th>رقم الهاتف</th><th>ولي الأمر</th><th>تفعيل الحساب</th></tr>
                   </thead>
                   <tbody id="pendingTableBody"></tbody>
                 </table>
               </div>
             </div>
 
+            <!-- قائمة الطلاب مع إخفاء أرقام الهواتف للخصوصية -->
             <div class="tab-pane fade" id="studentsTab">
-              <input type="text" id="studentSearch" class="form-control w-50 mb-3" placeholder="بحث بالاسم الحقيقي أو الهاتف..." onkeyup="filterStudents()">
+              <input type="text" id="studentSearch" class="form-control w-50 mb-3" placeholder="بحث بالاسم الحقيقي..." onkeyup="filterStudents()">
               <div class="table-responsive">
                 <table class="table table-striped align-middle">
                   <thead>
-                    <tr><th>الاسم الحقيقي</th><th>اسم المستخدم</th><th>الصف</th><th>رقم الهاتف</th><th>ولي الأمر</th><th>الإجراء</th></tr>
+                    <tr><th>الاسم الحقيقي</th><th>اسم المستخدم</th><th>الصف</th><th>الهاتف (محمي للخصوصية)</th><th>ولي الأمر (محمي)</th><th>الإجراء</th></tr>
                   </thead>
                   <tbody id="studentsTableBody"></tbody>
                 </table>
               </div>
             </div>
 
-            <div class="tab-pane fade" id="logsTab">
-              <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-                <h6 class="fw-bold m-0">سجل حركة المنصة والنشاطات (Audit Logs)</h6>
-                <button class="btn btn-danger btn-sm" onclick="clearAllAuditLogs()"><i class="fa-solid fa-trash-can me-1"></i> مسح جميع السجلات</button>
-              </div>
+            <!-- إدارة التحدي اليومي -->
+            <div class="tab-pane fade" id="manageChallengeTab">
+              <h6 class="fw-bold mb-3">نشر تحدي يومي جديد (اختياري A, B, C, D)</h6>
+              <form onsubmit="postDailyChallenge(event)" class="mb-4 pb-4 border-bottom">
+                <textarea id="adminQText" class="form-control mb-2" placeholder="نص السؤال البرمجي..." rows="2" required></textarea>
+                <div class="row g-2 mb-2">
+                  <div class="col-md-6"><input type="text" id="optA" class="form-control" placeholder="الخيار A" required></div>
+                  <div class="col-md-6"><input type="text" id="optB" class="form-control" placeholder="الخيار B" required></div>
+                  <div class="col-md-6"><input type="text" id="optC" class="form-control" placeholder="الخيار C" required></div>
+                  <div class="col-md-6"><input type="text" id="optD" class="form-control" placeholder="الخيار D" required></div>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label small fw-semibold">الإجابة الصحيحة:</label>
+                  <select id="correctOpt" class="form-select">
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="C">C</option>
+                    <option value="D">D</option>
+                  </select>
+                </div>
+                <button type="submit" class="btn btn-warning btn-sm px-4 fw-bold">نشر التحدي اليومي</button>
+              </form>
+
+              <h6 class="fw-bold mb-3 text-success">إجابات الطلاب المسجلة على التحدي:</h6>
               <div class="table-responsive">
                 <table class="table table-sm align-middle">
                   <thead>
-                    <tr><th>الاسم</th><th>الصفة</th><th>الحدث</th><th>التوقيت الكامل</th><th>الإجراء</th></tr>
+                    <tr><th>اسم الطالب</th><th>الإجابة المختارة</th><th>الحالة</th><th>التوقيت</th></tr>
                   </thead>
-                  <tbody id="logsTableBody"></tbody>
+                  <tbody id="adminChallengeResponsesBody"></tbody>
                 </table>
               </div>
             </div>
 
-            <!-- إدارة ونشر وحذف الإشعارات -->
+            <!-- إدارة الإشعارات -->
             <div class="tab-pane fade" id="manageNewsTab">
               <h6 class="fw-bold mb-3">نشر إشعار أو خبر جديد</h6>
               <form onsubmit="addNotification(event)" class="mb-4 pb-4 border-bottom">
@@ -644,80 +699,47 @@
                 <textarea id="notifContent" class="form-control mb-3" placeholder="محتوى الإشعار..." rows="3" required></textarea>
                 <button type="submit" class="btn btn-primary btn-sm px-4">نشر الإشعار</button>
               </form>
-
-              <h6 class="fw-bold mb-3 text-danger"><i class="fa-solid fa-list-check me-1"></i> الإشعارات والأخبار المنشورة حالياً</h6>
               <div class="table-responsive">
                 <table class="table table-hover align-middle">
-                  <thead>
-                    <tr>
-                      <th>عنوان الإشعار</th>
-                      <th>المحتوى</th>
-                      <th>التاريخ</th>
-                      <th>حذف</th>
-                    </tr>
-                  </thead>
+                  <thead><tr><th>العنوان</th><th>المحتوى</th><th>حذف</th></tr></thead>
                   <tbody id="adminNewsTableBody"></tbody>
                 </table>
               </div>
             </div>
 
-            <!-- إدارة وإضافة وحذف المتميزين -->
+            <!-- إدارة المتميزين -->
             <div class="tab-pane fade" id="manageHonorTab">
-              <h6 class="fw-bold mb-3">إضافة طالب لقائمة المتميزين (مع رفع الصورة مباشرة)</h6>
+              <h6 class="fw-bold mb-3">إضافة طالب لقائمة المتميزين</h6>
               <form onsubmit="addHonorStudent(event)" class="mb-4 pb-4 border-bottom">
                 <input type="text" id="honorName" class="form-control mb-2" placeholder="اسم الطالب" required>
                 <input type="text" id="honorTitle" class="form-control mb-2" placeholder="الإنجاز / المركز" required>
-                
-                <div class="mb-3">
-                  <label class="form-label small fw-semibold">صورة الطالب الشخصية:</label>
-                  <input type="file" id="honorImgFile" accept="image/*" class="form-control" required>
-                </div>
-
-                <button type="submit" class="btn btn-warning btn-sm px-4 text-dark fw-bold">إضافة للوحة الشرف</button>
+                <input type="file" id="honorImgFile" accept="image/*" class="form-control mb-3" required>
+                <button type="submit" class="btn btn-warning btn-sm px-4 fw-bold">إضافة لوحة الشرف</button>
               </form>
-
-              <h6 class="fw-bold mb-3 text-danger"><i class="fa-solid fa-trophy me-1"></i> الطلاب المسجلون في لوحة الشرف حالياً</h6>
               <div class="table-responsive">
                 <table class="table table-hover align-middle">
-                  <thead>
-                    <tr>
-                      <th>الصورة</th>
-                      <th>اسم الطالب</th>
-                      <th>الإنجاز / المركز</th>
-                      <th>حذف</th>
-                    </tr>
-                  </thead>
+                  <thead><tr><th>الصورة</th><th>الاسم</th><th>الإنجاز</th><th>حذف</th></tr></thead>
                   <tbody id="adminHonorTableBody"></tbody>
                 </table>
               </div>
             </div>
 
-            <!-- إدارة وإضافة وحذف المذكرات والكتب -->
+            <!-- إدارة المذكرات -->
             <div class="tab-pane fade" id="manageBooksTab">
-              <h6 class="fw-bold mb-3">إضافة كتاب أو مذكرة إلكترونية (Supabase)</h6>
+              <h6 class="fw-bold mb-3">إضافة كتاب أو مذكرة</h6>
               <form onsubmit="addBook(event)" class="mb-4 pb-4 border-bottom">
-                <input type="text" id="bookTitle" class="form-control mb-2" placeholder="عنوان المذكرة / الكتاب" required>
+                <input type="text" id="bookTitle" class="form-control mb-2" placeholder="عنوان المذكرة" required>
                 <select id="bookGrade" class="form-select mb-2" required>
                   <option value="الصف الأول الثانوي">الصف الأول الثانوي</option>
                   <option value="الصف الثاني الثانوي">الصف الثاني الثانوي</option>
                   <option value="الصف الثالث الثانوي">الصف الثالث الثانوي</option>
-                  <option value="عام لكل المراحل">عام لكل المراحل</option>
                 </select>
-                <input type="url" id="bookUrl" class="form-control mb-3" placeholder="رابط الملف أو Google Drive (https://...)" required>
-                <button type="submit" class="btn btn-success btn-sm px-4"><i class="fa-solid fa-plus me-1"></i> نشر المذكرة</button>
+                <input type="url" id="bookUrl" class="form-control mb-3" placeholder="رابط التحميل" required>
+                <button type="submit" class="btn btn-success btn-sm px-4">نشر المذكرة</button>
               </form>
-
-              <h6 class="fw-bold mb-3 text-danger"><i class="fa-solid fa-book me-1"></i> المذكرات والكتب المنشورة حالياً</h6>
               <div class="table-responsive">
                 <table class="table table-hover align-middle">
-                  <thead>
-                    <tr>
-                      <th>عنوان المذكرة</th>
-                      <th>المرحلة الدراسية</th>
-                      <th>الرابط</th>
-                      <th>حذف</th>
-                    </tr>
-                  </thead>
+                  <thead><tr><th>العنوان</th><th>المرحلة</th><th>حذف</th></tr></thead>
                   <tbody id="adminBooksTableBody"></tbody>
                 </table>
               </div>
@@ -764,8 +786,6 @@
               <input type="password" id="loginPass" class="form-control" required autocomplete="current-password">
             </div>
             <button type="submit" class="btn btn-custom-primary w-100 py-2 mb-3">تسجيل الدخول</button>
-            <small id="loginLockMsg" class="text-danger d-block mb-2 text-center" style="display: none;"></small>
-            
             <div class="text-center mt-3 pt-2 border-top">
               <small class="text-muted">إذا لم يكن لديك حساب؟</small>
               <a href="#" class="text-primary text-decoration-none fw-semibold ms-1" onclick="showAuthModal('register')">قم بإنشاء حساب</a>
@@ -809,16 +829,7 @@
               <label class="form-label fw-semibold">كلمة المرور</label>
               <input type="password" id="regPass" class="form-control" required autocomplete="new-password">
             </div>
-            <div class="mb-3">
-              <label class="form-label fw-semibold">تأكيد كلمة المرور</label>
-              <input type="password" id="regPassConfirm" class="form-control" required autocomplete="new-password">
-            </div>
             <button type="submit" class="btn btn-success w-100 py-2 fw-bold mb-3">إنشاء حساب جديد</button>
-            
-            <div class="text-center mt-3 pt-2 border-top">
-              <small class="text-muted">لديك حساب بالفعل؟</small>
-              <a href="#" class="text-primary text-decoration-none fw-semibold ms-1" onclick="showAuthModal('login')">قم بتسجيل الدخول</a>
-            </div>
           </form>
         </div>
       </div>
@@ -837,7 +848,8 @@
     let honorStudents = [];
     let books = [];
     let chatMessages = [];
-    let auditLogs = [];
+    let dailyChallenge = null;
+    let challengeResponses = [];
     
     let currentUser = JSON.parse(localStorage.getItem('platform_current_user')) || null;
     let savedTheme = localStorage.getItem('platform_theme') || 'light';
@@ -846,15 +858,10 @@
     document.body.setAttribute('data-theme', savedTheme);
     window.addEventListener('DOMContentLoaded', () => {
       const themeIcon = document.getElementById('themeIcon');
-      if (savedTheme === 'dark') {
-        themeIcon.className = 'fa-solid fa-sun';
-      } else {
-        themeIcon.className = 'fa-solid fa-moon';
-      }
+      if (savedTheme === 'dark') themeIcon.className = 'fa-solid fa-sun';
     });
 
     const ADMIN_PASS = "Sabrey1990@@";
-    let loginAttempts = JSON.parse(localStorage.getItem('platform_login_attempts')) || {};
 
     function isValidEgyPhone(phone) {
       return /^01[0125]\d{8}$/.test(phone);
@@ -863,102 +870,58 @@
     function getDisplayName(user) {
       if (!user) return 'زائر';
       const nameToShow = (user.username && user.username.trim() !== '') ? user.username : user.name;
-      const roleText = user.role === 'teacher' ? ' (معلم)' : ' (طالب)';
-      return nameToShow + roleText;
+      return nameToShow + (user.role === 'teacher' ? ' (معلم)' : ' (طالب)');
     }
 
     async function fetchSupabaseData() {
-      // جلب البروفايلات
       const { data: profilesData } = await _supabase.from('profiles').select('*');
       if (profilesData) users = profilesData;
 
-      // جلب الإشعارات
       const { data: notifsData } = await _supabase.from('notifications').select('*').order('created_at', { ascending: false });
-      if (notifsData) {
-        notifications = notifsData.map(n => ({
-          id: n.id,
-          title: n.title,
-          content: n.content,
-          date: new Date(n.created_at).toLocaleDateString('ar-EG')
-        }));
-      }
+      if (notifsData) notifications = notifsData.map(n => ({ ...n, date: new Date(n.created_at).toLocaleDateString('ar-EG') }));
 
-      // جلب لوحة الشرف
-      const { data: honorData, error: honorError } = await _supabase.from('honor_students').select('*').order('created_at', { ascending: false });
-      if (!honorError && honorData) {
-        honorStudents = honorData;
-      }
+      const { data: honorData } = await _supabase.from('honor_students').select('*').order('created_at', { ascending: false });
+      if (honorData) honorStudents = honorData;
 
-      // جلب المذكرات والكتب من Supabase
-      const { data: booksData, error: booksError } = await _supabase.from('books').select('*').order('created_at', { ascending: false });
-      if (!booksError && booksData) {
-        books = booksData;
-      }
+      const { data: booksData } = await _supabase.from('books').select('*').order('created_at', { ascending: false });
+      if (booksData) books = booksData;
 
-      // جلب سجلات النظام (Audit Logs)
-      const { data: logsData, error: logsError } = await _supabase.from('audit_logs').select('*').order('created_at', { ascending: false });
-      if (!logsError && logsData) {
-        auditLogs = logsData;
-      }
-
-      // جلب رسائل الشات الحية
-      const { data: messagesData, error: msgError } = await _supabase.from('chat_messages').select('*').order('created_at', { ascending: true });
-      if (!msgError && messagesData) {
+      const { data: messagesData } = await _supabase.from('chat_messages').select('*').order('created_at', { ascending: true });
+      if (messagesData) {
         chatMessages = messagesData.map(m => {
           let senderDisplay = 'زائر';
           const foundUser = users.find(u => u.phone === m.sender || u.id == m.sender);
-          if (foundUser) {
-            senderDisplay = getDisplayName(foundUser);
-          } else if (m.sender) {
-            senderDisplay = m.sender;
-          }
-
-          return {
-            sender: senderDisplay,
-            text: m.content || '',
-            img: m.image_url || null
-          };
+          if (foundUser) senderDisplay = getDisplayName(foundUser);
+          else if (m.sender) senderDisplay = m.sender;
+          return { id: m.id, sender: senderDisplay, text: m.content || '', img: m.image_url || null };
         });
       }
 
-      updateUI();
-      if (isAdminLoggedIn) {
-        renderAdminManagementTables();
+      // جلب التحدي اليومي الأخير
+      const { data: challengeData } = await _supabase.from('daily_challenges').select('*').order('created_at', { ascending: false }).limit(1);
+      if (challengeData && challengeData.length > 0) {
+        dailyChallenge = challengeData[0];
+        renderDailyChallenge();
       }
+
+      // جلب إجابات التحدي
+      const { data: respData } = await _supabase.from('daily_challenge_responses').select('*').order('created_at', { ascending: false });
+      if (respData) challengeResponses = respData;
+
+      updateUI();
+      if (isAdminLoggedIn) renderAdminManagementTables();
     }
 
     function setupRealtimeSubscription() {
-      _supabase
-        .channel('public:chat_messages')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'chat_messages' }, () => fetchSupabaseData())
-        .subscribe();
-
-      _supabase
-        .channel('public:audit_logs')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'audit_logs' }, () => fetchSupabaseData())
-        .subscribe();
-
-      _supabase
-        .channel('public:honor_students')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'honor_students' }, () => fetchSupabaseData())
-        .subscribe();
-
-      _supabase
-        .channel('public:notifications')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'notifications' }, () => fetchSupabaseData())
-        .subscribe();
-
-      _supabase
-        .channel('public:books')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'books' }, () => fetchSupabaseData())
-        .subscribe();
+      _supabase.channel('public:chat_messages').on('postgres_changes', { event: '*', schema: 'public', table: 'chat_messages' }, () => fetchSupabaseData()).subscribe();
+      _supabase.channel('public:daily_challenges').on('postgres_changes', { event: '*', schema: 'public', table: 'daily_challenges' }, () => fetchSupabaseData()).subscribe();
+      _supabase.channel('public:daily_challenge_responses').on('postgres_changes', { event: '*', schema: 'public', table: 'daily_challenge_responses' }, () => fetchSupabaseData()).subscribe();
     }
 
     function updateUI() {
       if (currentUser && currentUser.status === 'approved') {
         document.getElementById('authContainer').style.display = 'none';
         document.getElementById('profileNavItem').style.display = 'flex';
-        
         document.getElementById('profName').value = currentUser.name;
         document.getElementById('profUsername').value = currentUser.username || '';
         document.getElementById('profPhone').value = currentUser.phone;
@@ -974,7 +937,7 @@
     }
 
     function showSection(sectionId, element) {
-      const protectedSections = ['forumSection', 'editorSection', 'booksSection'];
+      const protectedSections = ['forumSection', 'editorSection', 'booksSection', 'challengeSection'];
       if (protectedSections.includes(sectionId) && (!currentUser || currentUser.status !== 'approved')) {
         alert("عذراً، هذا القسم متاح فقط لطلاب المنصة المفعلين بعد موافقة الأدمن.");
         return;
@@ -999,9 +962,7 @@
         element.classList.add('active');
       }
 
-      if (window.innerWidth <= 991) {
-        toggleSidebar();
-      }
+      if (window.innerWidth <= 991) toggleSidebar();
     }
 
     function toggleTheme() {
@@ -1021,7 +982,6 @@
     function toggleSidebar() {
       const sidebar = document.getElementById('sidebar');
       const backdrop = document.getElementById('sidebarBackdrop');
-
       if (window.innerWidth <= 991) {
         sidebar.classList.toggle('mobile-open');
         backdrop.classList.toggle('show');
@@ -1060,15 +1020,9 @@
       const phone = document.getElementById('regPhone').value;
       const parentPhone = document.getElementById('regParentPhone').value;
       const pass = document.getElementById('regPass').value;
-      const passConfirm = document.getElementById('regPassConfirm').value;
 
       if (!isValidEgyPhone(phone)) {
-        alert("يرجى إدخال رقم مصري صحيح مكون من 11 رقم يبدأ بـ (010, 011, 012, 015)");
-        return;
-      }
-
-      if (pass !== passConfirm) {
-        alert("كلمتا المرور غير متطابقتين!");
+        alert("يرجى إدخال رقم مصري صحيح مكون من 11 رقم");
         return;
       }
 
@@ -1076,10 +1030,9 @@
         { name, username, role, grade, phone, parent_phone: parentPhone, pass, status: 'pending' }
       ]);
 
-      if (error) {
-        alert("خطأ أثناء التسجيل: " + error.message);
-      } else {
-        alert("تم إرسال طلبك بنجاح. يلزم تفعيل الحساب من خلال التواصل مع الأدمن عبر الواتساب.");
+      if (error) alert("خطأ أثناء التسجيل: " + error.message);
+      else {
+        alert("تم إرسال طلبك بنجاح. يلزم تفعيل الحساب عبر التواصل مع الأدمن.");
         authModal.hide();
         fetchSupabaseData();
       }
@@ -1089,37 +1042,14 @@
       e.preventDefault();
       const phone = document.getElementById('loginPhone').value;
       const pass = document.getElementById('loginPass').value;
-      const lockMsg = document.getElementById('loginLockMsg');
-
-      const now = Date.now();
-      if (loginAttempts[phone] && loginAttempts[phone].lockUntil > now) {
-        const remainingSecs = Math.ceil((loginAttempts[phone].lockUntil - now) / 1000);
-        lockMsg.style.display = 'block';
-        lockMsg.innerText = `تم قفل الحساب مؤقتاً. حاول بعد ${remainingSecs} ثانية.`;
-        return;
-      }
 
       await fetchSupabaseData();
       const user = users.find(u => u.phone === phone && u.pass === pass);
       
       if (!user) {
-        if (!loginAttempts[phone]) loginAttempts[phone] = { count: 0, lockUntil: 0 };
-        loginAttempts[phone].count += 1;
-
-        if (loginAttempts[phone].count >= 5) {
-          loginAttempts[phone].lockUntil = Date.now() + 60000;
-          loginAttempts[phone].count = 0;
-          localStorage.setItem('platform_login_attempts', JSON.stringify(loginAttempts));
-          lockMsg.style.display = 'block';
-          lockMsg.innerText = "تم تجاوز 5 محاولات خاطئة. تم قفل الحساب مؤقتاً لمدة دقيقة.";
-          return;
-        }
-
-        localStorage.setItem('platform_login_attempts', JSON.stringify(loginAttempts));
         alert("خطأ في البيانات أو الرقم غير مسجل!");
         return;
       }
-
       if (user.status === 'pending') {
         alert("حسابك ما زال بانتظار موافقة الأدمن وتفعيله.");
         return;
@@ -1127,15 +1057,11 @@
 
       currentUser = user;
       localStorage.setItem('platform_current_user', JSON.stringify(currentUser));
-      await addAuditLog(user.name, user.role === 'teacher' ? 'معلم' : 'طالب', "تسجيل دخول");
       updateUI();
       authModal.hide();
     }
 
-    async function logout() {
-      if (currentUser) {
-        await addAuditLog(currentUser.name, currentUser.role === 'teacher' ? 'معلم' : 'طالب', "تسجيل خروج");
-      }
+    function logout() {
       currentUser = null;
       localStorage.removeItem('platform_current_user');
       updateUI();
@@ -1145,7 +1071,6 @@
     async function updateProfile(e) {
       e.preventDefault();
       if (!currentUser) return;
-      
       currentUser.name = document.getElementById('profName').value;
       currentUser.username = document.getElementById('profUsername').value;
       currentUser.phone = document.getElementById('profPhone').value;
@@ -1154,24 +1079,15 @@
       if (newPass) currentUser.pass = newPass;
 
       const { error } = await _supabase.from('profiles').update({
-        name: currentUser.name,
-        username: currentUser.username,
-        phone: currentUser.phone,
-        parent_phone: currentUser.parent_phone,
-        pass: currentUser.pass
+        name: currentUser.name, username: currentUser.username, phone: currentUser.phone, parent_phone: currentUser.parent_phone, pass: currentUser.pass
       }).eq('id', currentUser.id);
 
-      if (error) {
-        alert("حدث خطأ أثناء التحديث: " + error.message);
-      } else {
+      if (error) alert("خطأ أثناء التحديث: " + error.message);
+      else {
         localStorage.setItem('platform_current_user', JSON.stringify(currentUser));
         alert("تم تحديث الملف الشخصي بنجاح!");
         fetchSupabaseData();
       }
-    }
-
-    async function addAuditLog(name, role, action) {
-      await _supabase.from('audit_logs').insert([{ name, role, action }]);
     }
 
     function renderNotifications() {
@@ -1211,7 +1127,7 @@
     function renderBooks(list = books) {
       const container = document.getElementById('booksContainer');
       if (!list || list.length === 0) {
-        container.innerHTML = `<p class="text-center text-muted">لا توجد كتب أو مذكرات متاحة حالياً.</p>`;
+        container.innerHTML = `<p class="text-center text-muted">لا توجد كتب متاحة حالياً.</p>`;
         return;
       }
       container.innerHTML = list.map(b => `
@@ -1228,37 +1144,30 @@
 
     function filterBooks() {
       const query = document.getElementById('bookSearch').value.toLowerCase();
-      const filtered = books.filter(b => b.title.toLowerCase().includes(query) || b.grade.toLowerCase().includes(query));
-      renderBooks(filtered);
+      renderBooks(books.filter(b => b.title.toLowerCase().includes(query) || b.grade.toLowerCase().includes(query)));
     }
 
+    // المنتدى: محاذاة رسائل المستخدم يمين باللون الأزرق والآخرين يسار مع دعم الحذف والتعديل بالضغط المطول
     function renderChat() {
       const container = document.getElementById('chatContainer');
-      container.innerHTML = chatMessages.map(m => `
-        <div class="chat-message ${currentUser && m.sender.includes(currentUser.name) ? 'sent' : 'received'}">
-          <small class="fw-semibold d-block mb-1 text-info" style="font-size: 0.75rem;">${m.sender}</small>
-          ${m.text ? `<p class="m-0">${m.text}</p>` : ''}
-          ${m.img ? `<img src="${m.img}" class="img-fluid rounded-3 mt-2" style="max-height: 180px;">` : ''}
-        </div>
-      `).join('');
+      container.innerHTML = chatMessages.map(m => {
+        const isMyMsg = currentUser && m.sender.includes(currentUser.name);
+        return `
+          <div class="chat-message ${isMyMsg ? 'sent' : 'received'}" oncontextmenu="handleChatMessageContext(event, ${m.id}, '${m.text}')">
+            <small class="fw-semibold d-block mb-1 text-info" style="font-size: 0.75rem;">${m.sender}</small>
+            ${m.text ? `<p class="m-0">${m.text}</p>` : ''}
+            ${m.img ? `<img src="${m.img}" class="img-fluid rounded-3 mt-2" style="max-height: 180px;">` : ''}
+          </div>
+        `;
+      }).join('');
       container.scrollTop = container.scrollHeight;
     }
 
     async function sendChatMessage() {
       const input = document.getElementById('chatInput');
       if (!input.value.trim()) return;
-
-      const senderDisplay = currentUser ? getDisplayName(currentUser) : 'زائر (طالب)';
-      
-      const { error } = await _supabase.from('chat_messages').insert([
-        { sender: senderDisplay, content: input.value }
-      ]);
-
-      if (error) {
-        alert("فشل إرسال الرسالة: " + error.message);
-        return;
-      }
-      
+      const senderDisplay = currentUser ? getDisplayName(currentUser) : 'زائر';
+      await _supabase.from('chat_messages').insert([{ sender: senderDisplay, content: input.value }]);
       input.value = '';
       fetchSupabaseData();
     }
@@ -1268,33 +1177,111 @@
       if (file) {
         const reader = new FileReader();
         reader.onload = async function(event) {
-          const senderDisplay = currentUser ? getDisplayName(currentUser) : 'زائر (طالب)';
-          await _supabase.from('chat_messages').insert([
-            { sender: senderDisplay, content: '[صورة مرفقة]', image_url: event.target.result }
-          ]);
+          const senderDisplay = currentUser ? getDisplayName(currentUser) : 'زائر';
+          await _supabase.from('chat_messages').insert([{ sender: senderDisplay, content: '[صورة مرفقة]', image_url: event.target.result }]);
           fetchSupabaseData();
         };
         reader.readAsDataURL(file);
       }
     }
 
+    function handleChatMessageContext(e, msgId, currentText) {
+      e.preventDefault();
+      if (confirm("هل تريد حذف هذه الرسالة؟")) {
+        deleteChatMessage(msgId);
+      }
+    }
+
+    async function deleteChatMessage(msgId) {
+      await _supabase.from('chat_messages').delete().eq('id', msgId);
+      fetchSupabaseData();
+    }
+
+    // محرر الأكواد والويب (مربوط بالـ LocalStorage لكل طالب ومصحوب بمحرر الـ HTML/CSS/JS)
+    function switchEditorMode() {
+      const mode = document.getElementById('editorLanguage').value;
+      if (mode === 'web') {
+        document.getElementById('webBuilderMode').style.display = 'block';
+        document.getElementById('consoleMode').style.display = 'none';
+        loadWebEditorCode();
+      } else {
+        document.getElementById('webBuilderMode').style.display = 'none';
+        document.getElementById('consoleMode').style.display = 'block';
+      }
+    }
+
+    function saveWebEditorCode() {
+      const code = document.getElementById('webCodeArea').value;
+      const studentKey = currentUser ? `web_code_${currentUser.id}` : 'web_code_guest';
+      localStorage.setItem(studentKey, code);
+      document.getElementById('webPreviewFrame').srcdoc = code;
+    }
+
+    function loadWebEditorCode() {
+      const studentKey = currentUser ? `web_code_${currentUser.id}` : 'web_code_guest';
+      const saved = localStorage.getItem(studentKey) || '<h1>أهلاً بك في محرر موقعك الشخصي!</h1><p>اكتب كود الـ HTML هنا وسيظهر هنا مباشرةً.</p>';
+      document.getElementById('webCodeArea').value = saved;
+      document.getElementById('webPreviewFrame').srcdoc = saved;
+    }
+
     function runCode() {
       const lang = document.getElementById('editorLanguage').value;
       const code = document.getElementById('codeTextarea').value;
       const output = document.getElementById('codeOutput');
-
       if (lang === 'js') {
         try {
           let logs = [];
           const customConsole = { log: (...args) => logs.push(args.join(' ')) };
-          const runFn = new Function('console', code);
-          runFn(customConsole);
+          new Function('console', code)(customConsole);
           output.innerText = logs.join('\n') || 'تم تشغيل الشفرة بنجاح.';
         } catch (err) {
           output.innerText = 'خطأ برمجي: ' + err.message;
         }
       } else {
-        output.innerText = "شفرة Python (محاكاة):\n" + code;
+        output.innerText = "شفرة Python:\n" + code;
+      }
+    }
+
+    // التحدي اليومي
+    function renderDailyChallenge() {
+      if (!dailyChallenge) {
+        document.getElementById('dailyChallengeContainer').innerHTML = `<p class="text-center text-muted">لا يوجد تحدي يومي منشور حالياً.</p>`;
+        return;
+      }
+      document.getElementById('challengeQuestionText').innerText = dailyChallenge.question;
+      const opts = dailyChallenge.options; // يفترض أن تكون كائن أو مصفوفة خيارات
+      let optsHTML = '';
+      ['A', 'B', 'C', 'D'].forEach(k => {
+        if (opts[k]) {
+          optsHTML += `<label class="d-block p-2 border rounded-3 cursor-pointer"><input type="radio" name="challengeOpt" value="${k}" class="me-2"> ${k}) ${opts[k]}</label>`;
+        }
+      });
+      document.getElementById('challengeOptionsContainer').innerHTML = optsHTML;
+      document.getElementById('submitChallengeBtn').style.display = 'block';
+    }
+
+    async function submitDailyChallenge() {
+      const selected = document.querySelector('input[name="challengeOpt"]:checked');
+      if (!selected) {
+        alert("يرجى اختيار إجابة أولاً!");
+        return;
+      }
+      const chosen = selected.value;
+      const isCorrect = chosen === dailyChallenge.correct_answer;
+      
+      const studentName = currentUser ? currentUser.name : 'زائر';
+      await _supabase.from('daily_challenge_responses').insert([{
+        challenge_id: dailyChallenge.id,
+        name: studentName,
+        selected_option: chosen,
+        is_correct: isCorrect
+      }]);
+
+      const feedback = document.getElementById('challengeFeedback');
+      if (isCorrect) {
+        feedback.innerHTML = `<span class="text-success">إجابة صحيحة أحسنت! 🎉</span>`;
+      } else {
+        feedback.innerHTML = `<span class="text-danger">إجابة خاطئة، حاول مرة أخرى. الإجابة الصحيحة هي: ${dailyChallenge.correct_answer}</span>`;
       }
     }
 
@@ -1305,18 +1292,14 @@
         document.getElementById('adminAuthLock').style.display = 'none';
         document.getElementById('adminDashboard').style.display = 'block';
         loadAdminData();
-      } else {
-        alert("كلمة المرور خاطئة!");
-      }
+      } else alert("كلمة المرور خاطئة!");
     }
 
     function adminLogout() {
       isAdminLoggedIn = false;
       sessionStorage.removeItem('admin_logged_in');
-      document.getElementById('adminPassInput').value = '';
       document.getElementById('adminAuthLock').style.display = 'block';
       document.getElementById('adminDashboard').style.display = 'none';
-      alert("تم تسجيل خروج الأدمن بنجاح.");
     }
 
     async function loadAdminData() {
@@ -1326,274 +1309,129 @@
 
       document.getElementById('pendingCount').innerText = pendingUsers.length;
       document.getElementById('studentsCount').innerText = approvedUsers.length;
-      document.getElementById('logsCount').innerText = auditLogs.length;
+      document.getElementById('challengeStatsCount').innerText = challengeResponses.length;
 
       document.getElementById('pendingTableBody').innerHTML = pendingUsers.map(u => `
         <tr>
           <td><strong>${u.name}</strong></td>
-          <td><span class="text-muted">${u.username || 'بدون'}</span></td>
           <td>${u.grade}</td>
           <td>${u.phone}</td>
           <td>${u.parent_phone || '-'}</td>
           <td>
             <button class="btn btn-success btn-sm me-1" onclick="approveUser(${u.id})">قبول وتفعيل</button>
-            <a href="https://wa.me/20${u.phone.replace(/^0/, '')}?text=مرحباً بك، تم تفعيل حسابك على المنصة." target="_blank" class="btn btn-outline-success btn-sm me-1"><i class="fa-brands fa-whatsapp"></i></a>
             <button class="btn btn-danger btn-sm" onclick="rejectUser(${u.id})">رفض</button>
           </td>
         </tr>
       `).join('');
 
-      renderActiveStudentsTable(approvedUsers);
+      renderAdminStudentsTable(approvedUsers);
       renderAdminManagementTables();
-
-      document.getElementById('logsTableBody').innerHTML = auditLogs.map(l => `
-        <tr>
-          <td>${l.name || 'غير معروف'}</td>
-          <td>${l.role || 'غير محدد'}</td>
-          <td>${l.action}</td>
-          <td><span class="badge bg-dark">${new Date(l.created_at).toLocaleString('ar-EG')}</span></td>
-          <td>
-            <button class="btn btn-danger btn-sm" onclick="deleteSingleLog(${l.id})"><i class="fa-solid fa-trash"></i> حذف</button>
-          </td>
-        </tr>
-      `).join('');
     }
 
-    // تحديث جداول الإدارة الخاصة بالإشعارات والمتميزين والمذكرات في لوحة الأدمن فقط
-    function renderAdminManagementTables() {
-      const adminNewsBody = document.getElementById('adminNewsTableBody');
-      if (adminNewsBody) {
-        if (notifications.length === 0) {
-          adminNewsBody.innerHTML = `<tr><td colspan="4" class="text-center text-muted">لا توجد إشعارات منشورة حالياً.</td></tr>`;
-        } else {
-          adminNewsBody.innerHTML = notifications.map(n => `
-            <tr>
-              <td><strong>${n.title}</strong></td>
-              <td>${n.content}</td>
-              <td><span class="badge bg-secondary-subtle text-secondary">${n.date}</span></td>
-              <td>
-                <button class="btn btn-danger btn-sm" onclick="deleteNotification(${n.id})"><i class="fa-solid fa-trash"></i> حذف</button>
-              </td>
-            </tr>
-          `).join('');
-        }
-      }
-
-      const adminHonorBody = document.getElementById('adminHonorTableBody');
-      if (adminHonorBody) {
-        if (honorStudents.length === 0) {
-          adminHonorBody.innerHTML = `<tr><td colspan="4" class="text-center text-muted">لا يوجد طلاب في لوحة الشرف حالياً.</td></tr>`;
-        } else {
-          adminHonorBody.innerHTML = honorStudents.map(h => `
-            <tr>
-              <td><img src="${h.image_url || 'https://via.placeholder.com/50'}" style="width: 45px; height: 45px; border-radius: 50%; object-fit: cover;"></td>
-              <td><strong>${h.name}</strong></td>
-              <td><span class="text-warning fw-semibold">${h.achievement}</span></td>
-              <td>
-                <button class="btn btn-danger btn-sm" onclick="deleteHonorStudent(${h.id})"><i class="fa-solid fa-trash"></i> حذف</button>
-              </td>
-            </tr>
-          `).join('');
-        }
-      }
-
-      const adminBooksBody = document.getElementById('adminBooksTableBody');
-      if (adminBooksBody) {
-        if (books.length === 0) {
-          adminBooksBody.innerHTML = `<tr><td colspan="4" class="text-center text-muted">لا توجد مذكرات أو كتب منشورة حالياً.</td></tr>`;
-        } else {
-          adminBooksBody.innerHTML = books.map(b => `
-            <tr>
-              <td><strong>${b.title}</strong></td>
-              <td><span class="badge bg-primary-subtle text-primary">${b.grade}</span></td>
-              <td><a href="${b.url}" target="_blank" class="btn btn-outline-primary btn-sm"><i class="fa-solid fa-up-right-from-square"></i> معاينة الرابط</a></td>
-              <td>
-                <button class="btn btn-danger btn-sm" onclick="deleteBook(${b.id})"><i class="fa-solid fa-trash"></i> حذف</button>
-              </td>
-            </tr>
-          `).join('');
-        }
-      }
-    }
-
-    function renderActiveStudentsTable(list) {
+    // إخفاء أرقام الهواتف وأولياء الأمور في لوحة الأدمن للطلاب (مع الاحتفاظ بها في قاعدة البيانات)
+    function renderAdminStudentsTable(list) {
       document.getElementById('studentsTableBody').innerHTML = list.map(u => `
         <tr>
           <td><strong>${u.name}</strong></td>
           <td><span class="badge bg-secondary-subtle text-secondary">${u.username || 'حقيقي'}</span></td>
           <td>${u.grade}</td>
-          <td>${u.phone}</td>
-          <td>${u.parent_phone || '-'}</td>
-          <td>
-            <button class="btn btn-outline-danger btn-sm" onclick="deleteStudent(${u.id})"><i class="fa-solid fa-trash"></i> حذف</button>
-          </td>
+          <td><span class="text-muted fst-italic">محمي في القاعدة (••••••••)</span></td>
+          <td><span class="text-muted fst-italic">محمي في القاعدة (••••••••)</span></td>
+          <td><button class="btn btn-outline-danger btn-sm" onclick="deleteStudent(${u.id})"><i class="fa-solid fa-trash"></i> حذف</button></td>
         </tr>
       `).join('');
     }
 
+    function renderAdminManagementTables() {
+      const respBody = document.getElementById('adminChallengeResponsesBody');
+      if (respBody) {
+        respBody.innerHTML = challengeResponses.map(r => `
+          <tr>
+            <td><strong>${r.name}</strong></td>
+            <td>${r.selected_option}</td>
+            <td>${r.is_correct ? '<span class="text-success">صحيحة</span>' : '<span class="text-danger">خاطئة</span>'}</td>
+            <td>${new Date(r.created_at).toLocaleString('ar-EG')}</td>
+          </tr>
+        `).join('');
+      }
+    }
+
     async function approveUser(id) {
       await _supabase.from('profiles').update({ status: 'approved' }).eq('id', id);
-      await addAuditLog('الأدمن', 'مدير النظام', `تفعيل حساب المستخدم صاحب المعرف: ${id}`);
-      fetchSupabaseData();
       loadAdminData();
-      alert("تم تفعيل الطالب بنجاح.");
     }
 
     async function rejectUser(id) {
       await _supabase.from('profiles').delete().eq('id', id);
-      await addAuditLog('الأدمن', 'مدير النظام', `رفض وحذف طلب التسجيل للمعرف: ${id}`);
-      fetchSupabaseData();
       loadAdminData();
     }
 
     async function deleteStudent(id) {
       if (confirm("هل أنت متأكد من حذف هذا الطالب؟")) {
         await _supabase.from('profiles').delete().eq('id', id);
-        await addAuditLog('الأدمن', 'مدير النظام', `حذف طالب صاحب المعرف: ${id}`);
-        fetchSupabaseData();
         loadAdminData();
-      }
-    }
-
-    async function deleteSingleLog(id) {
-      if (confirm("هل أنت متأكد من حذف هذا السجل؟")) {
-        const { error } = await _supabase.from('audit_logs').delete().eq('id', id);
-        if (error) {
-          alert("خطأ أثناء الحذف: " + error.message);
-        } else {
-          fetchSupabaseData();
-          loadAdminData();
-        }
-      }
-    }
-
-    async function clearAllAuditLogs() {
-      if (confirm("تحذير: هل تريد مسح جميع سجلات النظام نهائياً؟")) {
-        const { error } = await _supabase.from('audit_logs').delete().neq('id', 0);
-        if (error) {
-          alert("خطأ أثناء مسح السجلات: " + error.message);
-        } else {
-          fetchSupabaseData();
-          loadAdminData();
-          alert("تم تفريغ السجلات بنجاح.");
-        }
       }
     }
 
     function filterStudents() {
       const query = document.getElementById('studentSearch').value.toLowerCase();
-      const approvedUsers = users.filter(u => u.status === 'approved' && (u.name.toLowerCase().includes(query) || u.phone.includes(query)));
-      renderActiveStudentsTable(approvedUsers);
+      renderAdminStudentsTable(users.filter(u => u.status === 'approved' && u.name.toLowerCase().includes(query)));
+    }
+
+    // نشر تحدي يومي جديد من لوحة الأدمن
+    async function postDailyChallenge(event) {
+      event.preventDefault();
+      const question = document.getElementById('adminQText').value;
+      const options = {
+        A: document.getElementById('optA').value,
+        B: document.getElementById('optB').value,
+        C: document.getElementById('optC').value,
+        D: document.getElementById('optD').value
+      };
+      const correct_answer = document.getElementById('correctOpt').value;
+
+      const { error } = await _supabase.from('daily_challenges').insert([{ question, options, correct_answer }]);
+      if (error) alert("خطأ: " + error.message);
+      else {
+        alert("تم نشر التحدي اليومي بنجاح!");
+        document.getElementById('adminQText').value = '';
+        fetchSupabaseData();
+      }
     }
 
     async function addNotification(e) {
       e.preventDefault();
       const title = document.getElementById('notifTitle').value;
       const content = document.getElementById('notifContent').value;
-
-      const { error } = await _supabase.from('notifications').insert([{ title, content }]);
-      if (error) {
-        alert("خطأ أثناء نشر الإشعار: " + error.message);
-      } else {
-        await addAuditLog('الأدمن', 'مدير النظام', `نشر إشعار جديد: ${title}`);
-        alert("تم نشر الإشعار بنجاح!");
-        document.getElementById('notifTitle').value = '';
-        document.getElementById('notifContent').value = '';
-        loadAdminData();
-      }
+      await _supabase.from('notifications').insert([{ title, content }]);
+      alert("تم نشر الإشعار!");
+      loadAdminData();
     }
 
-    // حذف إشعار محدد (متاح للأدمن فقط)
-    async function deleteNotification(id) {
-      if (confirm("هل أنت متأكد من حذف هذا الإشعار نهائياً؟")) {
-        const { error } = await _supabase.from('notifications').delete().eq('id', id);
-        if (error) {
-          alert("خطأ أثناء حذف الإشعار: " + error.message);
-        } else {
-          await addAuditLog('الأدمن', 'مدير النظام', `حذف إشعار برقم: ${id}`);
-          loadAdminData();
-        }
-      }
-    }
-
-    // إضافة طالب للوحة الشرف مع رفع الصورة مباشرة
     async function addHonorStudent(e) {
       e.preventDefault();
       const name = document.getElementById('honorName').value;
       const achievement = document.getElementById('honorTitle').value;
       const fileInput = document.getElementById('honorImgFile');
-
       if (fileInput.files && fileInput.files[0]) {
         const reader = new FileReader();
         reader.onload = async function(event) {
-          const imageUrl = event.target.result;
-          const { error } = await _supabase.from('honor_students').insert([
-            { name: name, achievement: achievement, image_url: imageUrl }
-          ]);
-
-          if (error) {
-            alert("خطأ أثناء الإضافة: " + error.message);
-          } else {
-            await addAuditLog('الأدمن', 'مدير النظام', `إضافة طالب لوحة الشرف: ${name}`);
-            alert("تمت الإضافة بنجاح!");
-            document.getElementById('honorName').value = '';
-            document.getElementById('honorTitle').value = '';
-            fileInput.value = '';
-            loadAdminData();
-          }
+          await _supabase.from('honor_students').insert([{ name, achievement, image_url: event.target.result }]);
+          alert("تمت الإضافة بنجاح!");
+          loadAdminData();
         };
         reader.readAsDataURL(fileInput.files[0]);
-      } else {
-        alert("يرجى اختيار صورة للطالب.");
       }
     }
 
-    // حذف طالب من لوحة الشرف (متاح للأدمن فقط)
-    async function deleteHonorStudent(id) {
-      if (confirm("هل أنت متأكد من إزالة هذا الطالب من لوحة الشرف؟")) {
-        const { error } = await _supabase.from('honor_students').delete().eq('id', id);
-        if (error) {
-          alert("خطأ أثناء الحذف: " + error.message);
-        } else {
-          await addAuditLog('الأدمن', 'مدير النظام', `حذف طالب من لوحة الشرف برقم: ${id}`);
-          loadAdminData();
-        }
-      }
-    }
-
-    // إضافة كتاب أو مذكرة لقاعدة بيانات Supabase
     async function addBook(e) {
       e.preventDefault();
       const title = document.getElementById('bookTitle').value;
       const grade = document.getElementById('bookGrade').value;
       const url = document.getElementById('bookUrl').value;
-
-      const { error } = await _supabase.from('books').insert([
-        { title, grade, url }
-      ]);
-
-      if (error) {
-        alert("خطأ أثناء رفع المذكرة: " + error.message);
-      } else {
-        await addAuditLog('الأدمن', 'مدير النظام', `إضافة مذكرة/كتاب: ${title}`);
-        alert("تم نشر المذكرة بنجاح!");
-        document.getElementById('bookTitle').value = '';
-        document.getElementById('bookUrl').value = '';
-        loadAdminData();
-      }
-    }
-
-    // حذف كتاب أو مذكرة من Supabase (متاح للأدمن فقط)
-    async function deleteBook(id) {
-      if (confirm("هل أنت متأكد من حذف هذه المذكرة نهائياً؟")) {
-        const { error } = await _supabase.from('books').delete().eq('id', id);
-        if (error) {
-          alert("خطأ أثناء حذف المذكرة: " + error.message);
-        } else {
-          await addAuditLog('الأدمن', 'مدير النظام', `حذف مذكرة برقم: ${id}`);
-          loadAdminData();
-        }
-      }
+      await _supabase.from('books').insert([{ title, grade, url }]);
+      alert("تم نشر الكتاب!");
+      loadAdminData();
     }
 
     fetchSupabaseData();
