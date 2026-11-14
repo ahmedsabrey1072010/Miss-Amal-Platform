@@ -179,13 +179,29 @@
     .header-icon-btn:hover { transform: scale(1.08); border-color: var(--primary); color: var(--primary); }
     .header-icon-btn.admin-btn:hover { border-color: var(--warning); color: var(--warning); }
 
+    /* قائمة الإشعارات المتجاوبة والمعدلة للشاشات الصغيرة */
     .notification-dropdown {
-      display: none; position: absolute; left: 0; top: 50px; width: 320px;
-      background: var(--bg-card); border: 1px solid var(--border-color);
-      border-radius: var(--radius-lg); box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-      z-index: 1100; padding: 14px; text-align: right;
+      display: none; 
+      position: absolute; 
+      left: 0; 
+      top: 50px; 
+      width: 320px; 
+      max-width: calc(100vw - 30px);
+      background: var(--bg-card); 
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg); 
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+      z-index: 1100; 
+      padding: 14px; 
+      text-align: right;
     }
     .notification-dropdown.show { display: block; }
+
+    @media (max-width: 400px) {
+      .notification-dropdown {
+        left: -60px;
+      }
+    }
 
     .chat-box {
       height: 500px; overflow-y: auto; background: var(--bg-body);
