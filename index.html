@@ -646,11 +646,16 @@
             </div>
 
             <div class="tab-pane fade" id="manageHonorTab">
-              <h6 class="fw-bold mb-3">إضافة طالب لقائمة المتميزين</h6>
+              <h6 class="fw-bold mb-3">إضافة طالب لقائمة المتميزين (مع رفع الصورة مباشرة)</h6>
               <form onsubmit="addHonorStudent(event)" class="mb-4">
                 <input type="text" id="honorName" class="form-control mb-2" placeholder="اسم الطالب" required>
                 <input type="text" id="honorTitle" class="form-control mb-2" placeholder="الإنجاز / المركز" required>
-                <input type="text" id="honorImg" class="form-control mb-3" placeholder="رابط صورة الطالب (اختياري)">
+                
+                <div class="mb-3">
+                  <label class="form-label small fw-semibold">صورة الطالب الشخصية:</label>
+                  <input type="file" id="honorImgFile" accept="image/*" class="form-control" required>
+                </div>
+
                 <button type="submit" class="btn btn-warning btn-sm px-4 text-dark fw-bold">إضافة للوحة الشرف</button>
               </form>
             </div>
@@ -781,9 +786,7 @@
 
     let users = [];
     let notifications = [];
-    let honorStudents = JSON.parse(localStorage.getItem('platform_honor')) || [
-      { id: 1, name: "أحمد صبري", title: "المركز الأول في البرمجة والتطوير", img: "https://via.placeholder.com/100" }
-    ];
+    let honorStudents = [];
     let books = JSON.parse(localStorage.getItem('platform_books')) || [
       { id: 1, title: "مذكرة خوارزميات الذكاء الاصطناعي", grade: "الصف الثاني الثانوي", url: "#" }
     ];
@@ -833,6 +836,12 @@
         }));
       }
 
+      // جلب لوحة الشرف من Supabase
+      const { data: honorData, error: honorError } = await _supabase.from('honor_students').select('*').order('created_at', { ascending: false });
+      if (!honorError && honorData) {
+        honorStudents = honorData;
+      }
+
       // جلب سجلات النظام (Audit Logs) من جدول Supabase
       const { data: logsData, error: logsError } = await _supabase.from('audit_logs').select('*').order('created_at', { ascending: false });
       if (!logsError && logsData) {
@@ -865,16 +874,17 @@
     function setupRealtimeSubscription() {
       _supabase
         .channel('public:chat_messages')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'chat_messages' }, payload => {
-          fetchSupabaseData();
-        })
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'chat_messages' }, () => fetchSupabaseData())
         .subscribe();
 
       _supabase
         .channel('public:audit_logs')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'audit_logs' }, payload => {
-          fetchSupabaseData();
-        })
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'audit_logs' }, () => fetchSupabaseData())
+        .subscribe();
+
+      _supabase
+        .channel('public:honor_students')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'honor_students' }, () => fetchSupabaseData())
         .subscribe();
     }
 
@@ -1094,7 +1104,6 @@
       }
     }
 
-    // دالة إضافة سجل جديد لجدول Supabase مباشرة
     async function addAuditLog(name, role, action) {
       await _supabase.from('audit_logs').insert([{ name, role, action }]);
     }
@@ -1118,12 +1127,16 @@
 
     function renderHonor() {
       const container = document.getElementById('honorContainer');
+      if (honorStudents.length === 0) {
+        container.innerHTML = `<p class="text-center text-muted">لا توجد سجلات في لوحة الشرف حالياً.</p>`;
+        return;
+      }
       container.innerHTML = honorStudents.map(h => `
         <div class="col-md-4">
           <div class="honor-card">
-            <img src="${h.img || 'https://via.placeholder.com/100'}" class="honor-avatar">
+            <img src="${h.image_url || 'https://via.placeholder.com/100'}" class="honor-avatar">
             <h6 class="fw-bold m-0">${h.name}</h6>
-            <small class="text-warning fw-semibold mt-1 d-block">${h.title}</small>
+            <small class="text-warning fw-semibold mt-1 d-block">${h.achievement}</small>
           </div>
         </div>
       `).join('');
@@ -1256,7 +1269,6 @@
 
       renderActiveStudentsTable(approvedUsers);
 
-      // عرض السجلات مع زرار الحذف الفردي
       document.getElementById('logsTableBody').innerHTML = auditLogs.map(l => `
         <tr>
           <td>${l.name || 'غير معروف'}</td>
@@ -1309,7 +1321,6 @@
       }
     }
 
-    // دالة حذف سجل واحد من جدول الـ audit_logs
     async function deleteSingleLog(id) {
       if (confirm("هل أنت متأكد من حذف هذا السجل؟")) {
         const { error } = await _supabase.from('audit_logs').delete().eq('id', id);
@@ -1322,10 +1333,8 @@
       }
     }
 
-    // دالة مسح جميع السجلات دفعة واحدة
     async function clearAllAuditLogs() {
       if (confirm("تحذير: هل تريد مسح جميع سجلات النظام نهائياً؟")) {
-        // حذف الكل عبر مطابقة شرط يعود بـ true دائماً
         const { error } = await _supabase.from('audit_logs').delete().neq('id', 0);
         if (error) {
           alert("خطأ أثناء مسح السجلات: " + error.message);
@@ -1356,21 +1365,39 @@
       fetchSupabaseData();
     }
 
+    // إضافة طالب للوحة الشرف مع رفع الصورة مباشرة وتحويلها لـ Base64 أو تخزينها
     async function addHonorStudent(e) {
       e.preventDefault();
-      honorStudents.push({
-        id: Date.now(),
-        name: document.getElementById('honorName').value,
-        title: document.getElementById('honorTitle').value,
-        img: document.getElementById('honorImg').value
-      });
-      localStorage.setItem('platform_honor', JSON.stringify(honorStudents));
-      renderHonor();
-      await addAuditLog('الأدمن', 'مدير النظام', `إضافة طالب لوحة الشرف: ${document.getElementById('honorName').value}`);
-      alert("تمت الإضافة بنجاح!");
+      const name = document.getElementById('honorName').value;
+      const achievement = document.getElementById('honorTitle').value;
+      const fileInput = document.getElementById('honorImgFile');
+
+      if (fileInput.files && fileInput.files[0]) {
+        const reader = new FileReader();
+        reader.onload = async function(event) {
+          const imageUrl = event.target.result;
+          const { error } = await _supabase.from('honor_students').insert([
+            { name: name, achievement: achievement, image_url: imageUrl }
+          ]);
+
+          if (error) {
+            alert("خطأ أثناء الإضافة: " + error.message);
+          } else {
+            await addAuditLog('الأدمن', 'مدير النظام', `إضافة طالب لوحة الشرف: ${name}`);
+            alert("تمت الإضافة بنجاح!");
+            document.getElementById('honorName').value = '';
+            document.getElementById('honorTitle').value = '';
+            fileInput.value = '';
+            fetchSupabaseData();
+          }
+        };
+        reader.readAsDataURL(fileInput.files[0]);
+      } else {
+        alert("يرجى اختيار صورة للطالب.");
+      }
     }
 
-    async function addBook(e) {
+    function addBook(e) {
       e.preventDefault();
       books.push({
         id: Date.now(),
@@ -1380,7 +1407,7 @@
       });
       localStorage.setItem('platform_books', JSON.stringify(books));
       renderBooks();
-      await addAuditLog('الأدمن', 'مدير النظام', `إضافة مذكرة/كتاب: ${document.getElementById('bookTitle').value}`);
+      addAuditLog('الأدمن', 'مدير النظام', `إضافة مذكرة/كتاب: ${document.getElementById('bookTitle').value}`);
       alert("تم رفع الكتاب بنجاح!");
     }
 
