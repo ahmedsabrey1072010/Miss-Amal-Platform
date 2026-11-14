@@ -591,8 +591,8 @@
             <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#pendingTab"><i class="fa-solid fa-user-clock me-1"></i> الطلبات المعلقة</a></li>
             <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#studentsTab"><i class="fa-solid fa-users me-1"></i> قائمة الطلاب</a></li>
             <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#logsTab"><i class="fa-solid fa-clock-rotate-left me-1"></i> السجلات</a></li>
-            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#manageNewsTab"><i class="fa-solid fa-bullhorn me-1"></i> نشر إشعار</a></li>
-            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#manageHonorTab"><i class="fa-solid fa-award me-1"></i> المتميزين</a></li>
+            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#manageNewsTab"><i class="fa-solid fa-bullhorn me-1"></i> إدارة الإشعارات</a></li>
+            <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#manageHonorTab"><i class="fa-solid fa-award me-1"></i> إدارة المتميزين</a></li>
             <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#manageBooksTab"><i class="fa-solid fa-book me-1"></i> المذكرات</a></li>
           </ul>
 
@@ -636,18 +636,35 @@
               </div>
             </div>
 
+            <!-- إدارة ونشر وحذف الإشعارات -->
             <div class="tab-pane fade" id="manageNewsTab">
-              <h6 class="fw-bold mb-3">إدارة ونشر الإشعارات والأخبار</h6>
-              <form onsubmit="addNotification(event)" class="mb-4">
+              <h6 class="fw-bold mb-3">نشر إشعار أو خبر جديد</h6>
+              <form onsubmit="addNotification(event)" class="mb-4 pb-4 border-bottom">
                 <input type="text" id="notifTitle" class="form-control mb-2" placeholder="عنوان الإشعار" required>
                 <textarea id="notifContent" class="form-control mb-3" placeholder="محتوى الإشعار..." rows="3" required></textarea>
                 <button type="submit" class="btn btn-primary btn-sm px-4">نشر الإشعار</button>
               </form>
+
+              <h6 class="fw-bold mb-3 text-danger"><i class="fa-solid fa-list-check me-1"></i> الإشعارات والأخبار المنشورة حالياً</h6>
+              <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                  <thead>
+                    <tr>
+                      <th>عنوان الإشعار</th>
+                      <th>المحتوى</th>
+                      <th>التاريخ</th>
+                      <th>حذف</th>
+                    </tr>
+                  </thead>
+                  <tbody id="adminNewsTableBody"></tbody>
+                </table>
+              </div>
             </div>
 
+            <!-- إدارة وإضافة وحذف المتميزين -->
             <div class="tab-pane fade" id="manageHonorTab">
               <h6 class="fw-bold mb-3">إضافة طالب لقائمة المتميزين (مع رفع الصورة مباشرة)</h6>
-              <form onsubmit="addHonorStudent(event)" class="mb-4">
+              <form onsubmit="addHonorStudent(event)" class="mb-4 pb-4 border-bottom">
                 <input type="text" id="honorName" class="form-control mb-2" placeholder="اسم الطالب" required>
                 <input type="text" id="honorTitle" class="form-control mb-2" placeholder="الإنجاز / المركز" required>
                 
@@ -658,6 +675,21 @@
 
                 <button type="submit" class="btn btn-warning btn-sm px-4 text-dark fw-bold">إضافة للوحة الشرف</button>
               </form>
+
+              <h6 class="fw-bold mb-3 text-danger"><i class="fa-solid fa-trophy me-1"></i> الطلاب المسجلون في لوحة الشرف حالياً</h6>
+              <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                  <thead>
+                    <tr>
+                      <th>الصورة</th>
+                      <th>اسم الطالب</th>
+                      <th>الإنجاز / المركز</th>
+                      <th>حذف</th>
+                    </tr>
+                  </thead>
+                  <tbody id="adminHonorTableBody"></tbody>
+                </table>
+              </div>
             </div>
 
             <div class="tab-pane fade" id="manageBooksTab">
@@ -826,10 +858,11 @@
       const { data: profilesData } = await _supabase.from('profiles').select('*');
       if (profilesData) users = profilesData;
 
-      // جلب الإشعارات
+      // جلب الإشعارات مع الاحتفاظ بالـ id للحذف
       const { data: notifsData } = await _supabase.from('notifications').select('*').order('created_at', { ascending: false });
       if (notifsData) {
         notifications = notifsData.map(n => ({
+          id: n.id,
           title: n.title,
           content: n.content,
           date: new Date(n.created_at).toLocaleDateString('ar-EG')
@@ -842,7 +875,7 @@
         honorStudents = honorData;
       }
 
-      // جلب سجلات النظام (Audit Logs) من جدول Supabase
+      // جلب سجلات النظام (Audit Logs)
       const { data: logsData, error: logsError } = await _supabase.from('audit_logs').select('*').order('created_at', { ascending: false });
       if (!logsError && logsData) {
         auditLogs = logsData;
@@ -869,6 +902,9 @@
       }
 
       updateUI();
+      if (isAdminLoggedIn) {
+        renderAdminManagementTables();
+      }
     }
 
     function setupRealtimeSubscription() {
@@ -885,6 +921,11 @@
       _supabase
         .channel('public:honor_students')
         .on('postgres_changes', { event: '*', schema: 'public', table: 'honor_students' }, () => fetchSupabaseData())
+        .subscribe();
+
+      _supabase
+        .channel('public:notifications')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'notifications' }, () => fetchSupabaseData())
         .subscribe();
     }
 
@@ -1268,6 +1309,7 @@
       `).join('');
 
       renderActiveStudentsTable(approvedUsers);
+      renderAdminManagementTables();
 
       document.getElementById('logsTableBody').innerHTML = auditLogs.map(l => `
         <tr>
@@ -1280,6 +1322,45 @@
           </td>
         </tr>
       `).join('');
+    }
+
+    // تحديث جداول الإدارة الخاصة بالإشعارات والمتميزين في لوحة الأدمن فقط
+    function renderAdminManagementTables() {
+      const adminNewsBody = document.getElementById('adminNewsTableBody');
+      if (adminNewsBody) {
+        if (notifications.length === 0) {
+          adminNewsBody.innerHTML = `<tr><td colspan="4" class="text-center text-muted">لا توجد إشعارات منشورة حالياً.</td></tr>`;
+        } else {
+          adminNewsBody.innerHTML = notifications.map(n => `
+            <tr>
+              <td><strong>${n.title}</strong></td>
+              <td>${n.content}</td>
+              <td><span class="badge bg-secondary-subtle text-secondary">${n.date}</span></td>
+              <td>
+                <button class="btn btn-danger btn-sm" onclick="deleteNotification(${n.id})"><i class="fa-solid fa-trash"></i> حذف</button>
+              </td>
+            </tr>
+          `).join('');
+        }
+      }
+
+      const adminHonorBody = document.getElementById('adminHonorTableBody');
+      if (adminHonorBody) {
+        if (honorStudents.length === 0) {
+          adminHonorBody.innerHTML = `<tr><td colspan="4" class="text-center text-muted">لا يوجد طلاب في لوحة الشرف حالياً.</td></tr>`;
+        } else {
+          adminHonorBody.innerHTML = honorStudents.map(h => `
+            <tr>
+              <td><img src="${h.image_url || 'https://via.placeholder.com/50'}" style="width: 45px; height: 45px; border-radius: 50%; object-fit: cover;"></td>
+              <td><strong>${h.name}</strong></td>
+              <td><span class="text-warning fw-semibold">${h.achievement}</span></td>
+              <td>
+                <button class="btn btn-danger btn-sm" onclick="deleteHonorStudent(${h.id})"><i class="fa-solid fa-trash"></i> حذف</button>
+              </td>
+            </tr>
+          `).join('');
+        }
+      }
     }
 
     function renderActiveStudentsTable(list) {
@@ -1357,15 +1438,32 @@
       const title = document.getElementById('notifTitle').value;
       const content = document.getElementById('notifContent').value;
 
-      await _supabase.from('notifications').insert([{ title, content }]);
-      await addAuditLog('الأدمن', 'مدير النظام', `نشر إشعار جديد: ${title}`);
-      alert("تم نشر الإشعار بنجاح!");
-      document.getElementById('notifTitle').value = '';
-      document.getElementById('notifContent').value = '';
-      fetchSupabaseData();
+      const { error } = await _supabase.from('notifications').insert([{ title, content }]);
+      if (error) {
+        alert("خطأ أثناء نشر الإشعار: " + error.message);
+      } else {
+        await addAuditLog('الأدمن', 'مدير النظام', `نشر إشعار جديد: ${title}`);
+        alert("تم نشر الإشعار بنجاح!");
+        document.getElementById('notifTitle').value = '';
+        document.getElementById('notifContent').value = '';
+        loadAdminData();
+      }
     }
 
-    // إضافة طالب للوحة الشرف مع رفع الصورة مباشرة وتحويلها لـ Base64 أو تخزينها
+    // حذف إشعار محدد (متاح للأدمن فقط)
+    async function deleteNotification(id) {
+      if (confirm("هل أنت متأكد من حذف هذا الإشعار نهائياً؟")) {
+        const { error } = await _supabase.from('notifications').delete().eq('id', id);
+        if (error) {
+          alert("خطأ أثناء حذف الإشعار: " + error.message);
+        } else {
+          await addAuditLog('الأدمن', 'مدير النظام', `حذف إشعار برقم: ${id}`);
+          loadAdminData();
+        }
+      }
+    }
+
+    // إضافة طالب للوحة الشرف مع رفع الصورة مباشرة
     async function addHonorStudent(e) {
       e.preventDefault();
       const name = document.getElementById('honorName').value;
@@ -1388,12 +1486,25 @@
             document.getElementById('honorName').value = '';
             document.getElementById('honorTitle').value = '';
             fileInput.value = '';
-            fetchSupabaseData();
+            loadAdminData();
           }
         };
         reader.readAsDataURL(fileInput.files[0]);
       } else {
         alert("يرجى اختيار صورة للطالب.");
+      }
+    }
+
+    // حذف طالب من لوحة الشرف (متاح للأدمن فقط)
+    async function deleteHonorStudent(id) {
+      if (confirm("هل أنت متأكد من إزالة هذا الطالب من لوحة الشرف؟")) {
+        const { error } = await _supabase.from('honor_students').delete().eq('id', id);
+        if (error) {
+          alert("خطأ أثناء الحذف: " + error.message);
+        } else {
+          await addAuditLog('الأدمن', 'مدير النظام', `حذف طالب من لوحة الشرف برقم: ${id}`);
+          loadAdminData();
+        }
       }
     }
 
