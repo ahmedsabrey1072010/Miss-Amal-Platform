@@ -195,19 +195,9 @@
     .header-icon-btn.admin-btn:hover { border-color: var(--warning); color: var(--warning); }
 
     .notification-dropdown {
-      display: none; 
-      position: absolute; 
-      left: 0; 
-      top: 50px; 
-      width: 320px; 
-      max-width: calc(100vw - 30px);
-      background: var(--bg-card); 
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-lg); 
-      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-      z-index: 1100; 
-      padding: 14px; 
-      text-align: right;
+      display: none; position: absolute; left: 0; top: 50px; width: 320px; max-width: calc(100vw - 30px);
+      background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-lg); 
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15); z-index: 1100; padding: 14px; text-align: right;
     }
     .notification-dropdown.show { display: block; }
 
@@ -265,7 +255,7 @@
 </head>
 <body data-theme="light">
 
-  <!-- عنصر شاشة التحميل العامة -->
+  <!-- شاشة التحميل العامة -->
   <div id="globalLoadingOverlay">
     <div class="spinner-border text-light mb-3" style="width: 3.5rem; height: 3.5rem;" role="status"></div>
     <h5 id="globalLoadingText" class="fw-bold m-0">جاري المعالجة...</h5>
@@ -689,7 +679,7 @@
 
   </div>
 
-  <!-- Admin Credentials Modal (محدث ليطلب رقم الهاتف وكلمة المرور من جدول admins) -->
+  <!-- Admin Credentials Modal (محدث برقم الهاتف وكلمة المرور لجدول admins) -->
   <div class="modal fade" id="adminAuthModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-sm">
       <div class="modal-content" style="background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid var(--border-color);">
@@ -701,7 +691,7 @@
           <h6 class="fw-bold mb-1">دخول لوحة الأدمن</h6>
           <p class="small text-muted mb-3">أدخل رقم الهاتف وكلمة المرور الخاصة بالمشرف</p>
           <form onsubmit="checkAdminAuth(event)">
-            <input type="tel" id="adminPhoneInput" class="form-control mb-2 text-center" placeholder="رقم الهاتف (010...)" inputmode="numeric" required>
+            <input type="tel" id="adminPhoneInput" class="form-control mb-2 text-center" placeholder="رقم الهاتف (011...)" inputmode="numeric" required>
             <input type="password" id="adminPassInput" class="form-control mb-3 text-center" placeholder="كلمة المرور" autocomplete="current-password" required>
             <button type="submit" class="btn btn-warning w-100 fw-bold py-2">تسجيل دخول الأدمن</button>
           </form>
@@ -1066,7 +1056,7 @@
       }
     }
 
-    // التحقق السحابي من جدول admins في Supabase
+    // التحقق السحابي السليم من جدول admins في Supabase
     async function checkAdminAuth(e) {
       if (e) e.preventDefault();
       const phoneInput = document.getElementById('adminPhoneInput').value.trim();
