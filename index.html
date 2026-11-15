@@ -191,29 +191,6 @@
     .header-icon-btn:hover { transform: scale(1.08); border-color: var(--primary); color: var(--primary); }
     .header-icon-btn.admin-btn:hover { border-color: var(--warning); color: var(--warning); }
 
-    .notification-dropdown {
-      display: none; position: absolute; left: 0; top: 50px; width: 320px; max-width: calc(100vw - 30px);
-      background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-lg); 
-      box-shadow: 0 10px 25px rgba(0,0,0,0.15); z-index: 1100; padding: 14px; text-align: right;
-    }
-    .notification-dropdown.show { display: block; }
-
-    .chat-box {
-      height: 500px; overflow-y: auto; background: var(--bg-body);
-      border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 20px; display: flex; flex-direction: column; gap: 14px;
-    }
-    .chat-message {
-      max-width: 75%; padding: 14px 18px; border-radius: 18px; font-size: 0.95rem; word-break: break-word; display: flex; flex-direction: column; box-shadow: var(--shadow-sm);
-    }
-    .chat-message.sent {
-      margin-right: auto; margin-left: 0; background: var(--primary); color: white;
-      border-bottom-left-radius: 18px; border-bottom-right-radius: 4px; align-items: flex-start;
-    }
-    .chat-message.received {
-      margin-left: auto; margin-right: 0; background: var(--bg-card); color: var(--text-main);
-      border: 1px solid var(--border-color); border-bottom-left-radius: 4px; border-bottom-right-radius: 18px; align-items: flex-start;
-    }
-
     .honor-card {
       background: var(--bg-card); border: 1px solid var(--border-color);
       border-radius: var(--radius-lg); padding: 24px; text-align: center; color: var(--text-main); box-shadow: var(--shadow-sm);
@@ -222,16 +199,42 @@
       width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 3px solid var(--warning); margin-bottom: 16px; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
     }
 
+    /* أزرار الفوتر الاحترافية والشيك */
     footer {
-      background: var(--bg-card); border-top: 1px solid var(--border-color);
-      padding: 24px 32px; text-align: center; font-size: 0.9rem; color: var(--text-muted);
+      background: var(--bg-card); 
+      border-top: 1px solid var(--border-color);
+      padding: 30px 24px; 
+      text-align: center; 
+      color: var(--text-muted);
     }
     .footer-contact-btn {
-      display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px;
-      border-radius: 50rem; font-weight: 600; font-size: 0.9rem; text-decoration: none; border: 1px solid var(--border-color); background: var(--bg-body); color: var(--text-main);
+      display: inline-flex; 
+      align-items: center; 
+      gap: 10px; 
+      padding: 12px 22px;
+      border-radius: 50rem; 
+      font-weight: 600; 
+      font-size: 0.9rem; 
+      text-decoration: none; 
+      border: 1px solid var(--border-color); 
+      background: var(--bg-body); 
+      color: var(--text-main);
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s ease;
     }
-    .footer-contact-btn.teacher:hover { background: var(--success); color: #fff; border-color: var(--success); }
-    .footer-contact-btn.admin:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .footer-contact-btn:hover {
+      transform: translateY(-2px);
+    }
+    .footer-contact-btn.teacher:hover { 
+      background: #10b981; 
+      color: #fff; 
+      border-color: #10b981; 
+    }
+    .footer-contact-btn.admin:hover { 
+      background: #06b6d4; 
+      color: #fff; 
+      border-color: #06b6d4; 
+    }
 
     .table { color: var(--text-main) !important; }
 
@@ -292,23 +295,6 @@
       </div>
       
       <div class="d-flex align-items-center gap-2">
-        <div style="position: relative;" id="notificationContainer">
-          <button class="header-icon-btn" onclick="toggleNotificationDropdown()" title="الإشعارات والتنبيهات">
-            <i class="fa-solid fa-bell text-primary"></i>
-            <span id="notificationBadge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.65rem; display: none;">0</span>
-          </button>
-          
-          <div id="notificationDropdown" class="notification-dropdown">
-            <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-2">
-              <h6 class="fw-bold m-0 text-primary" style="font-size: 0.95rem;"><i class="fa-solid fa-bell me-1"></i> التنبيهات الأخيرة</h6>
-              <button class="btn btn-sm btn-outline-primary py-0 px-2" style="font-size: 0.75rem;" onclick="requestBrowserNotificationPermission()">إشعارات المتصفح</button>
-            </div>
-            <div id="dropdownNotificationsList" style="max-height: 240px; overflow-y: auto;">
-              <p class="text-muted small text-center m-0 py-3">لا توجد إشعارات جديدة</p>
-            </div>
-          </div>
-        </div>
-
         <button class="header-icon-btn admin-btn" onclick="openAdminAccess()" title="لوحة تحكم الأدمن">
           <i class="fa-solid fa-shield-halved text-warning"></i>
         </button>
@@ -560,8 +546,26 @@
 
     </main>
 
+    <!-- الفوتر الأنيق المحدث بأزرار التواصل وأرقام الواتساب المطلوبة -->
     <footer>
-      <p class="m-0">جميع الحقوق محفوظة © للمطور <strong class="text-primary">أحمد صبري</strong></p>
+      <div style="max-width: 800px; margin: 0 auto;">
+        <p class="mb-2" style="font-size: 0.95rem;">جميع الحقوق محفوظة © للمطور <strong class="text-primary">أحمد صبري</strong></p>
+        <p class="text-muted small mb-3">منصة المس أمل شفيق السيد للبرمجة والذكاء الاصطناعي</p>
+        
+        <div class="d-flex justify-content-center align-items-center gap-3 flex-wrap">
+          <!-- زرار تواصل المعلم (برقم 01287255571) -->
+          <a href="https://wa.me/201287255571" target="_blank" class="footer-contact-btn teacher">
+            <i class="fa-brands fa-whatsapp text-success fa-lg"></i> 
+            <span>تواصل مع المعلم</span>
+          </a>
+
+          <!-- زرار تواصل الدعم الفني والأدمن (برقمك الشخصي 01143038021) -->
+          <a href="https://wa.me/201143038021" target="_blank" class="footer-contact-btn admin">
+            <i class="fa-brands fa-whatsapp text-info fa-lg"></i> 
+            <span>تواصل مع الدعم الفني</span>
+          </a>
+        </div>
+      </div>
     </footer>
 
   </div>
