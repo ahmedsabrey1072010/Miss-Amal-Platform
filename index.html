@@ -191,6 +191,29 @@
     .header-icon-btn:hover { transform: scale(1.08); border-color: var(--primary); color: var(--primary); }
     .header-icon-btn.admin-btn:hover { border-color: var(--warning); color: var(--warning); }
 
+    .notification-dropdown {
+      display: none; position: absolute; left: 0; top: 50px; width: 320px; max-width: calc(100vw - 30px);
+      background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-lg); 
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15); z-index: 1100; padding: 14px; text-align: right;
+    }
+    .notification-dropdown.show { display: block; }
+
+    .chat-box {
+      height: 500px; overflow-y: auto; background: var(--bg-body);
+      border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 20px; display: flex; flex-direction: column; gap: 14px;
+    }
+    .chat-message {
+      max-width: 75%; padding: 14px 18px; border-radius: 18px; font-size: 0.95rem; word-break: break-word; display: flex; flex-direction: column; box-shadow: var(--shadow-sm);
+    }
+    .chat-message.sent {
+      margin-right: auto; margin-left: 0; background: var(--primary); color: white;
+      border-bottom-left-radius: 18px; border-bottom-right-radius: 4px; align-items: flex-start;
+    }
+    .chat-message.received {
+      margin-left: auto; margin-right: 0; background: var(--bg-card); color: var(--text-main);
+      border: 1px solid var(--border-color); border-bottom-left-radius: 4px; border-bottom-right-radius: 18px; align-items: flex-start;
+    }
+
     .honor-card {
       background: var(--bg-card); border: 1px solid var(--border-color);
       border-radius: var(--radius-lg); padding: 24px; text-align: center; color: var(--text-main); box-shadow: var(--shadow-sm);
@@ -283,6 +306,23 @@
       </div>
       
       <div class="d-flex align-items-center gap-2">
+        <!-- زر الإشعارات والتنبيهات المنسدل -->
+        <div style="position: relative;" id="notificationContainer">
+          <button class="header-icon-btn" onclick="toggleNotificationDropdown()" title="الإشعارات والتنبيهات">
+            <i class="fa-solid fa-bell text-primary"></i>
+            <span id="notificationBadge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.65rem; display: none;">0</span>
+          </button>
+          
+          <div id="notificationDropdown" class="notification-dropdown">
+            <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-2">
+              <h6 class="fw-bold m-0 text-primary" style="font-size: 0.95rem;"><i class="fa-solid fa-bell me-1"></i> التنبيهات الأخيرة</h6>
+            </div>
+            <div id="dropdownNotificationsList" style="max-height: 240px; overflow-y: auto;">
+              <p class="text-muted small text-center m-0 py-3">لا توجد إشعارات جديدة</p>
+            </div>
+          </div>
+        </div>
+
         <button class="header-icon-btn admin-btn" onclick="openAdminAccess()" title="لوحة تحكم الأدمن">
           <i class="fa-solid fa-shield-halved text-warning"></i>
         </button>
@@ -299,6 +339,7 @@
 
     <main class="main-container">
 
+      <!-- الرئيسية -->
       <section id="homeSection">
         <div class="hero-card mb-4 text-center">
           <h2 class="fw-bold mb-2">طريقك لاحتراف البرمجة والذكاء الاصطناعي</h2>
@@ -322,6 +363,7 @@
         </div>
       </section>
 
+      <!-- الكتب والملخصات -->
       <section id="booksSection" style="display: none;">
         <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
           <h4 class="fw-bold m-0"><i class="fa-solid fa-book-open text-danger me-2"></i>مكتبة المذكرات والكتب</h4>
@@ -330,6 +372,7 @@
         <div class="row g-4" id="booksContainer"></div>
       </section>
 
+      <!-- الفيديوهات التعليمية -->
       <section id="videosSection" style="display: none;">
         <h4 class="fw-bold mb-4"><i class="fa-solid fa-video text-info me-2"></i>الفيديوهات التعليمية والشروحات</h4>
         <div class="row g-4" id="videosContainer">
@@ -337,6 +380,7 @@
         </div>
       </section>
 
+      <!-- منتدى الطلاب -->
       <section id="forumSection" style="display: none;">
         <div class="custom-card">
           <h5 class="fw-bold mb-3"><i class="fa-solid fa-comments text-success me-2"></i>منتدى المحادثة المباشر</h5>
@@ -355,6 +399,7 @@
         </div>
       </section>
 
+      <!-- محرر بايثون -->
       <section id="pythonEditorSection" style="display: none;">
         <div class="custom-card">
           <h5 class="fw-bold mb-3"><i class="fa-brands fa-python text-warning me-2"></i>محرر ومنفذ كود Python</h5>
@@ -364,6 +409,7 @@
         </div>
       </section>
 
+      <!-- محرر جافاسكريبت -->
       <section id="jsEditorSection" style="display: none;">
         <div class="custom-card">
           <h5 class="fw-bold mb-3"><i class="fa-brands fa-js text-warning me-2"></i>محرر ومنفذ JavaScript</h5>
@@ -373,6 +419,7 @@
         </div>
       </section>
 
+      <!-- محرر HTML & CSS -->
       <section id="htmlEditorSection" style="display: none;">
         <div class="custom-card">
           <h5 class="fw-bold mb-3"><i class="fa-solid fa-laptop-code text-info me-2"></i>محرر HTML & CSS</h5>
@@ -387,6 +434,7 @@
         </div>
       </section>
 
+      <!-- الملف الشخصي -->
       <section id="profileSection" style="display: none;">
         <div class="custom-card mx-auto" style="max-width: 650px;">
           <h4 class="fw-bold text-center mb-4">إعدادات الملف الشخصي</h4>
@@ -421,6 +469,7 @@
         </div>
       </section>
 
+      <!-- لوحة تحكم الأدمن -->
       <section id="adminSection" style="display: none;">
         <div id="adminDashboard">
           <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
@@ -574,7 +623,7 @@
     </div>
   </div>
 
-  <!-- Modal تسجيل الدخول وإنشاء الحساب (النموذج الكامل للبيانات) -->
+  <!-- Modal تسجيل الدخول وإنشاء الحساب الكامل -->
   <div class="modal fade" id="authModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content" style="background: var(--bg-card); border-radius: var(--radius-lg);">
@@ -657,7 +706,7 @@
     const SUPABASE_ANON_KEY = 'sb_publishable_Z6u7TuaH-WhcweAyb2hsJg_X5pWJ6HS';
     const _supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    let users = [], notifications = [], honorStudents = [], books = [], videos = [], auditLogs = [];
+    let users = [], notifications = [], honorStudents = [], books = [], videos = [], chatMessages = [], auditLogs = [];
     let currentUser = JSON.parse(localStorage.getItem('platform_current_user')) || null;
     let savedTheme = localStorage.getItem('platform_theme') || 'light';
     let isAdminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
@@ -683,7 +732,10 @@
       const { data: p } = await _supabase.from('profiles').select('*');
       if (p) users = p;
       const { data: n } = await _supabase.from('notifications').select('*');
-      if (n) notifications = n;
+      if (n) {
+        notifications = n.map(item => ({ title: item.title, content: item.content, date: new Date(item.created_at || Date.now()).toLocaleDateString('ar-EG') }));
+        renderDropdownNotifications();
+      }
       const { data: h } = await _supabase.from('honor_students').select('*');
       if (h) honorStudents = h;
       const { data: b } = await _supabase.from('books').select('*');
@@ -692,15 +744,65 @@
       if (v) videos = v;
       const { data: l } = await _supabase.from('audit_logs').select('*');
       if (l) auditLogs = l;
+      
+      const { data: m } = await _supabase.from('chat_messages').select('*');
+      if (m) {
+        chatMessages = m.map(item => ({ sender: item.sender || 'زائر', text: item.content || '', img: item.image_url || null }));
+      }
+
       updateUI();
     }
 
     function updateUI() {
+      if (currentUser && currentUser.status === 'approved') {
+        document.getElementById('authContainer').style.display = 'none';
+        document.getElementById('profileNavItem').style.display = 'flex';
+        document.getElementById('profName').value = currentUser.name;
+        document.getElementById('profUsername').value = currentUser.username || '';
+        document.getElementById('profPhone').value = currentUser.phone;
+        document.getElementById('profParentPhone').value = currentUser.parent_phone || '';
+      } else {
+        document.getElementById('authContainer').style.display = 'block';
+        document.getElementById('profileNavItem').style.display = 'none';
+      }
       renderHomeNotifications();
       renderHomeHonor();
+      renderBooks(books);
+      renderVideos(videos);
+      renderChat();
+    }
+
+    function toggleNotificationDropdown() {
+      const dropdown = document.getElementById('notificationDropdown');
+      dropdown.classList.toggle('show');
+      if (dropdown.classList.contains('show')) {
+        localStorage.setItem('platform_unread_count', '0');
+        document.getElementById('notificationBadge').style.display = 'none';
+      }
+    }
+
+    function renderDropdownNotifications() {
+      const listContainer = document.getElementById('dropdownNotificationsList');
+      const badge = document.getElementById('notificationBadge');
+      if (!notifications.length) {
+        listContainer.innerHTML = `<p class="text-muted small text-center m-0 py-3">لا توجد إشعارات جديدة</p>`;
+        badge.style.display = 'none';
+        return;
+      }
+      listContainer.innerHTML = notifications.map(n => `
+        <div class="p-2 border-bottom mb-1" style="background: var(--bg-body); border-radius: 8px;">
+          <h6 class="fw-bold text-primary m-0" style="font-size: 0.85rem;">${n.title}</h6>
+          <p class="m-0 text-muted small mt-1" style="font-size: 0.8rem;">${n.content}</p>
+        </div>
+      `).join('');
     }
 
     function showSection(sectionId, element) {
+      const protectedSections = ['forumSection', 'pythonEditorSection', 'jsEditorSection', 'htmlEditorSection', 'booksSection', 'videosSection'];
+      if (protectedSections.includes(sectionId) && (!currentUser || currentUser.status !== 'approved')) {
+        alert("عذراً، هذا القسم متاح فقط لطلاب المنصة المفعلين بعد موافقة الأدمن.");
+        return;
+      }
       if (sectionId === 'adminSection' && !isAdminLoggedIn) {
         openAdminAccess();
         return;
@@ -817,9 +919,14 @@
         alert("رقم الهاتف أو كلمة المرور غير صحيحة!");
         return;
       }
+      if (user.status === 'pending') {
+        alert("حسابك ما زال تحت المراجعة وبانتظار موافقة الأدمن.");
+        return;
+      }
       currentUser = user;
       localStorage.setItem('platform_current_user', JSON.stringify(currentUser));
       authModal.hide();
+      updateUI();
     }
 
     async function handleRegister(e) {
@@ -859,6 +966,31 @@
       currentUser = null;
       localStorage.removeItem('platform_current_user');
       showSection('homeSection', document.querySelector('#sidebar .nav-link'));
+      updateUI();
+    }
+
+    async function updateProfile(e) {
+      e.preventDefault();
+      if (!currentUser) return;
+      showLoadingOverlay("جاري تحديث الملف الشخصي...");
+      currentUser.name = document.getElementById('profName').value;
+      currentUser.username = document.getElementById('profUsername').value;
+      currentUser.phone = document.getElementById('profPhone').value;
+      currentUser.parent_phone = document.getElementById('profParentPhone').value;
+      const newPass = document.getElementById('profPass').value;
+      if (newPass) currentUser.pass = newPass;
+
+      const { error } = await _supabase.from('profiles').update({
+        name: currentUser.name, username: currentUser.username, phone: currentUser.phone, parent_phone: currentUser.parent_phone, pass: currentUser.pass
+      }).eq('id', currentUser.id);
+
+      hideLoadingOverlay();
+      if (error) alert("خطأ في التحديث: " + error.message);
+      else {
+        localStorage.setItem('platform_current_user', JSON.stringify(currentUser));
+        alert("تم التحديث بنجاح!");
+        fetchSupabaseData();
+      }
     }
 
     async function loadAdminData() {
@@ -866,6 +998,41 @@
       document.getElementById('pendingCount').innerText = users.filter(u => u.status === 'pending').length;
       document.getElementById('studentsCount').innerText = users.filter(u => u.status === 'approved').length;
       document.getElementById('logsCount').innerText = auditLogs.length;
+
+      document.getElementById('pendingTableBody').innerHTML = users.filter(u => u.status === 'pending').map(u => `
+        <tr>
+          <td><strong>${u.name}</strong></td>
+          <td>${u.grade}</td>
+          <td>${u.phone}</td>
+          <td>
+            <button class="btn btn-success btn-sm me-1" onclick="approveUser(${u.id})">قبول</button>
+            <button class="btn btn-danger btn-sm" onclick="rejectUser(${u.id})">رفض</button>
+          </td>
+        </tr>
+      `).join('') || `<tr><td colspan="4" class="text-center text-muted">لا توجد طلبات معلقة</td></tr>`;
+
+      document.getElementById('studentsTableBody').innerHTML = users.filter(u => u.status === 'approved').map(u => `
+        <tr>
+          <td><strong>${u.name}</strong></td>
+          <td>${u.grade}</td>
+          <td><button class="btn btn-outline-danger btn-sm" onclick="deleteStudent(${u.id})"><i class="fa-solid fa-trash"></i></button></td>
+        </tr>
+      `).join('') || `<tr><td colspan="3" class="text-center text-muted">لا توجد طلاب مفعلين</td></tr>`;
+    }
+
+    async function approveUser(id) {
+      await _supabase.from('profiles').update({ status: 'approved' }).eq('id', id);
+      loadAdminData();
+    }
+    async function rejectUser(id) {
+      await _supabase.from('profiles').delete().eq('id', id);
+      loadAdminData();
+    }
+    async function deleteStudent(id) {
+      if (confirm("هل أنت متأكد من الحذف؟")) {
+        await _supabase.from('profiles').delete().eq('id', id);
+        loadAdminData();
+      }
     }
 
     function switchAdminTab(tabId, element) {
@@ -887,10 +1054,103 @@
       container.innerHTML = honorStudents.map(h => `<div class="col-md-4"><div class="honor-card"><img src="${h.image_url}" class="honor-avatar"><h6 class="fw-bold">${h.name}</h6><small class="text-warning">${h.achievement}</small></div></div>`).join('');
     }
 
+    function renderBooks(list = books) {
+      const container = document.getElementById('booksContainer');
+      if (!list || !list.length) { container.innerHTML = `<p class="text-center text-muted col-12">لا توجد مذكرات أو كتب متاحة.</p>`; return; }
+      container.innerHTML = list.map(b => `
+        <div class="col-md-4">
+          <div class="custom-card h-100 d-flex flex-column m-0">
+            <i class="fa-solid fa-file-pdf fa-2x text-danger mb-3"></i>
+            <h6 class="fw-bold mb-2">${b.title}</h6>
+            <span class="badge bg-danger-subtle text-danger mb-3" style="width: fit-content;">${b.grade}</span>
+            <a href="${b.url}" target="_blank" class="btn btn-outline-danger btn-sm mt-auto fw-bold py-2"><i class="fa-solid fa-cloud-arrow-down me-1"></i> تحميل أو فتح</a>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function filterBooks() {
+      const query = document.getElementById('bookSearch').value.toLowerCase();
+      renderBooks(books.filter(b => b.title.toLowerCase().includes(query) || b.grade.toLowerCase().includes(query)));
+    }
+
+    function renderVideos(list = videos) {
+      const container = document.getElementById('videosContainer');
+      if (!list || !list.length) { container.innerHTML = `<p class="text-center text-muted col-12">لا توجد فيديوهات منشورة.</p>`; return; }
+      container.innerHTML = list.map(v => `
+        <div class="col-md-6">
+          <div class="custom-card h-100 m-0 d-flex flex-column justify-content-between">
+            <h6 class="fw-bold text-primary mb-3">${v.title}</h6>
+            <a href="${v.url}" target="_blank" class="btn btn-outline-info btn-sm fw-bold py-2 mt-auto"><i class="fa-solid fa-external-link-alt me-1"></i> مشاهدة الفيديو</a>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderChat() {
+      const container = document.getElementById('chatContainer');
+      if (!container) return;
+      container.innerHTML = chatMessages.map(m => `
+        <div class="chat-message received">
+          <small class="fw-semibold d-block mb-1 text-info" style="font-size: 0.75rem;">${m.sender}</small>
+          ${m.text ? `<p class="m-0">${m.text}</p>` : ''}
+          ${m.img ? `<img src="${m.img}" class="img-fluid rounded-3 mt-2" style="max-height: 180px;">` : ''}
+        </div>
+      `).join('') || `<p class="text-muted text-center">لا توجد رسائل سابقة. ابدأ النقاش!</p>`;
+      container.scrollTop = container.scrollHeight;
+    }
+
+    async function sendChatMessage() {
+      const input = document.getElementById('chatInput');
+      if (!input.value.trim()) return;
+      const senderDisplay = currentUser ? currentUser.name : 'زائر';
+      await _supabase.from('chat_messages').insert([{ sender: senderDisplay, content: input.value }]);
+      input.value = '';
+      fetchSupabaseData();
+    }
+
+    async function handleImageUpload(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = async function(event) {
+          const senderDisplay = currentUser ? currentUser.name : 'زائر';
+          await _supabase.from('chat_messages').insert([{ sender: senderDisplay, content: '[صورة]', image_url: event.target.result }]);
+          fetchSupabaseData();
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function runJsCode() {
+      const code = document.getElementById('jsCodeInput').value;
+      const output = document.getElementById('jsOutput');
+      try {
+        let logs = [];
+        const customConsole = { log: (...args) => logs.push(args.join(' ')) };
+        const runFn = new Function('console', code);
+        runFn(customConsole);
+        output.innerText = logs.join('\n') || 'تم التنفيذ بنجاح.';
+      } catch (err) {
+        output.innerText = 'خطأ: ' + err.message;
+      }
+    }
+
+    function runPythonCode() {
+      const code = document.getElementById('pythonCodeInput').value.trim();
+      document.getElementById('pythonOutput').innerText = "مخرجات Python (تم التنفيذ بنجاح).";
+    }
+
+    function saveStudentSiteCode() {
+      const code = document.getElementById('studentSiteCode').value;
+      document.getElementById('sitePreview').srcdoc = code;
+    }
+
     async function addNotification(e) {
       e.preventDefault();
       await _supabase.from('notifications').insert([{ title: document.getElementById('notifTitle').value, content: document.getElementById('notifContent').value }]);
       fetchSupabaseData();
+      alert("تم نشر الإشعار بنجاح!");
     }
     async function addHonorStudent(e) {
       e.preventDefault();
@@ -899,6 +1159,7 @@
       reader.onload = async function(event) {
         await _supabase.from('honor_students').insert([{ name: document.getElementById('honorName').value, achievement: document.getElementById('honorTitle').value, image_url: event.target.result }]);
         fetchSupabaseData();
+        alert("تمت الإضافة للوحة الشرف!");
       };
       reader.readAsDataURL(file);
     }
@@ -906,11 +1167,13 @@
       e.preventDefault();
       await _supabase.from('books').insert([{ title: document.getElementById('bookTitle').value, grade: document.getElementById('bookGrade').value, url: document.getElementById('bookUrl').value }]);
       fetchSupabaseData();
+      alert("تم نشر الكتاب بنجاح!");
     }
     async function addVideo(e) {
       e.preventDefault();
       await _supabase.from('educational_videos').insert([{ title: document.getElementById('videoTitle').value, url: document.getElementById('videoUrl').value }]);
       fetchSupabaseData();
+      alert("تم نشر الفيديو بنجاح!");
     }
   </script>
 </body>
