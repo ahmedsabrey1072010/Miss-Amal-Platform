@@ -59,6 +59,21 @@
 
     p { color: var(--text-muted); }
 
+    /* شاشة التحميل العامة (Global Loading Overlay) */
+    #globalLoadingOverlay {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(4px);
+      z-index: 9999;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+    }
+    #globalLoadingOverlay.show { display: flex; }
+
     #sidebar {
       width: var(--sidebar-width);
       background-color: var(--bg-sidebar);
@@ -179,7 +194,6 @@
     .header-icon-btn:hover { transform: scale(1.08); border-color: var(--primary); color: var(--primary); }
     .header-icon-btn.admin-btn:hover { border-color: var(--warning); color: var(--warning); }
 
-    /* قائمة الإشعارات المتجاوبة والمعدلة للشاشات الصغيرة */
     .notification-dropdown {
       display: none; 
       position: absolute; 
@@ -198,9 +212,7 @@
     .notification-dropdown.show { display: block; }
 
     @media (max-width: 400px) {
-      .notification-dropdown {
-        left: -60px;
-      }
+      .notification-dropdown { left: -60px; }
     }
 
     .chat-box {
@@ -253,6 +265,12 @@
 </head>
 <body data-theme="light">
 
+  <!-- عنصر شاشة التحميل العامة -->
+  <div id="globalLoadingOverlay">
+    <div class="spinner-border text-light mb-3" style="width: 3.5rem; height: 3.5rem;" role="status"></div>
+    <h5 id="globalLoadingText" class="fw-bold m-0">جاري المعالجة...</h5>
+  </div>
+
   <div class="sidebar-backdrop" id="sidebarBackdrop" onclick="toggleSidebar()"></div>
 
   <!-- Sidebar الرئيسية -->
@@ -292,7 +310,6 @@
       </div>
       
       <div class="d-flex align-items-center gap-2">
-        <!-- زر جرس الإشعارات والقائمة المنسدلة -->
         <div style="position: relative;" id="notificationContainer">
           <button class="header-icon-btn" onclick="toggleNotificationDropdown()" title="الإشعارات والتنبيهات">
             <i class="fa-solid fa-bell text-primary"></i>
@@ -310,7 +327,6 @@
           </div>
         </div>
 
-        <!-- زر لوحة تحكم الأدمن المباشر في الهيدر -->
         <button class="header-icon-btn admin-btn" onclick="openAdminAccess()" title="لوحة تحكم الأدمن">
           <i class="fa-solid fa-shield-halved text-warning"></i>
         </button>
@@ -487,11 +503,11 @@
                 <input type="password" id="profPass" class="form-control" placeholder="أدخل كلمة مرور جديدة للتعديل" autocomplete="new-password">
               </div>
             </div>
-            <button type="submit" class="btn btn-custom-primary w-100 py-2 mt-4 fw-bold">حفظ التعديلات الجديدة</button>
+            <button type="submit" class="btn btn-custom-primary w-100 py-2 mt-4 fw-bold" id="updateProfileBtn">حفظ التعديلات الجديدة</button>
           </form>
 
           <div class="border-top mt-4 pt-4 text-center">
-            <button type="button" class="btn btn-outline-danger w-100 py-2 fw-semibold" onclick="logout()">
+            <button type="button" class="btn btn-outline-danger w-100 py-2 fw-semibold" id="logoutBtn" onclick="logout()">
               <i class="fa-solid fa-right-from-bracket me-2"></i> تسجيل الخروج من الحساب
             </button>
           </div>
@@ -673,7 +689,7 @@
 
   </div>
 
-  <!-- Admin Password Modal -->
+  <!-- Admin Credentials Modal (محدث ليطلب رقم الهاتف وكلمة المرور من جدول admins) -->
   <div class="modal fade" id="adminAuthModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-sm">
       <div class="modal-content" style="background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid var(--border-color);">
@@ -683,10 +699,11 @@
         <div class="modal-body text-center px-4 pb-4 pt-0">
           <div class="brand-logo mx-auto mb-3 bg-warning d-flex align-items-center justify-content-center text-dark fs-4" style="width: 56px; height: 56px; border-radius: 50%;"><i class="fa-solid fa-lock"></i></div>
           <h6 class="fw-bold mb-1">دخول لوحة الأدمن</h6>
-          <p class="small text-muted mb-3">أدخل كلمة المرور الموحدة للمتابعة</p>
+          <p class="small text-muted mb-3">أدخل رقم الهاتف وكلمة المرور الخاصة بالمشرف</p>
           <form onsubmit="checkAdminAuth(event)">
-            <input type="password" id="adminPassInput" class="form-control mb-3 text-center" placeholder="••••••••••••" autocomplete="new-password" required>
-            <button type="submit" class="btn btn-warning w-100 fw-bold py-2">دخول</button>
+            <input type="tel" id="adminPhoneInput" class="form-control mb-2 text-center" placeholder="رقم الهاتف (010...)" inputmode="numeric" required>
+            <input type="password" id="adminPassInput" class="form-control mb-3 text-center" placeholder="كلمة المرور" autocomplete="current-password" required>
+            <button type="submit" class="btn btn-warning w-100 fw-bold py-2">تسجيل دخول الأدمن</button>
           </form>
         </div>
       </div>
@@ -711,7 +728,7 @@
               <label class="form-label fw-semibold">كلمة المرور</label>
               <input type="password" id="loginPass" class="form-control" required autocomplete="current-password">
             </div>
-            <button type="submit" class="btn btn-custom-primary w-100 py-2 mb-2">تسجيل الدخول</button>
+            <button type="submit" class="btn btn-custom-primary w-100 py-2 mb-2" id="loginSubmitBtn">تسجيل الدخول</button>
             <div id="loginLockMsg" class="alert alert-danger py-2 px-3 small text-center fw-semibold mb-2" style="display: none;"></div>
             
             <div class="text-center mt-3 pt-2 border-top">
@@ -760,7 +777,7 @@
               <label class="form-label fw-semibold">تأكيد كلمة المرور</label>
               <input type="password" id="regPassConfirm" class="form-control" required autocomplete="new-password">
             </div>
-            <button type="submit" class="btn btn-success w-100 py-2 fw-bold mb-3">إنشاء حساب جديد</button>
+            <button type="submit" class="btn btn-success w-100 py-2 fw-bold mb-3" id="regSubmitBtn">إنشاء حساب جديد</button>
             
             <div class="text-center mt-3 pt-2 border-top">
               <small class="text-muted">لديك حساب بالفعل؟</small>
@@ -813,9 +830,17 @@
       setupRealtimeSubscription();
     });
 
-    const ADMIN_PASS = "Sabrey1990@@";
     let loginAttempts = JSON.parse(localStorage.getItem('platform_login_attempts')) || {};
     let loginCountdownInterval = null;
+
+    function showLoadingOverlay(text) {
+      document.getElementById('globalLoadingText').innerText = text;
+      document.getElementById('globalLoadingOverlay').classList.add('show');
+    }
+
+    function hideLoadingOverlay() {
+      document.getElementById('globalLoadingOverlay').classList.remove('show');
+    }
 
     function isValidEgyPhone(phone) {
       return /^01[0125]\d{8}$/.test(phone);
@@ -868,7 +893,7 @@
     }
 
     function setupRealtimeSubscription() {
-      ['chat_messages', 'audit_logs', 'honor_students', 'notifications', 'books', 'educational_videos', 'profiles'].forEach(table => {
+      ['chat_messages', 'audit_logs', 'honor_students', 'notifications', 'books', 'educational_videos', 'profiles', 'admins'].forEach(table => {
         _supabase.channel('public:' + table)
           .on('postgres_changes', { event: '*', schema: 'public', table: table }, () => fetchSupabaseData())
           .subscribe();
@@ -989,8 +1014,11 @@
         loadAdminData();
       }
 
-      if (!skipMobileToggle && window.innerWidth <= 991 && document.getElementById('sidebar').classList.contains('mobile-open')) {
-        toggleSidebar();
+      const sidebar = document.getElementById('sidebar');
+      const backdrop = document.getElementById('sidebarBackdrop');
+      if (!skipMobileToggle && window.innerWidth <= 991 && sidebar.classList.contains('mobile-open')) {
+        sidebar.classList.remove('mobile-open');
+        backdrop.classList.remove('show');
       }
     }
 
@@ -1031,28 +1059,47 @@
       if (isAdminLoggedIn) {
         showSection('adminSection', null, true);
       } else {
+        document.getElementById('adminPhoneInput').value = '';
         document.getElementById('adminPassInput').value = '';
         adminAuthModal.show();
-        setTimeout(() => document.getElementById('adminPassInput').focus(), 400);
+        setTimeout(() => document.getElementById('adminPhoneInput').focus(), 400);
       }
     }
 
-    function checkAdminAuth(e) {
+    // التحقق السحابي من جدول admins في Supabase
+    async function checkAdminAuth(e) {
       if (e) e.preventDefault();
-      if (document.getElementById('adminPassInput').value === ADMIN_PASS) {
+      const phoneInput = document.getElementById('adminPhoneInput').value.trim();
+      const passInput = document.getElementById('adminPassInput').value;
+
+      showLoadingOverlay("جاري التحقق من صلاحيات الأدمن...");
+
+      const { data: adminData, error } = await _supabase
+        .from('admins')
+        .select('*')
+        .eq('phone', phoneInput)
+        .eq('password', passInput)
+        .single();
+
+      hideLoadingOverlay();
+
+      if (error || !adminData) {
+        alert("رقم الهاتف أو كلمة المرور للمشرف غير صحيحة!");
+        document.getElementById('adminPassInput').value = '';
+      } else {
         isAdminLoggedIn = true;
         sessionStorage.setItem('admin_logged_in', 'true');
+        sessionStorage.setItem('admin_name', adminData.name);
         adminAuthModal.hide();
         showSection('adminSection', null, true);
-      } else {
-        alert("كلمة المرور خاطئة!");
-        document.getElementById('adminPassInput').value = '';
       }
     }
 
     function adminLogout() {
       isAdminLoggedIn = false;
       sessionStorage.removeItem('admin_logged_in');
+      sessionStorage.removeItem('admin_name');
+      document.getElementById('adminPhoneInput').value = '';
       document.getElementById('adminPassInput').value = '';
       const homeLink = document.querySelector('#sidebar .nav-link');
       showSection('homeSection', homeLink, true);
@@ -1079,7 +1126,7 @@
 
     function startLoginLockCountdown(phone) {
       const lockMsg = document.getElementById('loginLockMsg');
-      const submitBtn = document.querySelector('#loginForm button[type="submit"]');
+      const submitBtn = document.getElementById('loginSubmitBtn');
       const passInput = document.getElementById('loginPass');
 
       if (loginCountdownInterval) clearInterval(loginCountdownInterval);
@@ -1111,7 +1158,7 @@
 
     document.getElementById('loginPhone').addEventListener('input', function() {
       const phone = this.value.trim();
-      const submitBtn = document.querySelector('#loginForm button[type="submit"]');
+      const submitBtn = document.getElementById('loginSubmitBtn');
       const passInput = document.getElementById('loginPass');
       const lockMsg = document.getElementById('loginLockMsg');
 
@@ -1127,6 +1174,10 @@
 
     async function handleRegister(e) {
       e.preventDefault();
+      const submitBtn = document.getElementById('regSubmitBtn');
+      submitBtn.disabled = true;
+      showLoadingOverlay("جاري إنشاء الحساب وإرسال الطلب...");
+
       const name = document.getElementById('regName').value.trim();
       const username = document.getElementById('regUsername').value.trim();
       const role = document.getElementById('regRole').value;
@@ -1137,10 +1188,14 @@
       const passConfirm = document.getElementById('regPassConfirm').value;
 
       if (!isValidEgyPhone(phone)) {
+        hideLoadingOverlay();
+        submitBtn.disabled = false;
         alert("يرجى إدخال رقم مصري صحيح مكون من 11 رقم يبدأ بـ (010, 011, 012, 015)");
         return;
       }
       if (pass !== passConfirm) {
+        hideLoadingOverlay();
+        submitBtn.disabled = false;
         alert("كلمتا المرور غير متطابقتين!");
         return;
       }
@@ -1151,11 +1206,15 @@
         .eq('phone', phone);
 
       if (checkError) {
+        hideLoadingOverlay();
+        submitBtn.disabled = false;
         alert("حدث خطأ أثناء التحقق من الرقم: " + checkError.message);
         return;
       }
 
       if (existingUsers && existingUsers.length > 0) {
+        hideLoadingOverlay();
+        submitBtn.disabled = false;
         const existingAccount = existingUsers[0];
         if (existingAccount.status === 'approved') {
           alert("هذا الرقم مسجل بالفعل على المنصة، يمكنك تسجيل الدخول مباشرة.");
@@ -1168,6 +1227,9 @@
       const { error } = await _supabase.from('profiles').insert([
         { name, username, role, grade, phone, parent_phone: parentPhone, pass, status: 'pending' }
       ]);
+
+      hideLoadingOverlay();
+      submitBtn.disabled = false;
 
       if (error) {
         alert("خطأ أثناء التسجيل: " + error.message);
@@ -1183,6 +1245,7 @@
       e.preventDefault();
       const phone = document.getElementById('loginPhone').value.trim();
       const pass = document.getElementById('loginPass').value;
+      const submitBtn = document.getElementById('loginSubmitBtn');
 
       const now = Date.now();
       if (loginAttempts[phone] && loginAttempts[phone].lockUntil > now) {
@@ -1190,10 +1253,16 @@
         return;
       }
 
+      submitBtn.disabled = true;
+      showLoadingOverlay("جاري تسجيل دخولك...");
+
       await fetchSupabaseData();
       const user = users.find(u => u.phone === phone && u.pass === pass);
       
       if (!user) {
+        hideLoadingOverlay();
+        submitBtn.disabled = false;
+
         if (!loginAttempts[phone]) loginAttempts[phone] = { count: 0, lockUntil: 0 };
         loginAttempts[phone].count += 1;
 
@@ -1212,6 +1281,8 @@
       }
 
       if (user.status === 'pending') {
+        hideLoadingOverlay();
+        submitBtn.disabled = false;
         alert("حسابك ما زال تحت المراجعة وبانتظار موافقة الأدمن وتفعيله.");
         return;
       }
@@ -1224,14 +1295,25 @@
       currentUser = user;
       localStorage.setItem('platform_current_user', JSON.stringify(currentUser));
       await addAuditLog(user.name, user.role === 'teacher' ? 'معلم' : 'طالب', "تسجيل دخول");
+      
+      hideLoadingOverlay();
+      submitBtn.disabled = false;
       updateUI();
       authModal.hide();
     }
 
     async function logout() {
+      const logoutBtn = document.getElementById('logoutBtn');
+      if (logoutBtn) logoutBtn.disabled = true;
+      showLoadingOverlay("جاري تسجيل الخروج...");
+
       if (currentUser) await addAuditLog(currentUser.name, currentUser.role === 'teacher' ? 'معلم' : 'طالب', "تسجيل خروج");
       currentUser = null;
       localStorage.removeItem('platform_current_user');
+
+      hideLoadingOverlay();
+      if (logoutBtn) logoutBtn.disabled = false;
+
       updateUI();
       const homeLink = document.querySelector('#sidebar .nav-link');
       showSection('homeSection', homeLink, true);
@@ -1240,6 +1322,10 @@
     async function updateProfile(e) {
       e.preventDefault();
       if (!currentUser) return;
+      const updateBtn = document.getElementById('updateProfileBtn');
+      updateBtn.disabled = true;
+      showLoadingOverlay("جاري تحديث بيانات الملف الشخصي...");
+
       currentUser.name = document.getElementById('profName').value;
       currentUser.username = document.getElementById('profUsername').value;
       currentUser.phone = document.getElementById('profPhone').value;
@@ -1250,6 +1336,9 @@
       const { error } = await _supabase.from('profiles').update({
         name: currentUser.name, username: currentUser.username, phone: currentUser.phone, parent_phone: currentUser.parent_phone, pass: currentUser.pass
       }).eq('id', currentUser.id);
+
+      hideLoadingOverlay();
+      updateBtn.disabled = false;
 
       if (error) alert("حدث خطأ أثناء التحديث: " + error.message);
       else {
