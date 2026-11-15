@@ -199,7 +199,6 @@
       width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 3px solid var(--warning); margin-bottom: 16px; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
     }
 
-    /* أزرار الفوتر الاحترافية والشيك */
     footer {
       background: var(--bg-card); 
       border-top: 1px solid var(--border-color);
@@ -222,23 +221,12 @@
       box-shadow: var(--shadow-sm);
       transition: all 0.3s ease;
     }
-    .footer-contact-btn:hover {
-      transform: translateY(-2px);
-    }
-    .footer-contact-btn.teacher:hover { 
-      background: #10b981; 
-      color: #fff; 
-      border-color: #10b981; 
-    }
-    .footer-contact-btn.admin:hover { 
-      background: #06b6d4; 
-      color: #fff; 
-      border-color: #06b6d4; 
-    }
+    .footer-contact-btn:hover { transform: translateY(-2px); }
+    .footer-contact-btn.teacher:hover { background: #10b981; color: #fff; border-color: #10b981; }
+    .footer-contact-btn.admin:hover { background: #06b6d4; color: #fff; border-color: #06b6d4; }
 
     .table { color: var(--text-main) !important; }
 
-    /* التجاوب الشامل للشاشات الصغيرة والموبايل */
     @media (max-width: 991px) {
       #sidebar { transform: translateX(100%); }
       #sidebar.mobile-open { transform: translateX(0) !important; }
@@ -546,20 +534,17 @@
 
     </main>
 
-    <!-- الفوتر الأنيق المحدث بأزرار التواصل وأرقام الواتساب المطلوبة -->
     <footer>
       <div style="max-width: 800px; margin: 0 auto;">
         <p class="mb-2" style="font-size: 0.95rem;">جميع الحقوق محفوظة © للمطور <strong class="text-primary">أحمد صبري</strong></p>
         <p class="text-muted small mb-3">منصة المس أمل شفيق السيد للبرمجة والذكاء الاصطناعي</p>
         
         <div class="d-flex justify-content-center align-items-center gap-3 flex-wrap">
-          <!-- زرار تواصل المعلم (برقم 01287255571) -->
           <a href="https://wa.me/201287255571" target="_blank" class="footer-contact-btn teacher">
             <i class="fa-brands fa-whatsapp text-success fa-lg"></i> 
             <span>تواصل مع المعلم</span>
           </a>
 
-          <!-- زرار تواصل الدعم الفني والأدمن (برقمك الشخصي 01143038021) -->
           <a href="https://wa.me/201143038021" target="_blank" class="footer-contact-btn admin">
             <i class="fa-brands fa-whatsapp text-info fa-lg"></i> 
             <span>تواصل مع الدعم الفني</span>
@@ -589,6 +574,7 @@
     </div>
   </div>
 
+  <!-- Modal تسجيل الدخول وإنشاء الحساب (النموذج الكامل للبيانات) -->
   <div class="modal fade" id="authModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content" style="background: var(--bg-card); border-radius: var(--radius-lg);">
@@ -606,35 +592,72 @@
               <label class="form-label">كلمة المرور</label>
               <input type="password" id="loginPass" class="form-control" required>
             </div>
-            <button type="submit" class="btn btn-custom-primary w-100 py-2">تسجيل الدخول</button>
+            <button type="submit" class="btn btn-custom-primary w-100 py-2 mb-2">تسجيل الدخول</button>
+            <div class="text-center mt-3 pt-2 border-top">
+              <small class="text-muted">إذا لم يكن لديك حساب؟</small>
+              <a href="#" class="text-primary text-decoration-none fw-semibold ms-1" onclick="showAuthModal('register')">قم بإنشاء حساب</a>
+            </div>
           </form>
+
           <form id="registerForm" onsubmit="handleRegister(event)" style="display: none;">
             <div class="mb-3">
               <label class="form-label">الاسم الحقيقي</label>
               <input type="text" id="regName" class="form-control" required>
             </div>
             <div class="mb-3">
-              <label class="form-label">رقم الهاتف</label>
+              <label class="form-label">اسم المستخدم المستعار (اختياري)</label>
+              <input type="text" id="regUsername" class="form-control" placeholder="مثال: Ahmed_AI">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">الصفة</label>
+              <select id="regRole" class="form-select" onchange="toggleGradeSelect()">
+                <option value="student">طالب</option>
+                <option value="teacher">معلم</option>
+              </select>
+            </div>
+            <div class="mb-3" id="gradeGroup">
+              <label class="form-label">الصف الدراسي</label>
+              <select id="regGrade" class="form-select">
+                <option value="الصف الأول الثانوي">الصف الأول الثانوي</option>
+                <option value="الصف الثاني الثانوي">الصف الثاني الثانوي</option>
+                <option value="الصف الثالث الثانوي">الصف الثالث الثانوي</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">رقم الهاتف (11 رقم)</label>
               <input type="tel" id="regPhone" class="form-control" required>
+            </div>
+            <div class="mb-3" id="parentPhoneGroup">
+              <label class="form-label">رقم ولي الأمر</label>
+              <input type="tel" id="regParentPhone" class="form-control">
             </div>
             <div class="mb-3">
               <label class="form-label">كلمة المرور</label>
               <input type="password" id="regPass" class="form-control" required>
             </div>
-            <button type="submit" class="btn btn-success w-100 py-2">إنشاء حساب</button>
+            <div class="mb-3">
+              <label class="form-label">تأكيد كلمة المرور</label>
+              <input type="password" id="regPassConfirm" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-success w-100 py-2 fw-bold mb-3">إنشاء حساب جديد</button>
+            <div class="text-center mt-3 pt-2 border-top">
+              <small class="text-muted">لديك حساب بالفعل؟</small>
+              <a href="#" class="text-primary text-decoration-none fw-semibold ms-1" onclick="showAuthModal('login')">قم بتسجيل الدخول</a>
+            </div>
           </form>
         </div>
       </div>
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script>
     const SUPABASE_URL = 'https://hoddrxekayofbyqmoyyz.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_Z6u7TuaH-WhcweAyb2hsJg_X5pWJ6HS';
     const _supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    let users = [], notifications = [], honorStudents = [], books = [], videos = [], chatMessages = [], auditLogs = [];
+    let users = [], notifications = [], honorStudents = [], books = [], videos = [], auditLogs = [];
     let currentUser = JSON.parse(localStorage.getItem('platform_current_user')) || null;
     let savedTheme = localStorage.getItem('platform_theme') || 'light';
     let isAdminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
@@ -723,7 +746,6 @@
       }
     }
 
-    // التحقق السحابي الآمن والمشفر بالكامل عبر Supabase
     async function checkAdminAuth(e) {
       if (e) e.preventDefault();
       const phoneInput = document.getElementById('adminPhoneInput').value.trim();
@@ -777,6 +799,12 @@
       authModal.show();
     }
 
+    function toggleGradeSelect() {
+      const role = document.getElementById('regRole').value;
+      document.getElementById('gradeGroup').style.display = role === 'student' ? 'block' : 'none';
+      document.getElementById('parentPhoneGroup').style.display = role === 'student' ? 'block' : 'none';
+    }
+
     async function handleLogin(e) {
       e.preventDefault();
       const phone = document.getElementById('loginPhone').value.trim();
@@ -796,14 +824,35 @@
 
     async function handleRegister(e) {
       e.preventDefault();
-      showLoadingOverlay("جاري إنشاء الحساب...");
       const name = document.getElementById('regName').value.trim();
+      const username = document.getElementById('regUsername').value.trim();
+      const role = document.getElementById('regRole').value;
+      const grade = role === 'student' ? document.getElementById('regGrade').value : 'معلم';
       const phone = document.getElementById('regPhone').value.trim();
+      const parentPhone = document.getElementById('regParentPhone').value.trim();
       const pass = document.getElementById('regPass').value;
-      await _supabase.from('profiles').insert([{ name, phone, pass, role: 'student', status: 'pending', grade: 'الصف الثاني الثانوي' }]);
+      const passConfirm = document.getElementById('regPassConfirm').value;
+
+      if (pass !== passConfirm) {
+        alert("كلمتا المرور غير متطابقتين!");
+        return;
+      }
+
+      showLoadingOverlay("جاري إنشاء الحساب وإرسال الطلب...");
+      
+      const { error } = await _supabase.from('profiles').insert([{
+        name, username, role, grade, phone, parent_phone: parentPhone, pass, status: 'pending'
+      }]);
+
       hideLoadingOverlay();
-      alert("تم إرسال طلبك بنجاح.");
-      authModal.hide();
+
+      if (error) {
+        alert("خطأ أثناء إنشاء الحساب: " + error.message);
+      } else {
+        alert("تم إرسال طلبك بنجاح! بانتظار موافقة الأدمن والتفعيل.");
+        document.getElementById('registerForm').reset();
+        authModal.hide();
+      }
     }
 
     function logout() {
