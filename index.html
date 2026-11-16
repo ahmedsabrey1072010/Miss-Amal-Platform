@@ -17,14 +17,14 @@
     :root {
       --font-main: 'Readex Pro', sans-serif;
       --bg-body: #f1f5f9;
-      --bg-card: rgba(255, 255, 255, 0.78);
-      --bg-liquid-card: linear-gradient(135deg, rgba(255, 255, 255, 0.85), rgba(241, 245, 249, 0.65));
-      --bg-sidebar: linear-gradient(165deg, rgba(15, 23, 42, 0.92), rgba(30, 41, 59, 0.88));
+      --bg-card: rgba(255, 255, 255, 0.88);
+      --bg-liquid-card: linear-gradient(135deg, rgba(255, 255, 255, 0.92), rgba(241, 245, 249, 0.75));
+      --bg-sidebar: linear-gradient(165deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.92));
       --text-main: #0f172a;
       --text-muted: #475569;
       --border-color: rgba(203, 213, 225, 0.6);
-      --glass-border: rgba(255, 255, 255, 0.5);
-      --glass-blur: blur(16px);
+      --glass-border: rgba(255, 255, 255, 0.6);
+      --glass-blur: blur(10px); /* خفيف وسريع لمنع أي ثقل */
       
       --primary: #6366f1;
       --primary-hover: #4f46e5;
@@ -34,32 +34,28 @@
       --danger: #ef4444;
 
       --sidebar-width: 280px;
-      --radius-lg: 20px;
-      --radius-md: 14px;
-      --shadow-sm: 0 8px 32px rgba(15, 23, 42, 0.06);
+      --radius-lg: 18px;
+      --radius-md: 12px;
+      --shadow-sm: 0 4px 20px rgba(15, 23, 42, 0.05);
     }
 
     [data-theme="dark"] {
       --bg-body: #050b14;
-      --bg-card: rgba(15, 23, 42, 0.75);
-      --bg-liquid-card: linear-gradient(135deg, rgba(30, 41, 59, 0.65), rgba(15, 23, 42, 0.85));
-      --bg-sidebar: linear-gradient(165deg, rgba(2, 6, 23, 0.94), rgba(15, 23, 42, 0.9));
+      --bg-card: rgba(15, 23, 42, 0.85);
+      --bg-liquid-card: linear-gradient(135deg, rgba(30, 41, 59, 0.75), rgba(15, 23, 42, 0.9));
+      --bg-sidebar: linear-gradient(165deg, rgba(2, 6, 23, 0.96), rgba(15, 23, 42, 0.94));
       --text-main: #f8fafc;
       --text-muted: #cbd5e1;
       --border-color: rgba(51, 65, 85, 0.65);
       --glass-border: rgba(255, 255, 255, 0.1);
-      --shadow-sm: 0 8px 32px rgba(0, 0, 0, 0.35);
+      --shadow-sm: 0 4px 20px rgba(0, 0, 0, 0.25);
     }
 
-    * { box-sizing: border-box; transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, transform 0.2s ease; }
+    * { box-sizing: border-box; }
 
     body {
       font-family: var(--font-main);
       background-color: var(--bg-body);
-      background-image: 
-        radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.12) 0px, transparent 50%),
-        radial-gradient(at 100% 100%, rgba(6, 182, 212, 0.12) 0px, transparent 50%);
-      background-attachment: fixed;
       color: var(--text-main);
       margin: 0;
       min-height: 100vh;
@@ -67,379 +63,252 @@
       overflow-x: hidden;
     }
 
-    /* ضبط النصوص الرصاصية في الوضعين */
     p, .text-muted, small { color: var(--text-muted) !important; }
     [data-theme="dark"] .text-dark { color: #f8fafc !important; }
-    [data-theme="dark"] .bg-body { background-color: rgba(30, 41, 59, 0.6) !important; color: var(--text-main) !important; }
 
-    /* شاشة التحميل */
     #globalLoadingOverlay {
-      position: fixed;
-      top: 0; left: 0; width: 100vw; height: 100vh;
-      background: rgba(15, 23, 42, 0.8);
-      backdrop-filter: blur(8px);
-      z-index: 9999;
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(5px);
+      z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center; color: #fff;
     }
     #globalLoadingOverlay.show { display: flex; }
 
-    /* نافذة الترحيب المنبثقة عند تسجيل الدخول */
     #welcomeToast {
-      position: fixed;
-      top: 24px;
-      left: 50%;
-      transform: translateX(-50%) translateY(-120px);
-      background: var(--bg-liquid-card);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid var(--success);
-      box-shadow: 0 15px 35px rgba(16, 185, 129, 0.25);
-      border-radius: 50rem;
-      padding: 14px 28px;
-      z-index: 9998;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      opacity: 0;
-      transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: fixed; top: 24px; left: 50%; transform: translateX(-50%) translateY(-120px);
+      background: var(--bg-liquid-card); backdrop-filter: blur(12px);
+      border: 1px solid var(--success); box-shadow: 0 10px 25px rgba(16, 185, 129, 0.2);
+      border-radius: 50rem; padding: 12px 24px; z-index: 9998; display: flex; align-items: center; gap: 12px;
+      opacity: 0; transition: all 0.4s ease;
     }
-    #welcomeToast.show {
-      transform: translateX(-50%) translateY(0);
-      opacity: 1;
-    }
+    #welcomeToast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
     .welcome-check-icon {
-      width: 36px; height: 36px;
-      background: var(--success);
-      color: #fff;
-      border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.1rem;
-      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+      width: 32px; height: 32px; background: var(--success); color: #fff; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; font-size: 1rem;
     }
 
-    /* القائمة الجانبية بتأثير Liquid Glass */
     #sidebar {
-      width: var(--sidebar-width);
-      background: var(--bg-sidebar);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      height: 100vh;
-      position: fixed;
-      top: 0; right: 0;
-      z-index: 1050;
-      display: flex;
-      flex-direction: column;
-      border-left: 1px solid rgba(255, 255, 255, 0.12);
-      box-shadow: -10px 0 30px rgba(0, 0, 0, 0.15);
-      transform: translateX(0);
-      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      width: var(--sidebar-width); background: var(--bg-sidebar); backdrop-filter: blur(12px);
+      height: 100vh; position: fixed; top: 0; right: 0; z-index: 1050;
+      display: flex; flex-direction: column; border-left: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: -5px 0 20px rgba(0, 0, 0, 0.1);
+      transform: translateX(0); transition: transform 0.3s ease;
     }
     #sidebar.collapsed { transform: translateX(100%); }
 
     .sidebar-backdrop {
       position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-      background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(3px); z-index: 1040; display: none; opacity: 0; transition: opacity 0.3s ease;
+      background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(2px); z-index: 1040; display: none; opacity: 0; transition: opacity 0.3s ease;
     }
     .sidebar-backdrop.show { display: block; opacity: 1; }
 
     .sidebar-header {
-      padding: 20px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 18px; border-bottom: 1px solid rgba(255, 255, 255, 0.08);
       display: flex; align-items: center; justify-content: space-between;
     }
 
     .brand-logo {
-      width: 42px; height: 42px;
-      background: linear-gradient(135deg, var(--primary), var(--accent));
-      border-radius: var(--radius-md);
-      display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.2rem;
-      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.45);
+      width: 38px; height: 38px; background: linear-gradient(135deg, var(--primary), var(--accent));
+      border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.1rem;
     }
 
-    .sidebar-nav {
-      padding: 16px 12px; flex: 1; overflow-y: auto; max-height: calc(100vh - 80px);
-    }
-    .sidebar-nav::-webkit-scrollbar { width: 5px; }
+    .sidebar-nav { padding: 14px 10px; flex: 1; overflow-y: auto; }
+    .sidebar-nav::-webkit-scrollbar { width: 4px; }
     .sidebar-nav::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 10px; }
 
     .sidebar-nav .nav-link {
-      color: #cbd5e1 !important; padding: 12px 16px; border-radius: var(--radius-md);
-      font-weight: 500; display: flex; align-items: center; gap: 14px; margin-bottom: 6px; font-size: 0.95rem;
-      border: 1px solid transparent;
+      color: #cbd5e1 !important; padding: 10px 14px; border-radius: var(--radius-md);
+      font-weight: 500; display: flex; align-items: center; gap: 12px; margin-bottom: 4px; font-size: 0.92rem;
     }
-    .sidebar-nav .nav-link i { font-size: 1.2rem; width: 24px; text-align: center; }
-    .sidebar-nav .nav-link:hover { 
-      color: #ffffff !important; 
-      background: rgba(255, 255, 255, 0.08); 
-      border-color: rgba(255, 255, 255, 0.1);
-      transform: translateX(-4px);
-    }
+    .sidebar-nav .nav-link i { font-size: 1.1rem; width: 22px; text-align: center; }
+    .sidebar-nav .nav-link:hover { color: #ffffff !important; background: rgba(255, 255, 255, 0.06); }
     .sidebar-nav .nav-link.active {
-      color: #ffffff !important;
-      background: linear-gradient(135deg, rgba(99, 102, 241, 0.85), rgba(6, 182, 212, 0.85));
-      border-color: rgba(255, 255, 255, 0.25);
-      box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+      color: #ffffff !important; background: linear-gradient(135deg, var(--primary), var(--accent));
+      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
     }
 
-    /* لوحة الأدمن */
-    .admin-layout { display: flex; gap: 20px; align-items: flex-start; }
+    .admin-layout { display: flex; gap: 16px; align-items: flex-start; }
     .admin-sidebar {
-      width: 250px; background: var(--bg-liquid-card); backdrop-filter: var(--glass-blur);
-      border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 14px; flex-shrink: 0; box-shadow: var(--shadow-sm);
+      width: 240px; background: var(--bg-liquid-card); backdrop-filter: var(--glass-blur);
+      border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 12px; flex-shrink: 0; box-shadow: var(--shadow-sm);
     }
     .admin-sidebar .admin-nav-link {
-      display: flex; align-items: center; gap: 12px; padding: 11px 15px; border-radius: var(--radius-md);
-      color: var(--text-main); text-decoration: none; font-weight: 500; font-size: 0.9rem; margin-bottom: 6px;
+      display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: var(--radius-md);
+      color: var(--text-main); text-decoration: none; font-weight: 500; font-size: 0.88rem; margin-bottom: 4px;
     }
     .admin-sidebar .admin-nav-link:hover { background: rgba(99, 102, 241, 0.1); color: var(--primary); }
-    .admin-sidebar .admin-nav-link.active { background: linear-gradient(135deg, var(--primary), var(--primary-hover)); color: #fff; box-shadow: 0 4px 12px rgba(99,102,241,0.3); }
+    .admin-sidebar .admin-nav-link.active { background: linear-gradient(135deg, var(--primary), var(--primary-hover)); color: #fff; }
     .admin-content-area { flex: 1; min-width: 0; width: 100%; }
 
     #content {
       margin-right: var(--sidebar-width); flex: 1; display: flex; flex-direction: column; min-height: 100vh;
-      width: calc(100% - var(--sidebar-width));
-      transition: margin-right 0.35s cubic-bezier(0.4, 0, 0.2, 1), width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      width: calc(100% - var(--sidebar-width)); transition: margin-right 0.3s ease, width 0.3s ease;
     }
     #content.expanded { margin-right: 0; width: 100%; }
 
-    /* الهيدر العلوي بتأثير زجاجي */
     .top-header {
-      background: var(--bg-card); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
-      border-bottom: 1px solid var(--border-color);
-      padding: 14px 24px; display: flex; align-items: center; justify-content: space-between;
+      background: var(--bg-card); backdrop-filter: var(--glass-blur);
+      border-bottom: 1px solid var(--border-color); padding: 12px 20px;
+      display: flex; align-items: center; justify-content: space-between;
       position: sticky; top: 0; z-index: 1000; gap: 10px; flex-wrap: wrap; box-shadow: var(--shadow-sm);
     }
 
-    .main-container { padding: 32px; flex: 1; }
+    .main-container { padding: 24px; flex: 1; }
 
-    /* الكروت السائلة المتدرجة */
     .custom-card, .liquid-card {
-      background: var(--bg-liquid-card);
-      backdrop-filter: var(--glass-blur);
-      -webkit-backdrop-filter: var(--glass-blur);
-      border: 1px solid var(--border-color);
-      border-top: 1px solid var(--glass-border);
-      border-right: 1px solid var(--glass-border);
-      border-radius: var(--radius-lg); 
-      box-shadow: var(--shadow-sm); 
-      padding: 24px; 
-      margin-bottom: 24px; 
-      color: var(--text-main);
+      background: var(--bg-liquid-card); backdrop-filter: var(--glass-blur);
+      border: 1px solid var(--border-color); border-radius: var(--radius-lg); 
+      box-shadow: var(--shadow-sm); padding: 20px; margin-bottom: 20px; color: var(--text-main);
     }
     .liquid-item-card {
-      background: var(--bg-liquid-card);
-      backdrop-filter: blur(12px);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-md);
-      padding: 18px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
-      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      background: var(--bg-liquid-card); backdrop-filter: blur(8px);
+      border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 16px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03); transition: transform 0.2s ease;
     }
-    .liquid-item-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 12px 25px rgba(99, 102, 241, 0.15);
-      border-color: rgba(99, 102, 241, 0.4);
-    }
+    .liquid-item-card:hover { transform: translateY(-2px); border-color: rgba(99, 102, 241, 0.3); }
 
     .hero-card {
-      background: linear-gradient(135deg, rgba(99, 102, 241, 0.9) 0%, rgba(6, 182, 212, 0.85) 100%);
-      backdrop-filter: blur(12px);
-      color: white;
-      border: 1px solid rgba(255, 255, 255, 0.25);
-      border-radius: 24px; padding: 48px 32px; position: relative; overflow: hidden;
-      box-shadow: 0 15px 35px -5px rgba(99, 102, 241, 0.4);
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.88), rgba(6, 182, 212, 0.82));
+      backdrop-filter: blur(8px); color: white; border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 20px; padding: 40px 24px; text-align: center;
+      box-shadow: 0 10px 25px rgba(99, 102, 241, 0.3);
     }
     .hero-card p { color: rgba(255, 255, 255, 0.95) !important; }
 
     .form-control, .form-select {
-      background-color: rgba(255, 255, 255, 0.5); border: 1px solid var(--border-color);
-      color: var(--text-main); border-radius: var(--radius-md); padding: 12px 16px; font-size: 0.95rem;
+      background-color: rgba(255, 255, 255, 0.6); border: 1px solid var(--border-color);
+      color: var(--text-main); border-radius: var(--radius-md); padding: 10px 14px; font-size: 0.92rem;
     }
     [data-theme="dark"] .form-control, [data-theme="dark"] .form-select {
-      background-color: rgba(15, 23, 42, 0.6); color: #f8fafc;
+      background-color: rgba(15, 23, 42, 0.7); color: #f8fafc;
     }
     .form-control:focus, .form-select:focus {
       background-color: var(--bg-card); border-color: var(--primary);
-      box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15); color: var(--text-main);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12); color: var(--text-main);
     }
 
     .btn-custom-primary {
       background: linear-gradient(135deg, var(--primary), var(--primary-hover)); color: white; border: none;
-      border-radius: var(--radius-md); padding: 10px 20px; font-weight: 600; font-size: 0.9rem;
-      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.35);
+      border-radius: var(--radius-md); padding: 9px 18px; font-weight: 600; font-size: 0.88rem;
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
     }
-    .btn-custom-primary:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(99, 102, 241, 0.45); color: white; }
+    .btn-custom-primary:hover:not(:disabled) { color: white; transform: translateY(-1px); }
 
-    /* أزرار الهيدر الزجاجية الشفافة */
     .header-icon-btn {
-      width: 44px; height: 44px; border-radius: 50%;
-      background: rgba(255, 255, 255, 0.15);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(99, 102, 241, 0.25);
-      color: var(--text-main); display: flex; align-items: center; justify-content: center;
-      cursor: pointer; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); position: relative;
+      width: 40px; height: 40px; border-radius: 50%;
+      background: rgba(255, 255, 255, 0.12); backdrop-filter: blur(8px);
+      border: 1px solid rgba(99, 102, 241, 0.2); color: var(--text-main);
+      display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative;
     }
-    [data-theme="dark"] .header-icon-btn {
-      background: rgba(255, 255, 255, 0.06);
-      border-color: rgba(255, 255, 255, 0.15);
-    }
-    .header-icon-btn:hover { transform: scale(1.08); border-color: var(--primary); color: var(--primary); background: rgba(99, 102, 241, 0.15); }
-    .header-icon-btn.admin-btn:hover { border-color: var(--warning); color: var(--warning); background: rgba(245, 158, 11, 0.15); }
+    [data-theme="dark"] .header-icon-btn { background: rgba(255, 255, 255, 0.05); border-color: rgba(255, 255, 255, 0.1); }
+    .header-icon-btn:hover { border-color: var(--primary); color: var(--primary); background: rgba(99, 102, 241, 0.1); }
 
     .notification-dropdown {
-      display: none; position: absolute; left: 0; top: 54px; width: 330px; max-width: calc(100vw - 30px);
-      background: var(--bg-liquid-card); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      display: none; position: absolute; left: 0; top: 48px; width: 310px; max-width: calc(100vw - 20px);
+      background: var(--bg-liquid-card); backdrop-filter: blur(12px);
       border: 1px solid var(--border-color); border-radius: var(--radius-lg); 
-      box-shadow: 0 15px 35px rgba(0,0,0,0.2); z-index: 1100; padding: 16px; text-align: right;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15); z-index: 1100; padding: 14px; text-align: right;
     }
-    .notification-dropdown.show { display: block; animation: fadeInDown 0.25s ease; }
+    .notification-dropdown.show { display: block; }
 
-    @keyframes fadeInDown {
-      from { opacity: 0; transform: translateY(-10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* تصميم المنتدى الزجاجي */
     .chat-box {
-      height: 520px; overflow-y: auto; 
-      background: linear-gradient(180deg, rgba(99, 102, 241, 0.04), rgba(6, 182, 212, 0.04));
-      backdrop-filter: blur(10px);
-      border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 20px; 
-      display: flex; flex-direction: column; gap: 16px;
+      height: 480px; overflow-y: auto; 
+      background: linear-gradient(180deg, rgba(99, 102, 241, 0.03), rgba(6, 182, 212, 0.03));
+      backdrop-filter: blur(6px); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 16px; 
+      display: flex; flex-direction: column; gap: 14px;
     }
     .chat-message {
-      max-width: 78%; padding: 12px 16px; border-radius: 20px; font-size: 0.95rem; word-break: break-word; 
-      display: flex; flex-direction: column; position: relative;
-      backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      max-width: 78%; padding: 10px 14px; border-radius: 18px; font-size: 0.92rem; word-break: break-word; 
+      display: flex; flex-direction: column; position: relative; backdrop-filter: blur(8px);
     }
-    /* رسائلي باللون الأزرق الزجاجي */
     .chat-message.sent {
       margin-right: auto; margin-left: 0; 
-      background: linear-gradient(135deg, rgba(59, 130, 246, 0.85), rgba(37, 99, 235, 0.92));
-      border: 1px solid rgba(147, 197, 253, 0.4);
-      color: #ffffff !important;
-      border-bottom-left-radius: 20px; border-bottom-right-radius: 4px; align-items: flex-start;
-      box-shadow: 0 6px 20px rgba(37, 99, 235, 0.25);
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.82), rgba(37, 99, 235, 0.88));
+      border: 1px solid rgba(147, 197, 253, 0.3); color: #ffffff !important;
+      border-bottom-left-radius: 18px; border-bottom-right-radius: 4px; align-items: flex-start;
+      box-shadow: 0 4px 15px rgba(37, 99, 235, 0.2);
     }
     .chat-message.sent p, .chat-message.sent small { color: #ffffff !important; }
     
-    /* رسائل الآخرين باللون الأبيض الزجاجي */
     .chat-message.received {
       margin-left: auto; margin-right: 0; 
-      background: rgba(255, 255, 255, 0.82);
-      border: 1px solid rgba(203, 213, 225, 0.7);
-      color: #0f172a !important;
-      border-bottom-left-radius: 4px; border-bottom-right-radius: 20px; align-items: flex-start;
-      box-shadow: 0 6px 20px rgba(15, 23, 42, 0.06);
+      background: rgba(255, 255, 255, 0.8); border: 1px solid rgba(203, 213, 225, 0.6); color: #0f172a !important;
+      border-bottom-left-radius: 4px; border-bottom-right-radius: 18px; align-items: flex-start;
+      box-shadow: 0 4px 15px rgba(15, 23, 42, 0.04);
     }
     [data-theme="dark"] .chat-message.received {
-      background: rgba(255, 255, 255, 0.14);
-      border-color: rgba(255, 255, 255, 0.2);
-      color: #f8fafc !important;
+      background: rgba(255, 255, 255, 0.1); border-color: rgba(255, 255, 255, 0.15); color: #f8fafc !important;
     }
     [data-theme="dark"] .chat-message.received p { color: #f8fafc !important; }
 
     .chat-msg-header {
-      width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 12px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.18); padding-bottom: 6px; margin-bottom: 8px;
+      width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.15); padding-bottom: 4px; margin-bottom: 6px;
     }
-    .chat-message.received .chat-msg-header { border-bottom-color: rgba(148, 163, 184, 0.25); }
+    .chat-message.received .chat-msg-header { border-bottom-color: rgba(148, 163, 184, 0.2); }
     
     .chat-msg-actions button {
-      background: rgba(255, 255, 255, 0.2); border: none; color: inherit; border-radius: 6px;
-      padding: 2px 7px; font-size: 0.75rem; cursor: pointer; margin-right: 4px;
+      background: rgba(255, 255, 255, 0.2); border: none; color: inherit; border-radius: 4px;
+      padding: 1px 6px; font-size: 0.7rem; cursor: pointer; margin-right: 3px;
     }
-    .chat-msg-actions button:hover { background: rgba(255, 255, 255, 0.35); }
 
-    /* شريط إرسال الرسائل المنسق */
     .chat-input-wrapper {
-      background: var(--bg-liquid-card); backdrop-filter: blur(16px);
+      background: var(--bg-liquid-card); backdrop-filter: blur(10px);
       border: 1px solid var(--border-color); border-radius: 50rem;
-      padding: 8px 14px; display: flex; align-items: center; gap: 10px;
-      box-shadow: var(--shadow-sm);
+      padding: 6px 12px; display: flex; align-items: center; gap: 8px; box-shadow: var(--shadow-sm);
     }
-    .chat-input-wrapper input {
-      border: none !important; background: transparent !important; box-shadow: none !important; padding: 8px 12px;
-    }
+    .chat-input-wrapper input { border: none !important; background: transparent !important; box-shadow: none !important; padding: 6px 10px; }
+    
     .chat-action-btn {
-      width: 42px; height: 42px; border-radius: 50%; border: none;
+      width: 38px; height: 38px; border-radius: 50%; border: none;
       display: flex; align-items: center; justify-content: center; flex-shrink: 0; cursor: pointer;
     }
-    .chat-img-btn { background: rgba(99, 102, 241, 0.12); color: var(--primary); }
-    .chat-img-btn:hover { background: var(--primary); color: #fff; transform: scale(1.06); }
+    .chat-img-btn { background: rgba(99, 102, 241, 0.1); color: var(--primary); }
+    .chat-img-btn:hover { background: var(--primary); color: #fff; }
+    
     .chat-send-btn { 
       background: linear-gradient(135deg, var(--primary), var(--accent)); color: #fff; 
-      padding: 0 22px; height: 42px; border-radius: 50rem; border: none; font-weight: 600;
-      display: flex; align-items: center; gap: 8px; flex-shrink: 0;
-      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+      padding: 0 20px; height: 38px; border-radius: 50rem; border: none; font-weight: 600;
+      display: flex; align-items: center; gap: 6px; flex-shrink: 0;
+      box-shadow: 0 3px 10px rgba(99, 102, 241, 0.25);
     }
-    .chat-send-btn:hover { transform: scale(1.03); }
 
-    /* معاينة الصورة المرفقة في الشات */
-    .chat-img-preview {
-      max-height: 190px; border-radius: 14px; margin-top: 8px; cursor: pointer;
-      border: 2px solid rgba(255, 255, 255, 0.3); transition: transform 0.2s ease;
-    }
-    .chat-img-preview:hover { transform: scale(1.02); }
+    .chat-img-preview { max-height: 170px; border-radius: 12px; margin-top: 6px; cursor: pointer; border: 2px solid rgba(255, 255, 255, 0.3); }
 
-    /* كروت المحررات */
-    .editor-wrapper {
-      border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--border-color);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-    }
-    .editor-topbar {
-      background: #1e293b; padding: 10px 16px; display: flex; justify-content: space-between; align-items: center;
-      border-bottom: 1px solid #334155;
-    }
-    .editor-dots { display: flex; gap: 6px; }
-    .editor-dots span { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+    .editor-wrapper { border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--border-color); }
+    .editor-topbar { background: #1e293b; padding: 8px 14px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; }
+    .editor-dots { display: flex; gap: 5px; }
+    .editor-dots span { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
 
-    /* الصور الشخصية */
-    .profile-avatar-wrapper {
-      position: relative; width: 110px; height: 110px; margin: 0 auto 16px;
-    }
-    .profile-avatar-img {
-      width: 110px; height: 110px; border-radius: 50%; object-fit: cover;
-      border: 3px solid var(--primary); box-shadow: 0 6px 20px rgba(99, 102, 241, 0.3);
-    }
+    .profile-avatar-wrapper { position: relative; width: 100px; height: 100px; margin: 0 auto 14px; }
+    .profile-avatar-img { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary); }
     .avatar-upload-badge {
-      position: absolute; bottom: 0; left: 0; width: 34px; height: 34px;
+      position: absolute; bottom: 0; left: 0; width: 30px; height: 30px;
       background: var(--primary); color: #fff; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center; cursor: pointer;
-      border: 2px solid var(--bg-card); box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+      display: flex; align-items: center; justify-content: center; cursor: pointer; border: 2px solid var(--bg-card);
     }
     .header-user-pill {
-      display: flex; align-items: center; gap: 8px; padding: 4px 12px 4px 6px;
-      background: rgba(99, 102, 241, 0.12); border: 1px solid rgba(99, 102, 241, 0.25);
+      display: flex; align-items: center; gap: 6px; padding: 3px 10px 3px 5px;
+      background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.2);
       border-radius: 50rem; cursor: pointer;
     }
-    .header-user-pill img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
+    .header-user-pill img { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; }
 
     .honor-card {
-      background: var(--bg-liquid-card); backdrop-filter: blur(12px); border: 1px solid var(--border-color);
-      border-radius: var(--radius-lg); padding: 24px; text-align: center; color: var(--text-main); box-shadow: var(--shadow-sm);
+      background: var(--bg-liquid-card); backdrop-filter: blur(8px); border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg); padding: 20px; text-align: center; color: var(--text-main); box-shadow: var(--shadow-sm);
     }
-    .honor-avatar {
-      width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 3px solid var(--warning); margin-bottom: 16px; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
-    }
+    .honor-avatar { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid var(--warning); margin-bottom: 12px; }
 
     footer {
-      background: var(--bg-card); backdrop-filter: var(--glass-blur);
-      border-top: 1px solid var(--border-color);
-      padding: 30px 24px; text-align: center; color: var(--text-muted);
+      background: var(--bg-card); backdrop-filter: var(--glass-blur); border-top: 1px solid var(--border-color);
+      padding: 24px; text-align: center; color: var(--text-muted);
     }
     .footer-contact-btn {
-      display: inline-flex; align-items: center; gap: 10px; padding: 12px 22px;
-      border-radius: 50rem; font-weight: 600; font-size: 0.9rem; text-decoration: none; 
+      display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px;
+      border-radius: 50rem; font-weight: 600; font-size: 0.88rem; text-decoration: none; 
       border: 1px solid var(--border-color); background: var(--bg-liquid-card); color: var(--text-main);
       box-shadow: var(--shadow-sm);
     }
-    .footer-contact-btn:hover { transform: translateY(-2px); }
     .footer-contact-btn.teacher:hover { background: #10b981; color: #fff; border-color: #10b981; }
     .footer-contact-btn.admin:hover { background: #06b6d4; color: #fff; border-color: #06b6d4; }
 
@@ -449,42 +318,38 @@
       #sidebar { transform: translateX(100%); }
       #sidebar.mobile-open { transform: translateX(0) !important; }
       #content { margin-right: 0 !important; width: 100% !important; }
-      .admin-layout { flex-direction: column !important; gap: 15px; }
-      .admin-sidebar { width: 100% !important; display: flex; flex-wrap: wrap; gap: 6px; padding: 10px; }
-      .admin-sidebar h6 { width: 100%; margin-bottom: 8px !important; }
-      .admin-sidebar .admin-nav-link { flex: 1 1 45%; margin-bottom: 4px; font-size: 0.85rem; padding: 8px 10px; }
-      .main-container { padding: 16px !important; }
-      .chat-message { max-width: 88%; }
+      .admin-layout { flex-direction: column !important; }
+      .admin-sidebar { width: 100% !important; display: flex; flex-wrap: wrap; gap: 5px; padding: 8px; }
+      .admin-sidebar h6 { width: 100%; margin-bottom: 6px !important; }
+      .admin-sidebar .admin-nav-link { flex: 1 1 45%; font-size: 0.82rem; padding: 6px 8px; }
+      .main-container { padding: 14px !important; }
     }
   </style>
 </head>
 <body data-theme="light">
 
-  <!-- شاشة التحميل -->
   <div id="globalLoadingOverlay">
-    <div class="spinner-border text-light mb-3" style="width: 3.5rem; height: 3.5rem;" role="status"></div>
+    <div class="spinner-border text-light mb-3" style="width: 3rem; height: 3rem;" role="status"></div>
     <h5 id="globalLoadingText" class="fw-bold m-0 text-white">جاري المعالجة...</h5>
   </div>
 
-  <!-- مربع الترحيب المنبثق بعلامة الصح -->
   <div id="welcomeToast">
     <div class="welcome-check-icon"><i class="fa-solid fa-check"></i></div>
     <div>
-      <div class="fw-bold" style="font-size: 0.95rem; color: var(--text-main);">تم تسجيل دخولك بنجاح</div>
+      <div class="fw-bold" style="font-size: 0.92rem; color: var(--text-main);">تم تسجيل دخولك بنجاح</div>
       <div class="small fw-semibold text-primary" id="welcomeToastName">أهلاً بك!</div>
     </div>
   </div>
 
   <div class="sidebar-backdrop" id="sidebarBackdrop" onclick="toggleSidebar()"></div>
 
-  <!-- القائمة الجانبية Liquid Glass -->
   <aside id="sidebar">
     <div class="sidebar-header">
       <div class="d-flex align-items-center gap-2">
         <div class="brand-logo"><i class="fa-solid fa-code"></i></div>
         <div>
-          <h6 class="fw-bold m-0 text-white" style="font-size: 0.9rem;">المس أمل شفيق</h6>
-          <small style="font-size: 0.7rem; color: #94a3b8 !important;">البرمجة والذكاء الاصطناعي</small>
+          <h6 class="fw-bold m-0 text-white" style="font-size: 0.88rem;">المس أمل شفيق</h6>
+          <small style="font-size: 0.68rem; color: #94a3b8 !important;">البرمجة والذكاء الاصطناعي</small>
         </div>
       </div>
       <button class="btn btn-sm text-white-50" onclick="toggleSidebar()"><i class="fa-solid fa-xmark fa-lg"></i></button>
@@ -496,8 +361,8 @@
       <a class="nav-link" href="#" onclick="showSection('videosSection', this)"><i class="fa-solid fa-video text-info"></i>الفيديوهات التعليمية</a>
       <a class="nav-link" href="#" onclick="showSection('forumSection', this)"><i class="fa-solid fa-comments text-success"></i>منتدى الطلاب</a>
       
-      <a class="nav-link" href="#" onclick="showSection('pythonEditorSection', this)"><i class="fa-brands fa-python text-warning" style="font-size:1.3rem;"></i>محرر Python</a>
-      <a class="nav-link" href="#" onclick="showSection('jsEditorSection', this)"><i class="fa-brands fa-js text-warning" style="font-size:1.3rem;"></i>محرر JavaScript</a>
+      <a class="nav-link" href="#" onclick="showSection('pythonEditorSection', this)"><i class="fa-brands fa-python text-warning"></i>محرر Python</a>
+      <a class="nav-link" href="#" onclick="showSection('jsEditorSection', this)"><i class="fa-brands fa-js text-warning"></i>محرر JavaScript</a>
       <a class="nav-link" href="#" onclick="showSection('htmlEditorSection', this)"><i class="fa-solid fa-laptop-code text-info"></i>محرر HTML & CSS</a>
       
       <a class="nav-link" id="profileNavItem" style="display: none;" href="#" onclick="showSection('profileSection', this)"><i class="fa-solid fa-user-gear text-secondary"></i>الملف الشخصي</a>
@@ -506,42 +371,38 @@
 
   <div id="content">
     
-    <!-- الهيدر العلوي -->
     <header class="top-header">
       <div class="d-flex align-items-center gap-2">
         <button class="btn btn-sm btn-outline-secondary" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
-        <h5 class="fw-bold m-0 d-none d-md-block" style="font-size: 1.05rem;">منصة التعليم الرقمي</h5>
+        <h5 class="fw-bold m-0 d-none d-md-block" style="font-size: 1rem;">منصة التعليم الرقمي</h5>
       </div>
       
       <div class="d-flex align-items-center gap-2">
-        <!-- زر الإشعارات الزجاجي الشفاف -->
         <div style="position: relative;" id="notificationContainer">
           <button class="header-icon-btn" onclick="toggleNotificationDropdown()" title="الإشعارات والتنبيهات">
             <i class="fa-solid fa-bell text-primary"></i>
-            <span id="notificationBadge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.65rem; display: none;">0</span>
+            <span id="notificationBadge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem; display: none;">0</span>
           </button>
           
           <div id="notificationDropdown" class="notification-dropdown">
             <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-2">
-              <h6 class="fw-bold m-0 text-primary" style="font-size: 0.95rem;"><i class="fa-solid fa-bell me-1"></i> التنبيهات الأخيرة</h6>
+              <h6 class="fw-bold m-0 text-primary" style="font-size: 0.9rem;"><i class="fa-solid fa-bell me-1"></i> التنبيهات الأخيرة</h6>
             </div>
-            <div id="dropdownNotificationsList" style="max-height: 240px; overflow-y: auto;">
-              <p class="small text-center m-0 py-3">لا توجد إشعارات جديدة</p>
+            <div id="dropdownNotificationsList" style="max-height: 220px; overflow-y: auto;">
+              <p class="small text-center m-0 py-2">لا توجد إشعارات جديدة</p>
             </div>
           </div>
         </div>
 
-        <!-- زر لوحة الأدمن -->
-        <button class="header-icon-btn admin-btn" onclick="openAdminAccess()" title="لوحة تحكم الأدمن">
+        <button class="header-icon-btn" onclick="openAdminAccess()" title="لوحة تحكم الأدمن">
           <i class="fa-solid fa-shield-halved text-warning"></i>
         </button>
 
-        <!-- زر الوضع الليلي والنهاري -->
         <button class="header-icon-btn" onclick="toggleTheme()" title="تبديل الوضع الليلي والنهاري">
           <i class="fa-solid fa-moon" id="themeIcon"></i>
         </button>
         
-        <!-- زر الدخول أو شارة المستخدم -->
+        <!-- حاوية المصادقة: يتم التبديل بين زر الدخول أو شارة المستخدم فوراً -->
         <div id="authContainer">
           <button class="btn btn-custom-primary" onclick="showAuthModal('login')">تسجيل الدخول</button>
         </div>
@@ -554,16 +415,14 @@
 
     <main class="main-container">
 
-      <!-- الرئيسية -->
       <section id="homeSection">
         <div class="hero-card mb-4 text-center">
           <h2 class="fw-bold mb-2">طريقك لاحتراف البرمجة والذكاء الاصطناعي</h2>
           <p class="opacity-90 mb-3 fs-6">إشراف وتدريس: المس أمل شفيق السيد</p>
-          <p class="fs-6 text-white mb-4" style="max-width: 650px; margin: 0 auto;">انضم إلينا اليوم، وأنشئ حسابك لتستفيد من محركات الأكواد التفاعلية، كتب المنهج والمذكرات، منتدى النقاش المباشر.</p>
+          <p class="fs-6 text-white mb-4" style="max-width: 620px; margin: 0 auto;">انضم إلينا اليوم، وأنشئ حسابك لتستفيد من محركات الأكواد التفاعلية، كتب المنهج والمذكرات، منتدى النقاش المباشر.</p>
           <button id="heroStartBtn" class="btn btn-light text-primary fw-bold px-4 py-2 rounded-pill shadow" onclick="showAuthModal('register')">ابدأ رحلتك الآن</button>
         </div>
 
-        <!-- كروت مميزات المنصة للزوار (تختفي بعد تسجيل الدخول) -->
         <div id="guestFeaturesSection" class="custom-card mb-4">
           <div class="text-center mb-4">
             <h4 class="fw-bold text-primary mb-1"><i class="fa-solid fa-sparkles me-2"></i>ماذا ستستفيد عند انضمامك للمنصة؟</h4>
@@ -574,28 +433,28 @@
               <div class="liquid-item-card h-100 text-center">
                 <div class="brand-logo mx-auto mb-3"><i class="fa-solid fa-laptop-code"></i></div>
                 <h6 class="fw-bold">محررات أكواد حية</h6>
-                <p class="small m-0">اكتب ونفذ أكواد Python و JavaScript و HTML مباشرة من متصفحك.</p>
+                <p class="small m-0">اكتب ونفذ أكواد Python و JavaScript و HTML مباشرة.</p>
               </div>
             </div>
             <div class="col-md-3 col-sm-6">
               <div class="liquid-item-card h-100 text-center">
                 <div class="brand-logo mx-auto mb-3" style="background: linear-gradient(135deg, #ef4444, #f59e0b);"><i class="fa-solid fa-book-open"></i></div>
                 <h6 class="fw-bold">مذكرات وكتب شاملة</h6>
-                <p class="small m-0">تحميل وتصفح أحدث ملخصات المنهج والملفات التعليمية المنظمة.</p>
+                <p class="small m-0">تحميل وتصفح أحدث ملخصات المنهج والملفات التعليمية.</p>
               </div>
             </div>
             <div class="col-md-3 col-sm-6">
               <div class="liquid-item-card h-100 text-center">
                 <div class="brand-logo mx-auto mb-3" style="background: linear-gradient(135deg, #06b6d4, #3b82f6);"><i class="fa-solid fa-video"></i></div>
                 <h6 class="fw-bold">شروحات فيديو</h6>
-                <p class="small m-0">دروس مرئية مبسطة لشرح مفاهيم البرمجة والذكاء الاصطناعي.</p>
+                <p class="small m-0">دروس مرئية مبسطة لشرح مفاهيم البرمجة.</p>
               </div>
             </div>
             <div class="col-md-3 col-sm-6">
               <div class="liquid-item-card h-100 text-center">
                 <div class="brand-logo mx-auto mb-3" style="background: linear-gradient(135deg, #10b981, #059669);"><i class="fa-solid fa-comments"></i></div>
                 <h6 class="fw-bold">منتدى تفاعلي</h6>
-                <p class="small m-0">تواصل مباشر مع زملائك والمعلمة لطرح الأسئلة ومشاركة الأكواد.</p>
+                <p class="small m-0">تواصل مباشر مع زملائك والمعلمة لطرح الأسئلة.</p>
               </div>
             </div>
           </div>
@@ -616,16 +475,14 @@
         </div>
       </section>
 
-      <!-- الكتب والملخصات -->
       <section id="booksSection" style="display: none;">
         <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
           <h4 class="fw-bold m-0"><i class="fa-solid fa-book-open text-danger me-2"></i>مكتبة المذكرات والكتب</h4>
-          <input type="text" id="bookSearch" class="form-control" style="max-width: 280px;" placeholder="بحث عن كتاب أو مرحلة..." onkeyup="filterBooks()">
+          <input type="text" id="bookSearch" class="form-control" style="max-width: 260px;" placeholder="بحث عن كتاب أو مرحلة..." onkeyup="filterBooks()">
         </div>
         <div class="row g-4" id="booksContainer"></div>
       </section>
 
-      <!-- الفيديوهات التعليمية -->
       <section id="videosSection" style="display: none;">
         <h4 class="fw-bold mb-4"><i class="fa-solid fa-video text-info me-2"></i>الفيديوهات التعليمية والشروحات</h4>
         <div class="row g-4" id="videosContainer">
@@ -633,7 +490,6 @@
         </div>
       </section>
 
-      <!-- منتدى الطلاب المطور بالستايل الزجاجي -->
       <section id="forumSection" style="display: none;">
         <div class="custom-card">
           <div class="d-flex justify-content-between align-items-center mb-3">
@@ -643,11 +499,10 @@
           
           <div class="chat-box mb-3" id="chatContainer"></div>
           
-          <!-- شريط إدخال الرسائل المنسق -->
           <div class="chat-input-wrapper">
             <input type="file" id="chatImageInput" accept="image/*" style="display: none;" onchange="handleImageUpload(event)">
             <button type="button" class="chat-action-btn chat-img-btn" onclick="document.getElementById('chatImageInput').click()" title="إرفاق صورة">
-              <i class="fa-solid fa-image fa-lg"></i>
+              <i class="fa-solid fa-image"></i>
             </button>
 
             <input type="text" id="chatInput" class="form-control" placeholder="اكتب رسالتك للمجموعة هنا..." autocomplete="off" onkeypress="if(event.key==='Enter') sendChatMessage()">
@@ -660,7 +515,6 @@
         </div>
       </section>
 
-      <!-- محرر بايثون المحسّن -->
       <section id="pythonEditorSection" style="display: none;">
         <div class="custom-card">
           <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
@@ -672,14 +526,13 @@
               <div class="editor-dots"><span style="background:#ef4444;"></span><span style="background:#f59e0b;"></span><span style="background:#10b981;"></span></div>
               <small class="text-white-50 font-monospace">main.py</small>
             </div>
-            <textarea id="pythonCodeInput" class="form-control font-monospace rounded-0" rows="11" dir="ltr" style="background:#0f172a !important; color:#facc15 !important; border:none;" placeholder="print('مرحباً بك في عالم البرمجة')"></textarea>
+            <textarea id="pythonCodeInput" class="form-control font-monospace rounded-0" rows="10" dir="ltr" style="background:#0f172a !important; color:#facc15 !important; border:none;" placeholder="print('مرحباً بك')"></textarea>
           </div>
           <label class="form-label fw-bold small"><i class="fa-solid fa-terminal me-1"></i> شاشة المخرجات (Output):</label>
-          <pre id="pythonOutput" class="p-3 rounded-4 bg-dark text-warning font-monospace m-0 border border-secondary" style="min-height: 110px;"></pre>
+          <pre id="pythonOutput" class="p-3 rounded-3 bg-dark text-warning font-monospace m-0 border border-secondary" style="min-height: 90px;"></pre>
         </div>
       </section>
 
-      <!-- محرر جافاسكريبت المحسّن -->
       <section id="jsEditorSection" style="display: none;">
         <div class="custom-card">
           <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
@@ -691,14 +544,13 @@
               <div class="editor-dots"><span style="background:#ef4444;"></span><span style="background:#f59e0b;"></span><span style="background:#10b981;"></span></div>
               <small class="text-white-50 font-monospace">script.js</small>
             </div>
-            <textarea id="jsCodeInput" class="form-control font-monospace rounded-0" rows="11" dir="ltr" style="background:#0f172a !important; color:#38bdf8 !important; border:none;" placeholder="console.log('Hello JavaScript!');"></textarea>
+            <textarea id="jsCodeInput" class="form-control font-monospace rounded-0" rows="10" dir="ltr" style="background:#0f172a !important; color:#38bdf8 !important; border:none;" placeholder="console.log('Hello!');"></textarea>
           </div>
           <label class="form-label fw-bold small"><i class="fa-solid fa-terminal me-1"></i> وحدة التحكم (Console):</label>
-          <pre id="jsOutput" class="p-3 rounded-4 bg-dark text-success font-monospace m-0 border border-secondary" style="min-height: 110px;"></pre>
+          <pre id="jsOutput" class="p-3 rounded-3 bg-dark text-success font-monospace m-0 border border-secondary" style="min-height: 90px;"></pre>
         </div>
       </section>
 
-      <!-- محرر HTML & CSS المحسّن -->
       <section id="htmlEditorSection" style="display: none;">
         <div class="custom-card">
           <h5 class="fw-bold mb-3"><i class="fa-solid fa-laptop-code text-info me-2"></i>محرر HTML & CSS التفاعلي</h5>
@@ -709,7 +561,7 @@
                   <div class="editor-dots"><span style="background:#ef4444;"></span><span style="background:#f59e0b;"></span><span style="background:#10b981;"></span></div>
                   <small class="text-white-50 font-monospace">index.html</small>
                 </div>
-                <textarea id="studentSiteCode" class="form-control font-monospace rounded-0" rows="13" dir="ltr" style="background:#0f172a !important; color:#f8fafc !important; border:none;" placeholder="<h1>أهلاً بك في صفحتي</h1>" oninput="saveStudentSiteCode()"></textarea>
+                <textarea id="studentSiteCode" class="form-control font-monospace rounded-0" rows="12" dir="ltr" style="background:#0f172a !important; color:#f8fafc !important; border:none;" placeholder="<h1>أهلاً بك</h1>" oninput="saveStudentSiteCode()"></textarea>
               </div>
             </div>
             <div class="col-md-6">
@@ -717,22 +569,21 @@
                 <div class="editor-topbar" style="background:#334155;">
                   <small class="text-white fw-semibold"><i class="fa-solid fa-eye me-1"></i> المعاينة الحية</small>
                 </div>
-                <iframe id="sitePreview" style="width:100%; flex:1; min-height:310px; background:#fff; border:none;"></iframe>
+                <iframe id="sitePreview" style="width:100%; flex:1; min-height:280px; background:#fff; border:none;"></iframe>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- الملف الشخصي (مع صورة شخصية محفوظة محلياً) -->
       <section id="profileSection" style="display: none;">
-        <div class="custom-card mx-auto" style="max-width: 650px;">
+        <div class="custom-card mx-auto" style="max-width: 600px;">
           <h4 class="fw-bold text-center mb-4">إعدادات الملف الشخصي</h4>
           
           <div class="profile-avatar-wrapper">
             <img id="profileAvatarPreview" src="https://ui-avatars.com/api/?name=User&background=6366f1&color=fff" class="profile-avatar-img" alt="صورة الملف الشخصي">
             <label for="profileAvatarInput" class="avatar-upload-badge" title="تغيير الصورة الشخصية">
-              <i class="fa-solid fa-camera fa-sm"></i>
+              <i class="fa-solid fa-camera fa-xs"></i>
             </label>
             <input type="file" id="profileAvatarInput" accept="image/*" style="display:none;" onchange="handleProfileAvatarChange(event)">
           </div>
@@ -761,22 +612,21 @@
                 <input type="password" id="profPass" class="form-control" placeholder="اتركه فارغاً إذا لم ترد التغيير">
               </div>
             </div>
-            <button type="submit" class="btn btn-custom-primary w-100 py-2 mt-4 fw-bold" id="updateProfileBtn">حفظ التعديلات</button>
+            <button type="submit" class="btn btn-custom-primary w-100 py-2 mt-4 fw-bold">حفظ التعديلات</button>
           </form>
           <div class="border-top mt-4 pt-4 text-center">
-            <button type="button" class="btn btn-outline-danger w-100 py-2 fw-semibold" id="logoutBtn" onclick="logout()">تسجيل الخروج</button>
+            <button type="button" class="btn btn-outline-danger w-100 py-2 fw-semibold" onclick="logout()">تسجيل الخروج</button>
           </div>
         </div>
       </section>
 
-      <!-- لوحة تحكم الأدمن -->
       <section id="adminSection" style="display: none;">
         <div id="adminDashboard">
           <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
             <div class="d-flex align-items-center gap-3">
               <div style="position:relative;">
-                <img id="adminAvatarPreview" src="https://ui-avatars.com/api/?name=Admin&background=f59e0b&color=fff" style="width:52px; height:52px; border-radius:50%; object-fit:cover; border:2px solid var(--warning);">
-                <label for="adminAvatarInput" style="position:absolute; bottom:-2px; left:-2px; width:22px; height:22px; background:var(--warning); color:#000; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:0.65rem;" title="تغيير صورة الأدمن">
+                <img id="adminAvatarPreview" src="https://ui-avatars.com/api/?name=Admin&background=f59e0b&color=fff" style="width:48px; height:48px; border-radius:50%; object-fit:cover; border:2px solid var(--warning);">
+                <label for="adminAvatarInput" style="position:absolute; bottom:-2px; left:-2px; width:20px; height:20px; background:var(--warning); color:#000; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:0.6rem;" title="تغيير صورة الأدمن">
                   <i class="fa-solid fa-camera"></i>
                 </label>
                 <input type="file" id="adminAvatarInput" accept="image/*" style="display:none;" onchange="handleAdminAvatarChange(event)">
@@ -896,8 +746,8 @@
     </main>
 
     <footer>
-      <div style="max-width: 800px; margin: 0 auto;">
-        <p class="mb-2" style="font-size: 0.95rem;">جميع الحقوق محفوظة © للمطور <strong class="text-primary">أحمد صبري</strong></p>
+      <div style="max-width: 750px; margin: 0 auto;">
+        <p class="mb-2" style="font-size: 0.92rem;">جميع الحقوق محفوظة © للمطور <strong class="text-primary">أحمد صبري</strong></p>
         <p class="small mb-3">منصة المس أمل شفيق السيد للبرمجة والذكاء الاصطناعي</p>
         
         <div class="d-flex justify-content-center align-items-center gap-3 flex-wrap">
@@ -916,16 +766,15 @@
 
   </div>
 
-  <!-- Modal دخول الأدمن -->
   <div class="modal fade" id="adminAuthModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-sm">
-      <div class="modal-content" style="background: var(--bg-card); backdrop-filter: blur(20px); border-radius: var(--radius-lg);">
+      <div class="modal-content" style="background: var(--bg-card); backdrop-filter: blur(12px); border-radius: var(--radius-lg);">
         <div class="modal-header border-bottom-0 pb-0">
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body text-center px-4 pb-4 pt-0">
           <h6 class="fw-bold mb-1">دخول لوحة الأدمن</h6>
-          <p class="small mb-3">أدخل بيانات المشرف السحابية المشفرة</p>
+          <p class="small mb-3">أدخل بيانات المشرف السحابية</p>
           <form onsubmit="checkAdminAuth(event)">
             <input type="tel" id="adminPhoneInput" class="form-control mb-2 text-center" placeholder="رقم الهاتف" required>
             <input type="password" id="adminPassInput" class="form-control mb-3 text-center" placeholder="كلمة المرور" required>
@@ -936,10 +785,9 @@
     </div>
   </div>
 
-  <!-- Modal تسجيل الدخول وإنشاء الحساب الكامل -->
   <div class="modal fade" id="authModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content" style="background: var(--bg-card); backdrop-filter: blur(20px); border-radius: var(--radius-lg);">
+      <div class="modal-content" style="background: var(--bg-card); backdrop-filter: blur(12px); border-radius: var(--radius-lg);">
         <div class="modal-header border-bottom-0">
           <h5 class="modal-title fw-bold" id="authModalTitle">تسجيل الدخول</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -1012,14 +860,13 @@
     </div>
   </div>
 
-  <!-- Modal تكبير الصور في المنتدى -->
   <div class="modal fade" id="imageLightboxModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content bg-transparent border-0 text-center">
         <div class="d-flex justify-content-end mb-2">
           <button type="button" class="btn btn-light rounded-circle shadow" data-bs-dismiss="modal"><i class="fa-solid fa-xmark"></i></button>
         </div>
-        <img id="lightboxImageTarget" src="" class="img-fluid rounded-4 shadow-lg" style="max-height: 82vh; object-fit: contain;">
+        <img id="lightboxImageTarget" src="" class="img-fluid rounded-4 shadow-lg" style="max-height: 80vh; object-fit: contain;">
       </div>
     </div>
   </div>
@@ -1037,7 +884,7 @@
     let authModal, adminAuthModal, imageLightboxModal;
 
     document.body.setAttribute('data-theme', savedTheme);
-    if (savedTheme === 'dark') document.getElementById('themeIcon').className = 'fa-solid fa-sun';
+    if (savedTheme === 'dark') document.getElementById('themeIcon').className = 'fa-solid fa-sun text-warning';
     
     window.addEventListener('DOMContentLoaded', () => {
       authModal = new bootstrap.Modal(document.getElementById('authModal'));
@@ -1055,17 +902,13 @@
       document.getElementById('globalLoadingOverlay').classList.remove('show');
     }
 
-    // إظهار نافذة الترحيب المنبثقة عند تسجيل الدخول
     function showWelcomeToast(userName) {
       const toast = document.getElementById('welcomeToast');
       document.getElementById('welcomeToastName').innerText = `أهلاً بك يا ${userName}`;
       toast.classList.add('show');
-      setTimeout(() => {
-        toast.classList.remove('show');
-      }, 4500);
+      setTimeout(() => { toast.classList.remove('show'); }, 4000);
     }
 
-    // التحقق من صلاحية الوصول (طالب مفعل أو أدمن متصل)
     function hasPlatformAccess() {
       return (currentUser && currentUser.status === 'approved') || isAdminLoggedIn;
     }
@@ -1104,7 +947,7 @@
     function updateUI() {
       const isLoggedIn = hasPlatformAccess();
 
-      // إخفاء أو إظهار زرار ابدأ رحلتك وكروت المزايا للزوار
+      // التحكم الدقيق في إظهار وإخفاء أزرار الزوار وكروت المزايا
       document.getElementById('heroStartBtn').style.display = isLoggedIn ? 'none' : 'inline-block';
       document.getElementById('guestFeaturesSection').style.display = isLoggedIn ? 'none' : 'block';
 
@@ -1125,6 +968,7 @@
         document.getElementById('profileNavItem').style.display = 'none';
         loadAvatarsFromStorage();
       } else {
+        // عند تسجيل الخروج تماماً: يختفي شريط المستخدم ويظهر زر تسجيل الدخول
         document.getElementById('authContainer').style.display = 'block';
         document.getElementById('loggedInUserPill').style.display = 'none';
         document.getElementById('profileNavItem').style.display = 'none';
@@ -1137,7 +981,6 @@
       renderChat();
     }
 
-    // إدارة الصور الشخصية في LocalStorage
     function handleProfileAvatarChange(e) {
       const file = e.target.files[0];
       if (!file || !currentUser) return;
@@ -1187,7 +1030,7 @@
       const listContainer = document.getElementById('dropdownNotificationsList');
       const badge = document.getElementById('notificationBadge');
       if (!notifications.length) {
-        listContainer.innerHTML = `<p class="small text-center m-0 py-3">لا توجد إشعارات جديدة</p>`;
+        listContainer.innerHTML = `<p class="small text-center m-0 py-2">لا توجد إشعارات جديدة</p>`;
         badge.style.display = 'none';
         return;
       }
@@ -1195,8 +1038,8 @@
       badge.style.display = 'inline-block';
       listContainer.innerHTML = notifications.map(n => `
         <div class="liquid-item-card p-2 mb-2">
-          <h6 class="fw-bold text-primary m-0" style="font-size: 0.85rem;">${n.title}</h6>
-          <p class="m-0 small mt-1" style="font-size: 0.8rem;">${n.content}</p>
+          <h6 class="fw-bold text-primary m-0" style="font-size: 0.82rem;">${n.title}</h6>
+          <p class="m-0 small mt-1" style="font-size: 0.78rem;">${n.content}</p>
         </div>
       `).join('');
     }
@@ -1261,7 +1104,7 @@
       const phoneInput = document.getElementById('adminPhoneInput').value.trim();
       const passInput = document.getElementById('adminPassInput').value;
 
-      showLoadingOverlay("جاري التحقق من قاعدة البيانات السحابية...");
+      showLoadingOverlay("جاري التحقق من البيانات...");
 
       try {
         const { data: adminData, error } = await _supabase
@@ -1288,7 +1131,7 @@
         }
       } catch (err) {
         hideLoadingOverlay();
-        alert("حدث خطأ في الاتصال بالخدمة السحابية.");
+        alert("حدث خطأ في الاتصال بالخدمة.");
       }
     }
 
@@ -1358,7 +1201,7 @@
         return;
       }
 
-      showLoadingOverlay("جاري إنشاء الحساب وإرسال الطلب...");
+      showLoadingOverlay("جاري إنشاء الحساب...");
       
       const { error } = await _supabase.from('profiles').insert([{
         name, username, role, grade, phone, parent_phone: parentPhone, pass, status: 'pending'
@@ -1378,14 +1221,14 @@
     function logout() {
       currentUser = null;
       localStorage.removeItem('platform_current_user');
-      showSection('homeSection', document.querySelector('#sidebar .nav-link'));
       updateUI();
+      showSection('homeSection', document.querySelector('#sidebar .nav-link'));
     }
 
     async function updateProfile(e) {
       e.preventDefault();
       if (!currentUser) return;
-      showLoadingOverlay("جاري تحديث الملف الشخصي...");
+      showLoadingOverlay("جاري التحديث...");
       currentUser.name = document.getElementById('profName').value;
       currentUser.username = document.getElementById('profUsername').value;
       currentUser.phone = document.getElementById('profPhone').value;
@@ -1455,17 +1298,16 @@
       element.classList.add('active');
     }
 
-    // عرض الإشعارات بكروت Liquid متدرجة
     function renderHomeNotifications() {
       const container = document.getElementById('homeNotificationsContainer');
       if (!notifications.length) { container.innerHTML = `<p class="m-0">لا توجد إشعارات حالياً.</p>`; return; }
       container.innerHTML = notifications.map(n => `
         <div class="liquid-item-card">
           <div class="d-flex justify-content-between align-items-center mb-1">
-            <h6 class="text-primary fw-bold m-0"><i class="fa-solid fa-circle-info me-1"></i> ${n.title}</h6>
+            <h6 class="text-primary fw-bold m-0" style="font-size:0.9rem;"><i class="fa-solid fa-circle-info me-1"></i> ${n.title}</h6>
             <small class="badge bg-primary-subtle text-primary rounded-pill">${n.date}</small>
           </div>
-          <p class="m-0 mt-2">${n.content}</p>
+          <p class="m-0 mt-2 small">${n.content}</p>
         </div>
       `).join('');
     }
@@ -1476,7 +1318,6 @@
       container.innerHTML = honorStudents.map(h => `<div class="col-md-4"><div class="honor-card"><img src="${h.image_url}" class="honor-avatar"><h6 class="fw-bold">${h.name}</h6><small class="text-warning fw-semibold">${h.achievement}</small></div></div>`).join('');
     }
 
-    // عرض الكتب بكروت Liquid متدرجة
     function renderBooks(list = books) {
       const container = document.getElementById('booksContainer');
       if (!list || !list.length) { container.innerHTML = `<p class="text-center col-12">لا توجد مذكرات أو كتب متاحة.</p>`; return; }
@@ -1486,7 +1327,7 @@
             <div class="d-flex align-items-center gap-3 mb-3">
               <div class="brand-logo" style="background: linear-gradient(135deg, #ef4444, #dc2626);"><i class="fa-solid fa-file-pdf"></i></div>
               <div>
-                <h6 class="fw-bold m-0">${b.title}</h6>
+                <h6 class="fw-bold m-0" style="font-size:0.9rem;">${b.title}</h6>
                 <span class="badge bg-danger-subtle text-danger mt-1">${b.grade}</span>
               </div>
             </div>
@@ -1501,7 +1342,6 @@
       renderBooks(books.filter(b => b.title.toLowerCase().includes(query) || b.grade.toLowerCase().includes(query)));
     }
 
-    // عرض الفيديوهات بكروت Liquid متدرجة
     function renderVideos(list = videos) {
       const container = document.getElementById('videosContainer');
       if (!list || !list.length) { container.innerHTML = `<p class="text-center col-12">لا توجد فيديوهات منشورة.</p>`; return; }
@@ -1510,7 +1350,7 @@
           <div class="liquid-item-card h-100 d-flex flex-column justify-content-between">
             <div class="d-flex align-items-center gap-3 mb-3">
               <div class="brand-logo" style="background: linear-gradient(135deg, #06b6d4, #3b82f6);"><i class="fa-solid fa-play"></i></div>
-              <h6 class="fw-bold m-0">${v.title}</h6>
+              <h6 class="fw-bold m-0" style="font-size:0.9rem;">${v.title}</h6>
             </div>
             <a href="${v.url}" target="_blank" class="btn btn-custom-primary btn-sm fw-bold py-2 mt-auto rounded-pill"><i class="fa-solid fa-external-link-alt me-1"></i> مشاهدة الدرس الآن</a>
           </div>
@@ -1518,7 +1358,6 @@
       `).join('');
     }
 
-    // عرض رسائل المنتدى بالستايل الزجاجي وأزرار التعديل والحذف وتكبير الصور
     function renderChat() {
       const container = document.getElementById('chatContainer');
       if (!container) return;
@@ -1531,7 +1370,7 @@
         return `
           <div class="chat-message ${isMine ? 'sent' : 'received'}">
             <div class="chat-msg-header">
-              <small class="fw-bold" style="font-size: 0.78rem;">${isMine ? 'أنت' : m.sender}</small>
+              <small class="fw-bold" style="font-size: 0.75rem;">${isMine ? 'أنت' : m.sender}</small>
               ${canManage && m.id ? `
                 <div class="chat-msg-actions">
                   ${isMine && m.text && m.text !== '[صورة]' ? `<button onclick="editChatMessage(${m.id}, '${m.text.replace(/'/g, "\\'")}')" title="تعديل"><i class="fa-solid fa-pen"></i></button>` : ''}
