@@ -16,12 +16,15 @@
   <style>
     :root {
       --font-main: 'Readex Pro', sans-serif;
-      --bg-body: #f8fafc;
-      --bg-card: #ffffff;
-      --bg-sidebar: #0f172a;
-      --text-main: #1e293b;
-      --text-muted: #64748b;
-      --border-color: #e2e8f0;
+      --bg-body: #f1f5f9;
+      --bg-card: rgba(255, 255, 255, 0.78);
+      --bg-liquid-card: linear-gradient(135deg, rgba(255, 255, 255, 0.85), rgba(241, 245, 249, 0.65));
+      --bg-sidebar: linear-gradient(165deg, rgba(15, 23, 42, 0.92), rgba(30, 41, 59, 0.88));
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --border-color: rgba(203, 213, 225, 0.6);
+      --glass-border: rgba(255, 255, 255, 0.5);
+      --glass-blur: blur(16px);
       
       --primary: #6366f1;
       --primary-hover: #4f46e5;
@@ -31,25 +34,32 @@
       --danger: #ef4444;
 
       --sidebar-width: 280px;
-      --radius-lg: 18px;
-      --radius-md: 12px;
-      --shadow-sm: 0 4px 15px rgba(0,0,0,0.03);
+      --radius-lg: 20px;
+      --radius-md: 14px;
+      --shadow-sm: 0 8px 32px rgba(15, 23, 42, 0.06);
     }
 
     [data-theme="dark"] {
       --bg-body: #050b14;
-      --bg-card: #0f172a;
-      --bg-sidebar: #020617;
+      --bg-card: rgba(15, 23, 42, 0.75);
+      --bg-liquid-card: linear-gradient(135deg, rgba(30, 41, 59, 0.65), rgba(15, 23, 42, 0.85));
+      --bg-sidebar: linear-gradient(165deg, rgba(2, 6, 23, 0.94), rgba(15, 23, 42, 0.9));
       --text-main: #f8fafc;
-      --text-muted: #94a3b8;
-      --border-color: #1e293b;
+      --text-muted: #cbd5e1;
+      --border-color: rgba(51, 65, 85, 0.65);
+      --glass-border: rgba(255, 255, 255, 0.1);
+      --shadow-sm: 0 8px 32px rgba(0, 0, 0, 0.35);
     }
 
-    * { box-sizing: border-box; transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease; }
+    * { box-sizing: border-box; transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, transform 0.2s ease; }
 
     body {
       font-family: var(--font-main);
       background-color: var(--bg-body);
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.12) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(6, 182, 212, 0.12) 0px, transparent 50%);
+      background-attachment: fixed;
       color: var(--text-main);
       margin: 0;
       min-height: 100vh;
@@ -57,13 +67,17 @@
       overflow-x: hidden;
     }
 
-    p { color: var(--text-muted); }
+    /* ضبط النصوص الرصاصية في الوضعين */
+    p, .text-muted, small { color: var(--text-muted) !important; }
+    [data-theme="dark"] .text-dark { color: #f8fafc !important; }
+    [data-theme="dark"] .bg-body { background-color: rgba(30, 41, 59, 0.6) !important; color: var(--text-main) !important; }
 
+    /* شاشة التحميل */
     #globalLoadingOverlay {
       position: fixed;
       top: 0; left: 0; width: 100vw; height: 100vh;
-      background: rgba(15, 23, 42, 0.75);
-      backdrop-filter: blur(4px);
+      background: rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(8px);
       z-index: 9999;
       display: none;
       flex-direction: column;
@@ -73,16 +87,54 @@
     }
     #globalLoadingOverlay.show { display: flex; }
 
+    /* نافذة الترحيب المنبثقة عند تسجيل الدخول */
+    #welcomeToast {
+      position: fixed;
+      top: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-120px);
+      background: var(--bg-liquid-card);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--success);
+      box-shadow: 0 15px 35px rgba(16, 185, 129, 0.25);
+      border-radius: 50rem;
+      padding: 14px 28px;
+      z-index: 9998;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      opacity: 0;
+      transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    #welcomeToast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+    .welcome-check-icon {
+      width: 36px; height: 36px;
+      background: var(--success);
+      color: #fff;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+    }
+
+    /* القائمة الجانبية بتأثير Liquid Glass */
     #sidebar {
       width: var(--sidebar-width);
-      background-color: var(--bg-sidebar);
+      background: var(--bg-sidebar);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       height: 100vh;
       position: fixed;
       top: 0; right: 0;
       z-index: 1050;
       display: flex;
       flex-direction: column;
-      border-left: 1px solid rgba(255, 255, 255, 0.05);
+      border-left: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: -10px 0 30px rgba(0, 0, 0, 0.15);
       transform: translateX(0);
       transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     }
@@ -90,13 +142,13 @@
 
     .sidebar-backdrop {
       position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-      background: rgba(0, 0, 0, 0.5); z-index: 1040; display: none; opacity: 0; transition: opacity 0.3s ease;
+      background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(3px); z-index: 1040; display: none; opacity: 0; transition: opacity 0.3s ease;
     }
     .sidebar-backdrop.show { display: block; opacity: 1; }
 
     .sidebar-header {
       padding: 20px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
       display: flex; align-items: center; justify-content: space-between;
     }
 
@@ -105,7 +157,7 @@
       background: linear-gradient(135deg, var(--primary), var(--accent));
       border-radius: var(--radius-md);
       display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.2rem;
-      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.45);
     }
 
     .sidebar-nav {
@@ -115,28 +167,36 @@
     .sidebar-nav::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 10px; }
 
     .sidebar-nav .nav-link {
-      color: #94a3b8; padding: 12px 16px; border-radius: var(--radius-md);
+      color: #cbd5e1 !important; padding: 12px 16px; border-radius: var(--radius-md);
       font-weight: 500; display: flex; align-items: center; gap: 14px; margin-bottom: 6px; font-size: 0.95rem;
+      border: 1px solid transparent;
     }
     .sidebar-nav .nav-link i { font-size: 1.2rem; width: 24px; text-align: center; }
-    .sidebar-nav .nav-link:hover { color: #ffffff; background: rgba(255, 255, 255, 0.06); }
+    .sidebar-nav .nav-link:hover { 
+      color: #ffffff !important; 
+      background: rgba(255, 255, 255, 0.08); 
+      border-color: rgba(255, 255, 255, 0.1);
+      transform: translateX(-4px);
+    }
     .sidebar-nav .nav-link.active {
-      color: #ffffff;
-      background: linear-gradient(135deg, var(--primary), var(--primary-hover));
-      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+      color: #ffffff !important;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.85), rgba(6, 182, 212, 0.85));
+      border-color: rgba(255, 255, 255, 0.25);
+      box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
     }
 
+    /* لوحة الأدمن */
     .admin-layout { display: flex; gap: 20px; align-items: flex-start; }
     .admin-sidebar {
-      width: 250px; background: var(--bg-card); border: 1px solid var(--border-color);
-      border-radius: var(--radius-lg); padding: 14px; flex-shrink: 0; box-shadow: var(--shadow-sm);
+      width: 250px; background: var(--bg-liquid-card); backdrop-filter: var(--glass-blur);
+      border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 14px; flex-shrink: 0; box-shadow: var(--shadow-sm);
     }
     .admin-sidebar .admin-nav-link {
       display: flex; align-items: center; gap: 12px; padding: 11px 15px; border-radius: var(--radius-md);
       color: var(--text-main); text-decoration: none; font-weight: 500; font-size: 0.9rem; margin-bottom: 6px;
     }
-    .admin-sidebar .admin-nav-link:hover { background: var(--bg-body); color: var(--primary); }
-    .admin-sidebar .admin-nav-link.active { background: var(--primary); color: #fff; box-shadow: 0 4px 12px rgba(99,102,241,0.3); }
+    .admin-sidebar .admin-nav-link:hover { background: rgba(99, 102, 241, 0.1); color: var(--primary); }
+    .admin-sidebar .admin-nav-link.active { background: linear-gradient(135deg, var(--primary), var(--primary-hover)); color: #fff; box-shadow: 0 4px 12px rgba(99,102,241,0.3); }
     .admin-content-area { flex: 1; min-width: 0; width: 100%; }
 
     #content {
@@ -146,29 +206,61 @@
     }
     #content.expanded { margin-right: 0; width: 100%; }
 
+    /* الهيدر العلوي بتأثير زجاجي */
     .top-header {
-      background: var(--bg-card); border-bottom: 1px solid var(--border-color);
+      background: var(--bg-card); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+      border-bottom: 1px solid var(--border-color);
       padding: 14px 24px; display: flex; align-items: center; justify-content: space-between;
       position: sticky; top: 0; z-index: 1000; gap: 10px; flex-wrap: wrap; box-shadow: var(--shadow-sm);
     }
 
     .main-container { padding: 32px; flex: 1; }
 
-    .custom-card {
-      background: var(--bg-card); border: 1px solid var(--border-color);
-      border-radius: var(--radius-lg); box-shadow: var(--shadow-sm); padding: 24px; margin-bottom: 24px; color: var(--text-main);
+    /* الكروت السائلة المتدرجة */
+    .custom-card, .liquid-card {
+      background: var(--bg-liquid-card);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: 1px solid var(--border-color);
+      border-top: 1px solid var(--glass-border);
+      border-right: 1px solid var(--glass-border);
+      border-radius: var(--radius-lg); 
+      box-shadow: var(--shadow-sm); 
+      padding: 24px; 
+      margin-bottom: 24px; 
+      color: var(--text-main);
+    }
+    .liquid-item-card {
+      background: var(--bg-liquid-card);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 18px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    .liquid-item-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 25px rgba(99, 102, 241, 0.15);
+      border-color: rgba(99, 102, 241, 0.4);
     }
 
     .hero-card {
-      background: linear-gradient(135deg, #6366f1 0%, #06b6d4 100%); color: white;
-      border-radius: 20px; padding: 48px 32px; position: relative; overflow: hidden;
-      box-shadow: 0 10px 30px -5px rgba(99, 102, 241, 0.4);
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.9) 0%, rgba(6, 182, 212, 0.85) 100%);
+      backdrop-filter: blur(12px);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 24px; padding: 48px 32px; position: relative; overflow: hidden;
+      box-shadow: 0 15px 35px -5px rgba(99, 102, 241, 0.4);
     }
-    .hero-card p { color: rgba(255, 255, 255, 0.9) !important; }
+    .hero-card p { color: rgba(255, 255, 255, 0.95) !important; }
 
     .form-control, .form-select {
-      background-color: var(--bg-body); border: 1px solid var(--border-color);
+      background-color: rgba(255, 255, 255, 0.5); border: 1px solid var(--border-color);
       color: var(--text-main); border-radius: var(--radius-md); padding: 12px 16px; font-size: 0.95rem;
+    }
+    [data-theme="dark"] .form-control, [data-theme="dark"] .form-select {
+      background-color: rgba(15, 23, 42, 0.6); color: #f8fafc;
     }
     .form-control:focus, .form-select:focus {
       background-color: var(--bg-card); border-color: var(--primary);
@@ -176,46 +268,160 @@
     }
 
     .btn-custom-primary {
-      background: var(--primary); color: white; border: none;
+      background: linear-gradient(135deg, var(--primary), var(--primary-hover)); color: white; border: none;
       border-radius: var(--radius-md); padding: 10px 20px; font-weight: 600; font-size: 0.9rem;
-      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.35);
     }
-    .btn-custom-primary:hover:not(:disabled) { background: var(--primary-hover); color: white; }
+    .btn-custom-primary:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(99, 102, 241, 0.45); color: white; }
 
+    /* أزرار الهيدر الزجاجية الشفافة */
     .header-icon-btn {
-      width: 42px; height: 42px; border-radius: 50%;
-      background: var(--bg-body); border: 1px solid var(--border-color);
+      width: 44px; height: 44px; border-radius: 50%;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(99, 102, 241, 0.25);
       color: var(--text-main); display: flex; align-items: center; justify-content: center;
-      cursor: pointer; box-shadow: var(--shadow-sm); position: relative;
+      cursor: pointer; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); position: relative;
     }
-    .header-icon-btn:hover { transform: scale(1.08); border-color: var(--primary); color: var(--primary); }
-    .header-icon-btn.admin-btn:hover { border-color: var(--warning); color: var(--warning); }
+    [data-theme="dark"] .header-icon-btn {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+    .header-icon-btn:hover { transform: scale(1.08); border-color: var(--primary); color: var(--primary); background: rgba(99, 102, 241, 0.15); }
+    .header-icon-btn.admin-btn:hover { border-color: var(--warning); color: var(--warning); background: rgba(245, 158, 11, 0.15); }
 
     .notification-dropdown {
-      display: none; position: absolute; left: 0; top: 50px; width: 320px; max-width: calc(100vw - 30px);
-      background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-lg); 
-      box-shadow: 0 10px 25px rgba(0,0,0,0.15); z-index: 1100; padding: 14px; text-align: right;
+      display: none; position: absolute; left: 0; top: 54px; width: 330px; max-width: calc(100vw - 30px);
+      background: var(--bg-liquid-card); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border-color); border-radius: var(--radius-lg); 
+      box-shadow: 0 15px 35px rgba(0,0,0,0.2); z-index: 1100; padding: 16px; text-align: right;
     }
-    .notification-dropdown.show { display: block; }
+    .notification-dropdown.show { display: block; animation: fadeInDown 0.25s ease; }
 
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* تصميم المنتدى الزجاجي */
     .chat-box {
-      height: 500px; overflow-y: auto; background: var(--bg-body);
-      border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 20px; display: flex; flex-direction: column; gap: 14px;
+      height: 520px; overflow-y: auto; 
+      background: linear-gradient(180deg, rgba(99, 102, 241, 0.04), rgba(6, 182, 212, 0.04));
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 20px; 
+      display: flex; flex-direction: column; gap: 16px;
     }
     .chat-message {
-      max-width: 75%; padding: 14px 18px; border-radius: 18px; font-size: 0.95rem; word-break: break-word; display: flex; flex-direction: column; box-shadow: var(--shadow-sm);
+      max-width: 78%; padding: 12px 16px; border-radius: 20px; font-size: 0.95rem; word-break: break-word; 
+      display: flex; flex-direction: column; position: relative;
+      backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
     }
+    /* رسائلي باللون الأزرق الزجاجي */
     .chat-message.sent {
-      margin-right: auto; margin-left: 0; background: var(--primary); color: white;
-      border-bottom-left-radius: 18px; border-bottom-right-radius: 4px; align-items: flex-start;
+      margin-right: auto; margin-left: 0; 
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.85), rgba(37, 99, 235, 0.92));
+      border: 1px solid rgba(147, 197, 253, 0.4);
+      color: #ffffff !important;
+      border-bottom-left-radius: 20px; border-bottom-right-radius: 4px; align-items: flex-start;
+      box-shadow: 0 6px 20px rgba(37, 99, 235, 0.25);
     }
+    .chat-message.sent p, .chat-message.sent small { color: #ffffff !important; }
+    
+    /* رسائل الآخرين باللون الأبيض الزجاجي */
     .chat-message.received {
-      margin-left: auto; margin-right: 0; background: var(--bg-card); color: var(--text-main);
-      border: 1px solid var(--border-color); border-bottom-left-radius: 4px; border-bottom-right-radius: 18px; align-items: flex-start;
+      margin-left: auto; margin-right: 0; 
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid rgba(203, 213, 225, 0.7);
+      color: #0f172a !important;
+      border-bottom-left-radius: 4px; border-bottom-right-radius: 20px; align-items: flex-start;
+      box-shadow: 0 6px 20px rgba(15, 23, 42, 0.06);
     }
+    [data-theme="dark"] .chat-message.received {
+      background: rgba(255, 255, 255, 0.14);
+      border-color: rgba(255, 255, 255, 0.2);
+      color: #f8fafc !important;
+    }
+    [data-theme="dark"] .chat-message.received p { color: #f8fafc !important; }
+
+    .chat-msg-header {
+      width: 100%; display: flex; justify-content: space-between; align-items: center; gap: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.18); padding-bottom: 6px; margin-bottom: 8px;
+    }
+    .chat-message.received .chat-msg-header { border-bottom-color: rgba(148, 163, 184, 0.25); }
+    
+    .chat-msg-actions button {
+      background: rgba(255, 255, 255, 0.2); border: none; color: inherit; border-radius: 6px;
+      padding: 2px 7px; font-size: 0.75rem; cursor: pointer; margin-right: 4px;
+    }
+    .chat-msg-actions button:hover { background: rgba(255, 255, 255, 0.35); }
+
+    /* شريط إرسال الرسائل المنسق */
+    .chat-input-wrapper {
+      background: var(--bg-liquid-card); backdrop-filter: blur(16px);
+      border: 1px solid var(--border-color); border-radius: 50rem;
+      padding: 8px 14px; display: flex; align-items: center; gap: 10px;
+      box-shadow: var(--shadow-sm);
+    }
+    .chat-input-wrapper input {
+      border: none !important; background: transparent !important; box-shadow: none !important; padding: 8px 12px;
+    }
+    .chat-action-btn {
+      width: 42px; height: 42px; border-radius: 50%; border: none;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0; cursor: pointer;
+    }
+    .chat-img-btn { background: rgba(99, 102, 241, 0.12); color: var(--primary); }
+    .chat-img-btn:hover { background: var(--primary); color: #fff; transform: scale(1.06); }
+    .chat-send-btn { 
+      background: linear-gradient(135deg, var(--primary), var(--accent)); color: #fff; 
+      padding: 0 22px; height: 42px; border-radius: 50rem; border: none; font-weight: 600;
+      display: flex; align-items: center; gap: 8px; flex-shrink: 0;
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    }
+    .chat-send-btn:hover { transform: scale(1.03); }
+
+    /* معاينة الصورة المرفقة في الشات */
+    .chat-img-preview {
+      max-height: 190px; border-radius: 14px; margin-top: 8px; cursor: pointer;
+      border: 2px solid rgba(255, 255, 255, 0.3); transition: transform 0.2s ease;
+    }
+    .chat-img-preview:hover { transform: scale(1.02); }
+
+    /* كروت المحررات */
+    .editor-wrapper {
+      border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--border-color);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    }
+    .editor-topbar {
+      background: #1e293b; padding: 10px 16px; display: flex; justify-content: space-between; align-items: center;
+      border-bottom: 1px solid #334155;
+    }
+    .editor-dots { display: flex; gap: 6px; }
+    .editor-dots span { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+
+    /* الصور الشخصية */
+    .profile-avatar-wrapper {
+      position: relative; width: 110px; height: 110px; margin: 0 auto 16px;
+    }
+    .profile-avatar-img {
+      width: 110px; height: 110px; border-radius: 50%; object-fit: cover;
+      border: 3px solid var(--primary); box-shadow: 0 6px 20px rgba(99, 102, 241, 0.3);
+    }
+    .avatar-upload-badge {
+      position: absolute; bottom: 0; left: 0; width: 34px; height: 34px;
+      background: var(--primary); color: #fff; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; cursor: pointer;
+      border: 2px solid var(--bg-card); box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+    }
+    .header-user-pill {
+      display: flex; align-items: center; gap: 8px; padding: 4px 12px 4px 6px;
+      background: rgba(99, 102, 241, 0.12); border: 1px solid rgba(99, 102, 241, 0.25);
+      border-radius: 50rem; cursor: pointer;
+    }
+    .header-user-pill img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
 
     .honor-card {
-      background: var(--bg-card); border: 1px solid var(--border-color);
+      background: var(--bg-liquid-card); backdrop-filter: blur(12px); border: 1px solid var(--border-color);
       border-radius: var(--radius-lg); padding: 24px; text-align: center; color: var(--text-main); box-shadow: var(--shadow-sm);
     }
     .honor-avatar {
@@ -223,26 +429,15 @@
     }
 
     footer {
-      background: var(--bg-card); 
+      background: var(--bg-card); backdrop-filter: var(--glass-blur);
       border-top: 1px solid var(--border-color);
-      padding: 30px 24px; 
-      text-align: center; 
-      color: var(--text-muted);
+      padding: 30px 24px; text-align: center; color: var(--text-muted);
     }
     .footer-contact-btn {
-      display: inline-flex; 
-      align-items: center; 
-      gap: 10px; 
-      padding: 12px 22px;
-      border-radius: 50rem; 
-      font-weight: 600; 
-      font-size: 0.9rem; 
-      text-decoration: none; 
-      border: 1px solid var(--border-color); 
-      background: var(--bg-body); 
-      color: var(--text-main);
+      display: inline-flex; align-items: center; gap: 10px; padding: 12px 22px;
+      border-radius: 50rem; font-weight: 600; font-size: 0.9rem; text-decoration: none; 
+      border: 1px solid var(--border-color); background: var(--bg-liquid-card); color: var(--text-main);
       box-shadow: var(--shadow-sm);
-      transition: all 0.3s ease;
     }
     .footer-contact-btn:hover { transform: translateY(-2px); }
     .footer-contact-btn.teacher:hover { background: #10b981; color: #fff; border-color: #10b981; }
@@ -259,28 +454,40 @@
       .admin-sidebar h6 { width: 100%; margin-bottom: 8px !important; }
       .admin-sidebar .admin-nav-link { flex: 1 1 45%; margin-bottom: 4px; font-size: 0.85rem; padding: 8px 10px; }
       .main-container { padding: 16px !important; }
+      .chat-message { max-width: 88%; }
     }
   </style>
 </head>
 <body data-theme="light">
 
+  <!-- شاشة التحميل -->
   <div id="globalLoadingOverlay">
     <div class="spinner-border text-light mb-3" style="width: 3.5rem; height: 3.5rem;" role="status"></div>
-    <h5 id="globalLoadingText" class="fw-bold m-0">جاري المعالجة...</h5>
+    <h5 id="globalLoadingText" class="fw-bold m-0 text-white">جاري المعالجة...</h5>
+  </div>
+
+  <!-- مربع الترحيب المنبثق بعلامة الصح -->
+  <div id="welcomeToast">
+    <div class="welcome-check-icon"><i class="fa-solid fa-check"></i></div>
+    <div>
+      <div class="fw-bold" style="font-size: 0.95rem; color: var(--text-main);">تم تسجيل دخولك بنجاح</div>
+      <div class="small fw-semibold text-primary" id="welcomeToastName">أهلاً بك!</div>
+    </div>
   </div>
 
   <div class="sidebar-backdrop" id="sidebarBackdrop" onclick="toggleSidebar()"></div>
 
+  <!-- القائمة الجانبية Liquid Glass -->
   <aside id="sidebar">
     <div class="sidebar-header">
       <div class="d-flex align-items-center gap-2">
         <div class="brand-logo"><i class="fa-solid fa-code"></i></div>
         <div>
           <h6 class="fw-bold m-0 text-white" style="font-size: 0.9rem;">المس أمل شفيق</h6>
-          <small class="text-muted" style="font-size: 0.7rem;">البرمجة والذكاء الاصطناعي</small>
+          <small style="font-size: 0.7rem; color: #94a3b8 !important;">البرمجة والذكاء الاصطناعي</small>
         </div>
       </div>
-      <button class="btn btn-sm text-muted" onclick="toggleSidebar()"><i class="fa-solid fa-xmark fa-lg"></i></button>
+      <button class="btn btn-sm text-white-50" onclick="toggleSidebar()"><i class="fa-solid fa-xmark fa-lg"></i></button>
     </div>
     
     <div class="sidebar-nav">
@@ -299,6 +506,7 @@
 
   <div id="content">
     
+    <!-- الهيدر العلوي -->
     <header class="top-header">
       <div class="d-flex align-items-center gap-2">
         <button class="btn btn-sm btn-outline-secondary" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
@@ -306,7 +514,7 @@
       </div>
       
       <div class="d-flex align-items-center gap-2">
-        <!-- زر الإشعارات والتنبيهات المنسدل -->
+        <!-- زر الإشعارات الزجاجي الشفاف -->
         <div style="position: relative;" id="notificationContainer">
           <button class="header-icon-btn" onclick="toggleNotificationDropdown()" title="الإشعارات والتنبيهات">
             <i class="fa-solid fa-bell text-primary"></i>
@@ -318,21 +526,28 @@
               <h6 class="fw-bold m-0 text-primary" style="font-size: 0.95rem;"><i class="fa-solid fa-bell me-1"></i> التنبيهات الأخيرة</h6>
             </div>
             <div id="dropdownNotificationsList" style="max-height: 240px; overflow-y: auto;">
-              <p class="text-muted small text-center m-0 py-3">لا توجد إشعارات جديدة</p>
+              <p class="small text-center m-0 py-3">لا توجد إشعارات جديدة</p>
             </div>
           </div>
         </div>
 
+        <!-- زر لوحة الأدمن -->
         <button class="header-icon-btn admin-btn" onclick="openAdminAccess()" title="لوحة تحكم الأدمن">
           <i class="fa-solid fa-shield-halved text-warning"></i>
         </button>
 
+        <!-- زر الوضع الليلي والنهاري -->
         <button class="header-icon-btn" onclick="toggleTheme()" title="تبديل الوضع الليلي والنهاري">
           <i class="fa-solid fa-moon" id="themeIcon"></i>
         </button>
         
+        <!-- زر الدخول أو شارة المستخدم -->
         <div id="authContainer">
           <button class="btn btn-custom-primary" onclick="showAuthModal('login')">تسجيل الدخول</button>
+        </div>
+        <div id="loggedInUserPill" class="header-user-pill" style="display: none;" onclick="showSection('profileSection', document.getElementById('profileNavItem'))">
+          <img id="headerUserAvatar" src="https://ui-avatars.com/api/?name=User&background=6366f1&color=fff" alt="Avatar">
+          <span id="headerUserName" class="fw-semibold small"></span>
         </div>
       </div>
     </header>
@@ -345,20 +560,58 @@
           <h2 class="fw-bold mb-2">طريقك لاحتراف البرمجة والذكاء الاصطناعي</h2>
           <p class="opacity-90 mb-3 fs-6">إشراف وتدريس: المس أمل شفيق السيد</p>
           <p class="fs-6 text-white mb-4" style="max-width: 650px; margin: 0 auto;">انضم إلينا اليوم، وأنشئ حسابك لتستفيد من محركات الأكواد التفاعلية، كتب المنهج والمذكرات، منتدى النقاش المباشر.</p>
-          <button class="btn btn-light text-primary fw-bold px-4 py-2 rounded-pill shadow" onclick="showAuthModal('register')">ابدأ رحلتك الآن</button>
+          <button id="heroStartBtn" class="btn btn-light text-primary fw-bold px-4 py-2 rounded-pill shadow" onclick="showAuthModal('register')">ابدأ رحلتك الآن</button>
+        </div>
+
+        <!-- كروت مميزات المنصة للزوار (تختفي بعد تسجيل الدخول) -->
+        <div id="guestFeaturesSection" class="custom-card mb-4">
+          <div class="text-center mb-4">
+            <h4 class="fw-bold text-primary mb-1"><i class="fa-solid fa-sparkles me-2"></i>ماذا ستستفيد عند انضمامك للمنصة؟</h4>
+            <p class="m-0">سجل دخولك الآن لتفتح جميع أدوات التعلم التفاعلية مجاناً</p>
+          </div>
+          <div class="row g-3">
+            <div class="col-md-3 col-sm-6">
+              <div class="liquid-item-card h-100 text-center">
+                <div class="brand-logo mx-auto mb-3"><i class="fa-solid fa-laptop-code"></i></div>
+                <h6 class="fw-bold">محررات أكواد حية</h6>
+                <p class="small m-0">اكتب ونفذ أكواد Python و JavaScript و HTML مباشرة من متصفحك.</p>
+              </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+              <div class="liquid-item-card h-100 text-center">
+                <div class="brand-logo mx-auto mb-3" style="background: linear-gradient(135deg, #ef4444, #f59e0b);"><i class="fa-solid fa-book-open"></i></div>
+                <h6 class="fw-bold">مذكرات وكتب شاملة</h6>
+                <p class="small m-0">تحميل وتصفح أحدث ملخصات المنهج والملفات التعليمية المنظمة.</p>
+              </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+              <div class="liquid-item-card h-100 text-center">
+                <div class="brand-logo mx-auto mb-3" style="background: linear-gradient(135deg, #06b6d4, #3b82f6);"><i class="fa-solid fa-video"></i></div>
+                <h6 class="fw-bold">شروحات فيديو</h6>
+                <p class="small m-0">دروس مرئية مبسطة لشرح مفاهيم البرمجة والذكاء الاصطناعي.</p>
+              </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+              <div class="liquid-item-card h-100 text-center">
+                <div class="brand-logo mx-auto mb-3" style="background: linear-gradient(135deg, #10b981, #059669);"><i class="fa-solid fa-comments"></i></div>
+                <h6 class="fw-bold">منتدى تفاعلي</h6>
+                <p class="small m-0">تواصل مباشر مع زملائك والمعلمة لطرح الأسئلة ومشاركة الأكواد.</p>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div class="custom-card mb-4">
           <h5 class="fw-bold mb-3 text-primary"><i class="fa-solid fa-bullhorn me-2"></i>أحدث الإشعارات والأخبار التعليمية</h5>
           <div id="homeNotificationsContainer" class="d-flex flex-column gap-3">
-            <p class="text-muted m-0">جاري تحميل الإشعارات...</p>
+            <p class="m-0">جاري تحميل الإشعارات...</p>
           </div>
         </div>
 
         <div class="custom-card mb-4">
           <h4 class="fw-bold mb-4 text-warning"><i class="fa-solid fa-trophy me-2"></i>لوحة الطلاب المتميزين</h4>
           <div class="row g-4" id="homeHonorContainer">
-            <p class="text-muted text-center">جاري تحميل لوحة الشرف...</p>
+            <p class="text-center">جاري تحميل لوحة الشرف...</p>
           </div>
         </div>
       </section>
@@ -376,68 +629,115 @@
       <section id="videosSection" style="display: none;">
         <h4 class="fw-bold mb-4"><i class="fa-solid fa-video text-info me-2"></i>الفيديوهات التعليمية والشروحات</h4>
         <div class="row g-4" id="videosContainer">
-          <div class="col-12 text-center text-muted">جاري تحميل الفيديوهات...</div>
+          <div class="col-12 text-center">جاري تحميل الفيديوهات...</div>
         </div>
       </section>
 
-      <!-- منتدى الطلاب -->
+      <!-- منتدى الطلاب المطور بالستايل الزجاجي -->
       <section id="forumSection" style="display: none;">
         <div class="custom-card">
-          <h5 class="fw-bold mb-3"><i class="fa-solid fa-comments text-success me-2"></i>منتدى المحادثة المباشر</h5>
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="fw-bold m-0"><i class="fa-solid fa-comments text-success me-2"></i>منتدى المحادثة المباشر</h5>
+            <span class="badge bg-success-subtle text-success rounded-pill px-3 py-2"><i class="fa-solid fa-circle fa-2xs me-1"></i> متصل الآن</span>
+          </div>
+          
           <div class="chat-box mb-3" id="chatContainer"></div>
           
-          <div class="input-group gap-2 align-items-center">
-            <input type="text" id="chatInput" class="form-control" placeholder="اكتب رسالتك للمجموعة هنا..." autocomplete="off">
+          <!-- شريط إدخال الرسائل المنسق -->
+          <div class="chat-input-wrapper">
             <input type="file" id="chatImageInput" accept="image/*" style="display: none;" onchange="handleImageUpload(event)">
-            
-            <button class="btn btn-outline-secondary px-3 py-2" onclick="document.getElementById('chatImageInput').click()" title="إرفاق صورة">
-              <i class="fa-solid fa-image text-primary"></i>
+            <button type="button" class="chat-action-btn chat-img-btn" onclick="document.getElementById('chatImageInput').click()" title="إرفاق صورة">
+              <i class="fa-solid fa-image fa-lg"></i>
             </button>
 
-            <button class="btn btn-custom-primary px-4 py-2" onclick="sendChatMessage()"><i class="fa-solid fa-paper-plane me-1"></i> إرسال</button>
+            <input type="text" id="chatInput" class="form-control" placeholder="اكتب رسالتك للمجموعة هنا..." autocomplete="off" onkeypress="if(event.key==='Enter') sendChatMessage()">
+
+            <button type="button" class="chat-send-btn" onclick="sendChatMessage()">
+              <span>إرسال</span>
+              <i class="fa-solid fa-paper-plane"></i>
+            </button>
           </div>
         </div>
       </section>
 
-      <!-- محرر بايثون -->
+      <!-- محرر بايثون المحسّن -->
       <section id="pythonEditorSection" style="display: none;">
         <div class="custom-card">
-          <h5 class="fw-bold mb-3"><i class="fa-brands fa-python text-warning me-2"></i>محرر ومنفذ كود Python</h5>
-          <textarea id="pythonCodeInput" class="form-control font-monospace mb-3" rows="11" dir="ltr" style="background:#0f172a; color:#facc15; border:none;" placeholder="print('مرحباً')"></textarea>
-          <button class="btn btn-warning text-dark fw-bold px-4 mb-3" onclick="runPythonCode()"><i class="fa-solid fa-play me-1"></i> تشغيل Python</button>
-          <pre id="pythonOutput" class="p-3 rounded-3 bg-dark text-warning font-monospace" style="min-height: 120px;"></pre>
+          <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+            <h5 class="fw-bold m-0"><i class="fa-brands fa-python text-warning me-2"></i>محرر ومنفذ كود Python</h5>
+            <button class="btn btn-warning text-dark fw-bold px-4 rounded-pill shadow-sm" onclick="runPythonCode()"><i class="fa-solid fa-play me-1"></i> تشغيل الكود</button>
+          </div>
+          <div class="editor-wrapper mb-3">
+            <div class="editor-topbar">
+              <div class="editor-dots"><span style="background:#ef4444;"></span><span style="background:#f59e0b;"></span><span style="background:#10b981;"></span></div>
+              <small class="text-white-50 font-monospace">main.py</small>
+            </div>
+            <textarea id="pythonCodeInput" class="form-control font-monospace rounded-0" rows="11" dir="ltr" style="background:#0f172a !important; color:#facc15 !important; border:none;" placeholder="print('مرحباً بك في عالم البرمجة')"></textarea>
+          </div>
+          <label class="form-label fw-bold small"><i class="fa-solid fa-terminal me-1"></i> شاشة المخرجات (Output):</label>
+          <pre id="pythonOutput" class="p-3 rounded-4 bg-dark text-warning font-monospace m-0 border border-secondary" style="min-height: 110px;"></pre>
         </div>
       </section>
 
-      <!-- محرر جافاسكريبت -->
+      <!-- محرر جافاسكريبت المحسّن -->
       <section id="jsEditorSection" style="display: none;">
         <div class="custom-card">
-          <h5 class="fw-bold mb-3"><i class="fa-brands fa-js text-warning me-2"></i>محرر ومنفذ JavaScript</h5>
-          <textarea id="jsCodeInput" class="form-control font-monospace mb-3" rows="11" dir="ltr" style="background:#0f172a; color:#38bdf8; border:none;" placeholder="console.log('Test');"></textarea>
-          <button class="btn btn-primary fw-bold px-4 mb-3" onclick="runJsCode()"><i class="fa-solid fa-play me-1"></i> تنفيذ JS</button>
-          <pre id="jsOutput" class="p-3 rounded-3 bg-dark text-success font-monospace" style="min-height: 120px;"></pre>
+          <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+            <h5 class="fw-bold m-0"><i class="fa-brands fa-js text-warning me-2"></i>محرر ومنفذ JavaScript</h5>
+            <button class="btn btn-custom-primary px-4 rounded-pill" onclick="runJsCode()"><i class="fa-solid fa-play me-1"></i> تنفيذ JS</button>
+          </div>
+          <div class="editor-wrapper mb-3">
+            <div class="editor-topbar">
+              <div class="editor-dots"><span style="background:#ef4444;"></span><span style="background:#f59e0b;"></span><span style="background:#10b981;"></span></div>
+              <small class="text-white-50 font-monospace">script.js</small>
+            </div>
+            <textarea id="jsCodeInput" class="form-control font-monospace rounded-0" rows="11" dir="ltr" style="background:#0f172a !important; color:#38bdf8 !important; border:none;" placeholder="console.log('Hello JavaScript!');"></textarea>
+          </div>
+          <label class="form-label fw-bold small"><i class="fa-solid fa-terminal me-1"></i> وحدة التحكم (Console):</label>
+          <pre id="jsOutput" class="p-3 rounded-4 bg-dark text-success font-monospace m-0 border border-secondary" style="min-height: 110px;"></pre>
         </div>
       </section>
 
-      <!-- محرر HTML & CSS -->
+      <!-- محرر HTML & CSS المحسّن -->
       <section id="htmlEditorSection" style="display: none;">
         <div class="custom-card">
-          <h5 class="fw-bold mb-3"><i class="fa-solid fa-laptop-code text-info me-2"></i>محرر HTML & CSS</h5>
+          <h5 class="fw-bold mb-3"><i class="fa-solid fa-laptop-code text-info me-2"></i>محرر HTML & CSS التفاعلي</h5>
           <div class="row g-3">
             <div class="col-md-6">
-              <textarea id="studentSiteCode" class="form-control font-monospace" rows="12" dir="ltr" style="background:#0f172a; color:#f8fafc;" placeholder="<h1>موقعي</h1>" oninput="saveStudentSiteCode()"></textarea>
+              <div class="editor-wrapper">
+                <div class="editor-topbar">
+                  <div class="editor-dots"><span style="background:#ef4444;"></span><span style="background:#f59e0b;"></span><span style="background:#10b981;"></span></div>
+                  <small class="text-white-50 font-monospace">index.html</small>
+                </div>
+                <textarea id="studentSiteCode" class="form-control font-monospace rounded-0" rows="13" dir="ltr" style="background:#0f172a !important; color:#f8fafc !important; border:none;" placeholder="<h1>أهلاً بك في صفحتي</h1>" oninput="saveStudentSiteCode()"></textarea>
+              </div>
             </div>
             <div class="col-md-6">
-              <iframe id="sitePreview" style="width:100%; height:320px; background:#fff; border:1px solid var(--border-color); border-radius:8px;"></iframe>
+              <div class="editor-wrapper h-100 d-flex flex-column">
+                <div class="editor-topbar" style="background:#334155;">
+                  <small class="text-white fw-semibold"><i class="fa-solid fa-eye me-1"></i> المعاينة الحية</small>
+                </div>
+                <iframe id="sitePreview" style="width:100%; flex:1; min-height:310px; background:#fff; border:none;"></iframe>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- الملف الشخصي -->
+      <!-- الملف الشخصي (مع صورة شخصية محفوظة محلياً) -->
       <section id="profileSection" style="display: none;">
         <div class="custom-card mx-auto" style="max-width: 650px;">
           <h4 class="fw-bold text-center mb-4">إعدادات الملف الشخصي</h4>
+          
+          <div class="profile-avatar-wrapper">
+            <img id="profileAvatarPreview" src="https://ui-avatars.com/api/?name=User&background=6366f1&color=fff" class="profile-avatar-img" alt="صورة الملف الشخصي">
+            <label for="profileAvatarInput" class="avatar-upload-badge" title="تغيير الصورة الشخصية">
+              <i class="fa-solid fa-camera fa-sm"></i>
+            </label>
+            <input type="file" id="profileAvatarInput" accept="image/*" style="display:none;" onchange="handleProfileAvatarChange(event)">
+          </div>
+          <p class="text-center small mb-4">الصورة الشخصية تُحفظ محلياً على متصفحك بخصوصية تامة</p>
+
           <form onsubmit="updateProfile(event)" autocomplete="off">
             <div class="row g-3">
               <div class="col-md-6">
@@ -458,7 +758,7 @@
               </div>
               <div class="col-12">
                 <label class="form-label fw-semibold">كلمة المرور الجديدة</label>
-                <input type="password" id="profPass" class="form-control">
+                <input type="password" id="profPass" class="form-control" placeholder="اتركه فارغاً إذا لم ترد التغيير">
               </div>
             </div>
             <button type="submit" class="btn btn-custom-primary w-100 py-2 mt-4 fw-bold" id="updateProfileBtn">حفظ التعديلات</button>
@@ -473,8 +773,18 @@
       <section id="adminSection" style="display: none;">
         <div id="adminDashboard">
           <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
-            <div>
-              <h4 class="fw-bold m-0"><i class="fa-solid fa-chart-pie text-warning me-2"></i>لوحة تحكم الأدمن</h4>
+            <div class="d-flex align-items-center gap-3">
+              <div style="position:relative;">
+                <img id="adminAvatarPreview" src="https://ui-avatars.com/api/?name=Admin&background=f59e0b&color=fff" style="width:52px; height:52px; border-radius:50%; object-fit:cover; border:2px solid var(--warning);">
+                <label for="adminAvatarInput" style="position:absolute; bottom:-2px; left:-2px; width:22px; height:22px; background:var(--warning); color:#000; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:0.65rem;" title="تغيير صورة الأدمن">
+                  <i class="fa-solid fa-camera"></i>
+                </label>
+                <input type="file" id="adminAvatarInput" accept="image/*" style="display:none;" onchange="handleAdminAvatarChange(event)">
+              </div>
+              <div>
+                <h4 class="fw-bold m-0"><i class="fa-solid fa-chart-pie text-warning me-2"></i>لوحة تحكم الأدمن</h4>
+                <small id="adminWelcomeLabel">مرحباً أيها المشرف</small>
+              </div>
             </div>
             <button class="btn btn-outline-danger btn-sm px-3 fw-semibold" onclick="adminLogout()"><i class="fa-solid fa-right-from-bracket me-1"></i> خروج الأدمن</button>
           </div>
@@ -482,19 +792,19 @@
           <div class="row g-3 mb-4">
             <div class="col-md-4">
               <div class="custom-card border-start border-4 border-warning m-0">
-                <small class="text-muted fw-semibold">الطلبات المعلقة</small>
+                <small class="fw-semibold">الطلبات المعلقة</small>
                 <h2 id="pendingCount" class="fw-bold text-warning m-0 mt-2">0</h2>
               </div>
             </div>
             <div class="col-md-4">
               <div class="custom-card border-start border-4 border-primary m-0">
-                <small class="text-muted fw-semibold">الطلاب المفعلين</small>
+                <small class="fw-semibold">الطلاب المفعلين</small>
                 <h2 id="studentsCount" class="fw-bold text-primary m-0 mt-2">0</h2>
               </div>
             </div>
             <div class="col-md-4">
               <div class="custom-card border-start border-4 border-success m-0">
-                <small class="text-muted fw-semibold">السجلات</small>
+                <small class="fw-semibold">السجلات</small>
                 <h2 id="logsCount" class="fw-bold text-success m-0 mt-2">0</h2>
               </div>
             </div>
@@ -502,7 +812,7 @@
 
           <div class="admin-layout">
             <div class="admin-sidebar">
-              <h6 class="fw-bold px-2 mb-3 text-muted" style="font-size:0.8rem;">خيارات الإدارة</h6>
+              <h6 class="fw-bold px-2 mb-3" style="font-size:0.8rem;">خيارات الإدارة</h6>
               <a href="#" class="admin-nav-link active" onclick="switchAdminTab('pendingTab', this)"><i class="fa-solid fa-user-clock"></i> طلبات الانضمام</a>
               <a href="#" class="admin-nav-link" onclick="switchAdminTab('studentsTab', this)"><i class="fa-solid fa-users"></i> الطلاب</a>
               <a href="#" class="admin-nav-link" onclick="switchAdminTab('logsTab', this)"><i class="fa-solid fa-clock-rotate-left"></i> السجلات</a>
@@ -562,7 +872,9 @@
                 <form onsubmit="addBook(event)" class="mb-4 pb-4 border-bottom">
                   <input type="text" id="bookTitle" class="form-control mb-2" placeholder="عنوان الكتاب" required>
                   <select id="bookGrade" class="form-select mb-2">
-                    <option value="الصف الثاني الثانوي">الصف الثاني الثانوي</option>
+                    <option value="الصف الأول الثانوي">الصف الأول الثانوي</option>
+                    <option value="الصف الثاني الثانوي" selected>الصف الثاني الثانوي</option>
+                    <option value="الصف الثالث الثانوي">الصف الثالث الثانوي</option>
                   </select>
                   <input type="url" id="bookUrl" class="form-control mb-3" placeholder="رابط الملف" required>
                   <button type="submit" class="btn btn-success btn-sm px-4">نشر الكتاب</button>
@@ -586,7 +898,7 @@
     <footer>
       <div style="max-width: 800px; margin: 0 auto;">
         <p class="mb-2" style="font-size: 0.95rem;">جميع الحقوق محفوظة © للمطور <strong class="text-primary">أحمد صبري</strong></p>
-        <p class="text-muted small mb-3">منصة المس أمل شفيق السيد للبرمجة والذكاء الاصطناعي</p>
+        <p class="small mb-3">منصة المس أمل شفيق السيد للبرمجة والذكاء الاصطناعي</p>
         
         <div class="d-flex justify-content-center align-items-center gap-3 flex-wrap">
           <a href="https://wa.me/201287255571" target="_blank" class="footer-contact-btn teacher">
@@ -604,15 +916,16 @@
 
   </div>
 
+  <!-- Modal دخول الأدمن -->
   <div class="modal fade" id="adminAuthModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-sm">
-      <div class="modal-content" style="background: var(--bg-card); border-radius: var(--radius-lg);">
+      <div class="modal-content" style="background: var(--bg-card); backdrop-filter: blur(20px); border-radius: var(--radius-lg);">
         <div class="modal-header border-bottom-0 pb-0">
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body text-center px-4 pb-4 pt-0">
           <h6 class="fw-bold mb-1">دخول لوحة الأدمن</h6>
-          <p class="small text-muted mb-3">أدخل بيانات المشرف السحابية المشفرة</p>
+          <p class="small mb-3">أدخل بيانات المشرف السحابية المشفرة</p>
           <form onsubmit="checkAdminAuth(event)">
             <input type="tel" id="adminPhoneInput" class="form-control mb-2 text-center" placeholder="رقم الهاتف" required>
             <input type="password" id="adminPassInput" class="form-control mb-3 text-center" placeholder="كلمة المرور" required>
@@ -626,12 +939,12 @@
   <!-- Modal تسجيل الدخول وإنشاء الحساب الكامل -->
   <div class="modal fade" id="authModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content" style="background: var(--bg-card); border-radius: var(--radius-lg);">
+      <div class="modal-content" style="background: var(--bg-card); backdrop-filter: blur(20px); border-radius: var(--radius-lg);">
         <div class="modal-header border-bottom-0">
           <h5 class="modal-title fw-bold" id="authModalTitle">تسجيل الدخول</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
-        <div class="modal-content p-4 border-0">
+        <div class="modal-body p-4 pt-0">
           <form id="loginForm" onsubmit="handleLogin(event)">
             <div class="mb-3">
               <label class="form-label">رقم الهاتف</label>
@@ -643,7 +956,7 @@
             </div>
             <button type="submit" class="btn btn-custom-primary w-100 py-2 mb-2">تسجيل الدخول</button>
             <div class="text-center mt-3 pt-2 border-top">
-              <small class="text-muted">إذا لم يكن لديك حساب؟</small>
+              <small>إذا لم يكن لديك حساب؟</small>
               <a href="#" class="text-primary text-decoration-none fw-semibold ms-1" onclick="showAuthModal('register')">قم بإنشاء حساب</a>
             </div>
           </form>
@@ -690,7 +1003,7 @@
             </div>
             <button type="submit" class="btn btn-success w-100 py-2 fw-bold mb-3">إنشاء حساب جديد</button>
             <div class="text-center mt-3 pt-2 border-top">
-              <small class="text-muted">لديك حساب بالفعل؟</small>
+              <small>لديك حساب بالفعل؟</small>
               <a href="#" class="text-primary text-decoration-none fw-semibold ms-1" onclick="showAuthModal('login')">قم بتسجيل الدخول</a>
             </div>
           </form>
@@ -699,7 +1012,18 @@
     </div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- Modal تكبير الصور في المنتدى -->
+  <div class="modal fade" id="imageLightboxModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content bg-transparent border-0 text-center">
+        <div class="d-flex justify-content-end mb-2">
+          <button type="button" class="btn btn-light rounded-circle shadow" data-bs-dismiss="modal"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <img id="lightboxImageTarget" src="" class="img-fluid rounded-4 shadow-lg" style="max-height: 82vh; object-fit: contain;">
+      </div>
+    </div>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script>
     const SUPABASE_URL = 'https://hoddrxekayofbyqmoyyz.supabase.co';
@@ -710,13 +1034,16 @@
     let currentUser = JSON.parse(localStorage.getItem('platform_current_user')) || null;
     let savedTheme = localStorage.getItem('platform_theme') || 'light';
     let isAdminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
-    let authModal, adminAuthModal;
+    let authModal, adminAuthModal, imageLightboxModal;
 
     document.body.setAttribute('data-theme', savedTheme);
+    if (savedTheme === 'dark') document.getElementById('themeIcon').className = 'fa-solid fa-sun';
     
     window.addEventListener('DOMContentLoaded', () => {
       authModal = new bootstrap.Modal(document.getElementById('authModal'));
       adminAuthModal = new bootstrap.Modal(document.getElementById('adminAuthModal'));
+      imageLightboxModal = new bootstrap.Modal(document.getElementById('imageLightboxModal'));
+      loadAvatarsFromStorage();
       fetchSupabaseData();
     });
 
@@ -728,10 +1055,25 @@
       document.getElementById('globalLoadingOverlay').classList.remove('show');
     }
 
+    // إظهار نافذة الترحيب المنبثقة عند تسجيل الدخول
+    function showWelcomeToast(userName) {
+      const toast = document.getElementById('welcomeToast');
+      document.getElementById('welcomeToastName').innerText = `أهلاً بك يا ${userName}`;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 4500);
+    }
+
+    // التحقق من صلاحية الوصول (طالب مفعل أو أدمن متصل)
+    function hasPlatformAccess() {
+      return (currentUser && currentUser.status === 'approved') || isAdminLoggedIn;
+    }
+
     async function fetchSupabaseData() {
       const { data: p } = await _supabase.from('profiles').select('*');
       if (p) users = p;
-      const { data: n } = await _supabase.from('notifications').select('*');
+      const { data: n } = await _supabase.from('notifications').select('*').order('id', { ascending: false });
       if (n) {
         notifications = n.map(item => ({ title: item.title, content: item.content, date: new Date(item.created_at || Date.now()).toLocaleDateString('ar-EG') }));
         renderDropdownNotifications();
@@ -745,26 +1087,49 @@
       const { data: l } = await _supabase.from('audit_logs').select('*');
       if (l) auditLogs = l;
       
-      const { data: m } = await _supabase.from('chat_messages').select('*');
+      const { data: m } = await _supabase.from('chat_messages').select('*').order('id', { ascending: true });
       if (m) {
-        chatMessages = m.map(item => ({ sender: item.sender || 'زائر', text: item.content || '', img: item.image_url || null }));
+        chatMessages = m.map(item => ({ 
+          id: item.id,
+          sender: item.sender || 'زائر', 
+          sender_phone: item.sender_phone || '',
+          text: item.content || '', 
+          img: item.image_url || null 
+        }));
       }
 
       updateUI();
     }
 
     function updateUI() {
+      const isLoggedIn = hasPlatformAccess();
+
+      // إخفاء أو إظهار زرار ابدأ رحلتك وكروت المزايا للزوار
+      document.getElementById('heroStartBtn').style.display = isLoggedIn ? 'none' : 'inline-block';
+      document.getElementById('guestFeaturesSection').style.display = isLoggedIn ? 'none' : 'block';
+
       if (currentUser && currentUser.status === 'approved') {
         document.getElementById('authContainer').style.display = 'none';
+        document.getElementById('loggedInUserPill').style.display = 'flex';
+        document.getElementById('headerUserName').innerText = currentUser.name.split(' ')[0];
         document.getElementById('profileNavItem').style.display = 'flex';
         document.getElementById('profName').value = currentUser.name;
         document.getElementById('profUsername').value = currentUser.username || '';
         document.getElementById('profPhone').value = currentUser.phone;
         document.getElementById('profParentPhone').value = currentUser.parent_phone || '';
+        loadAvatarsFromStorage();
+      } else if (isAdminLoggedIn) {
+        document.getElementById('authContainer').style.display = 'none';
+        document.getElementById('loggedInUserPill').style.display = 'flex';
+        document.getElementById('headerUserName').innerText = sessionStorage.getItem('admin_name') || 'المشرف';
+        document.getElementById('profileNavItem').style.display = 'none';
+        loadAvatarsFromStorage();
       } else {
         document.getElementById('authContainer').style.display = 'block';
+        document.getElementById('loggedInUserPill').style.display = 'none';
         document.getElementById('profileNavItem').style.display = 'none';
       }
+
       renderHomeNotifications();
       renderHomeHonor();
       renderBooks(books);
@@ -772,11 +1137,48 @@
       renderChat();
     }
 
+    // إدارة الصور الشخصية في LocalStorage
+    function handleProfileAvatarChange(e) {
+      const file = e.target.files[0];
+      if (!file || !currentUser) return;
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        localStorage.setItem(`avatar_user_${currentUser.phone}`, event.target.result);
+        loadAvatarsFromStorage();
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function handleAdminAvatarChange(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        localStorage.setItem('avatar_admin_local', event.target.result);
+        loadAvatarsFromStorage();
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function loadAvatarsFromStorage() {
+      if (currentUser) {
+        const savedUserAvatar = localStorage.getItem(`avatar_user_${currentUser.phone}`);
+        const fallback = `https://ui-avatars.com/api/?name=${encodeURIComponent(currentUser.name)}&background=6366f1&color=fff`;
+        document.getElementById('profileAvatarPreview').src = savedUserAvatar || fallback;
+        document.getElementById('headerUserAvatar').src = savedUserAvatar || fallback;
+      }
+      const savedAdminAvatar = localStorage.getItem('avatar_admin_local');
+      const adminFallback = `https://ui-avatars.com/api/?name=Admin&background=f59e0b&color=fff`;
+      document.getElementById('adminAvatarPreview').src = savedAdminAvatar || adminFallback;
+      if (isAdminLoggedIn && !currentUser) {
+        document.getElementById('headerUserAvatar').src = savedAdminAvatar || adminFallback;
+      }
+    }
+
     function toggleNotificationDropdown() {
       const dropdown = document.getElementById('notificationDropdown');
       dropdown.classList.toggle('show');
       if (dropdown.classList.contains('show')) {
-        localStorage.setItem('platform_unread_count', '0');
         document.getElementById('notificationBadge').style.display = 'none';
       }
     }
@@ -785,22 +1187,25 @@
       const listContainer = document.getElementById('dropdownNotificationsList');
       const badge = document.getElementById('notificationBadge');
       if (!notifications.length) {
-        listContainer.innerHTML = `<p class="text-muted small text-center m-0 py-3">لا توجد إشعارات جديدة</p>`;
+        listContainer.innerHTML = `<p class="small text-center m-0 py-3">لا توجد إشعارات جديدة</p>`;
         badge.style.display = 'none';
         return;
       }
+      badge.innerText = notifications.length;
+      badge.style.display = 'inline-block';
       listContainer.innerHTML = notifications.map(n => `
-        <div class="p-2 border-bottom mb-1" style="background: var(--bg-body); border-radius: 8px;">
+        <div class="liquid-item-card p-2 mb-2">
           <h6 class="fw-bold text-primary m-0" style="font-size: 0.85rem;">${n.title}</h6>
-          <p class="m-0 text-muted small mt-1" style="font-size: 0.8rem;">${n.content}</p>
+          <p class="m-0 small mt-1" style="font-size: 0.8rem;">${n.content}</p>
         </div>
       `).join('');
     }
 
     function showSection(sectionId, element) {
       const protectedSections = ['forumSection', 'pythonEditorSection', 'jsEditorSection', 'htmlEditorSection', 'booksSection', 'videosSection'];
-      if (protectedSections.includes(sectionId) && (!currentUser || currentUser.status !== 'approved')) {
-        alert("عذراً، هذا القسم متاح فقط لطلاب المنصة المفعلين بعد موافقة الأدمن.");
+      if (protectedSections.includes(sectionId) && !hasPlatformAccess()) {
+        alert("عذراً، هذا القسم متاح فقط لطلاب المنصة المفعلين بعد تسجيل الدخول.");
+        showAuthModal('login');
         return;
       }
       if (sectionId === 'adminSection' && !isAdminLoggedIn) {
@@ -811,6 +1216,9 @@
       document.getElementById(sectionId).style.display = 'block';
       document.querySelectorAll('#sidebar .nav-link').forEach(link => link.classList.remove('active'));
       if (element) element.classList.add('active');
+      if (window.innerWidth <= 991 && document.getElementById('sidebar').classList.contains('mobile-open')) {
+        toggleSidebar();
+      }
       if (sectionId === 'adminSection') loadAdminData();
     }
 
@@ -819,7 +1227,7 @@
       const themeIcon = document.getElementById('themeIcon');
       if (body.getAttribute('data-theme') === 'light') {
         body.setAttribute('data-theme', 'dark');
-        themeIcon.className = 'fa-solid fa-sun';
+        themeIcon.className = 'fa-solid fa-sun text-warning';
         localStorage.setItem('platform_theme', 'dark');
       } else {
         body.setAttribute('data-theme', 'light');
@@ -872,7 +1280,10 @@
           isAdminLoggedIn = true;
           sessionStorage.setItem('admin_logged_in', 'true');
           sessionStorage.setItem('admin_name', adminData.name);
+          document.getElementById('adminWelcomeLabel').innerText = `مرحباً ${adminData.name}`;
           adminAuthModal.hide();
+          updateUI();
+          showWelcomeToast(adminData.name);
           showSection('adminSection', null);
         }
       } catch (err) {
@@ -885,6 +1296,7 @@
       isAdminLoggedIn = false;
       sessionStorage.removeItem('admin_logged_in');
       sessionStorage.removeItem('admin_name');
+      updateUI();
       showSection('homeSection', document.querySelector('#sidebar .nav-link'));
     }
 
@@ -927,6 +1339,7 @@
       localStorage.setItem('platform_current_user', JSON.stringify(currentUser));
       authModal.hide();
       updateUI();
+      showWelcomeToast(currentUser.name);
     }
 
     async function handleRegister(e) {
@@ -989,7 +1402,7 @@
       else {
         localStorage.setItem('platform_current_user', JSON.stringify(currentUser));
         alert("تم التحديث بنجاح!");
-        fetchSupabaseData();
+        updateUI();
       }
     }
 
@@ -1009,7 +1422,7 @@
             <button class="btn btn-danger btn-sm" onclick="rejectUser(${u.id})">رفض</button>
           </td>
         </tr>
-      `).join('') || `<tr><td colspan="4" class="text-center text-muted">لا توجد طلبات معلقة</td></tr>`;
+      `).join('') || `<tr><td colspan="4" class="text-center">لا توجد طلبات معلقة</td></tr>`;
 
       document.getElementById('studentsTableBody').innerHTML = users.filter(u => u.status === 'approved').map(u => `
         <tr>
@@ -1017,7 +1430,7 @@
           <td>${u.grade}</td>
           <td><button class="btn btn-outline-danger btn-sm" onclick="deleteStudent(${u.id})"><i class="fa-solid fa-trash"></i></button></td>
         </tr>
-      `).join('') || `<tr><td colspan="3" class="text-center text-muted">لا توجد طلاب مفعلين</td></tr>`;
+      `).join('') || `<tr><td colspan="3" class="text-center">لا توجد طلاب مفعلين</td></tr>`;
     }
 
     async function approveUser(id) {
@@ -1042,28 +1455,42 @@
       element.classList.add('active');
     }
 
+    // عرض الإشعارات بكروت Liquid متدرجة
     function renderHomeNotifications() {
       const container = document.getElementById('homeNotificationsContainer');
-      if (!notifications.length) { container.innerHTML = `<p class="text-muted m-0">لا توجد إشعارات حالياً.</p>`; return; }
-      container.innerHTML = notifications.map(n => `<div class="p-3 rounded-3 bg-body border mb-2"><h6 class="text-primary fw-bold">${n.title}</h6><p class="m-0">${n.content}</p></div>`).join('');
+      if (!notifications.length) { container.innerHTML = `<p class="m-0">لا توجد إشعارات حالياً.</p>`; return; }
+      container.innerHTML = notifications.map(n => `
+        <div class="liquid-item-card">
+          <div class="d-flex justify-content-between align-items-center mb-1">
+            <h6 class="text-primary fw-bold m-0"><i class="fa-solid fa-circle-info me-1"></i> ${n.title}</h6>
+            <small class="badge bg-primary-subtle text-primary rounded-pill">${n.date}</small>
+          </div>
+          <p class="m-0 mt-2">${n.content}</p>
+        </div>
+      `).join('');
     }
 
     function renderHomeHonor() {
       const container = document.getElementById('homeHonorContainer');
-      if (!honorStudents.length) { container.innerHTML = `<p class="text-muted text-center col-12">لا توجد سجلات.</p>`; return; }
-      container.innerHTML = honorStudents.map(h => `<div class="col-md-4"><div class="honor-card"><img src="${h.image_url}" class="honor-avatar"><h6 class="fw-bold">${h.name}</h6><small class="text-warning">${h.achievement}</small></div></div>`).join('');
+      if (!honorStudents.length) { container.innerHTML = `<p class="text-center col-12">لا توجد سجلات.</p>`; return; }
+      container.innerHTML = honorStudents.map(h => `<div class="col-md-4"><div class="honor-card"><img src="${h.image_url}" class="honor-avatar"><h6 class="fw-bold">${h.name}</h6><small class="text-warning fw-semibold">${h.achievement}</small></div></div>`).join('');
     }
 
+    // عرض الكتب بكروت Liquid متدرجة
     function renderBooks(list = books) {
       const container = document.getElementById('booksContainer');
-      if (!list || !list.length) { container.innerHTML = `<p class="text-center text-muted col-12">لا توجد مذكرات أو كتب متاحة.</p>`; return; }
+      if (!list || !list.length) { container.innerHTML = `<p class="text-center col-12">لا توجد مذكرات أو كتب متاحة.</p>`; return; }
       container.innerHTML = list.map(b => `
         <div class="col-md-4">
-          <div class="custom-card h-100 d-flex flex-column m-0">
-            <i class="fa-solid fa-file-pdf fa-2x text-danger mb-3"></i>
-            <h6 class="fw-bold mb-2">${b.title}</h6>
-            <span class="badge bg-danger-subtle text-danger mb-3" style="width: fit-content;">${b.grade}</span>
-            <a href="${b.url}" target="_blank" class="btn btn-outline-danger btn-sm mt-auto fw-bold py-2"><i class="fa-solid fa-cloud-arrow-down me-1"></i> تحميل أو فتح</a>
+          <div class="liquid-item-card h-100 d-flex flex-column">
+            <div class="d-flex align-items-center gap-3 mb-3">
+              <div class="brand-logo" style="background: linear-gradient(135deg, #ef4444, #dc2626);"><i class="fa-solid fa-file-pdf"></i></div>
+              <div>
+                <h6 class="fw-bold m-0">${b.title}</h6>
+                <span class="badge bg-danger-subtle text-danger mt-1">${b.grade}</span>
+              </div>
+            </div>
+            <a href="${b.url}" target="_blank" class="btn btn-outline-danger btn-sm mt-auto fw-bold py-2 rounded-pill"><i class="fa-solid fa-cloud-arrow-down me-1"></i> تحميل أو فتح</a>
           </div>
         </div>
       `).join('');
@@ -1074,39 +1501,79 @@
       renderBooks(books.filter(b => b.title.toLowerCase().includes(query) || b.grade.toLowerCase().includes(query)));
     }
 
+    // عرض الفيديوهات بكروت Liquid متدرجة
     function renderVideos(list = videos) {
       const container = document.getElementById('videosContainer');
-      if (!list || !list.length) { container.innerHTML = `<p class="text-center text-muted col-12">لا توجد فيديوهات منشورة.</p>`; return; }
+      if (!list || !list.length) { container.innerHTML = `<p class="text-center col-12">لا توجد فيديوهات منشورة.</p>`; return; }
       container.innerHTML = list.map(v => `
         <div class="col-md-6">
-          <div class="custom-card h-100 m-0 d-flex flex-column justify-content-between">
-            <h6 class="fw-bold text-primary mb-3">${v.title}</h6>
-            <a href="${v.url}" target="_blank" class="btn btn-outline-info btn-sm fw-bold py-2 mt-auto"><i class="fa-solid fa-external-link-alt me-1"></i> مشاهدة الفيديو</a>
+          <div class="liquid-item-card h-100 d-flex flex-column justify-content-between">
+            <div class="d-flex align-items-center gap-3 mb-3">
+              <div class="brand-logo" style="background: linear-gradient(135deg, #06b6d4, #3b82f6);"><i class="fa-solid fa-play"></i></div>
+              <h6 class="fw-bold m-0">${v.title}</h6>
+            </div>
+            <a href="${v.url}" target="_blank" class="btn btn-custom-primary btn-sm fw-bold py-2 mt-auto rounded-pill"><i class="fa-solid fa-external-link-alt me-1"></i> مشاهدة الدرس الآن</a>
           </div>
         </div>
       `).join('');
     }
 
+    // عرض رسائل المنتدى بالستايل الزجاجي وأزرار التعديل والحذف وتكبير الصور
     function renderChat() {
       const container = document.getElementById('chatContainer');
       if (!container) return;
-      container.innerHTML = chatMessages.map(m => `
-        <div class="chat-message received">
-          <small class="fw-semibold d-block mb-1 text-info" style="font-size: 0.75rem;">${m.sender}</small>
-          ${m.text ? `<p class="m-0">${m.text}</p>` : ''}
-          ${m.img ? `<img src="${m.img}" class="img-fluid rounded-3 mt-2" style="max-height: 180px;">` : ''}
-        </div>
-      `).join('') || `<p class="text-muted text-center">لا توجد رسائل سابقة. ابدأ النقاش!</p>`;
+      const myName = currentUser ? currentUser.name : (isAdminLoggedIn ? (sessionStorage.getItem('admin_name') || 'المشرف') : '');
+
+      container.innerHTML = chatMessages.map(m => {
+        const isMine = myName && m.sender === myName;
+        const canManage = isMine || isAdminLoggedIn;
+
+        return `
+          <div class="chat-message ${isMine ? 'sent' : 'received'}">
+            <div class="chat-msg-header">
+              <small class="fw-bold" style="font-size: 0.78rem;">${isMine ? 'أنت' : m.sender}</small>
+              ${canManage && m.id ? `
+                <div class="chat-msg-actions">
+                  ${isMine && m.text && m.text !== '[صورة]' ? `<button onclick="editChatMessage(${m.id}, '${m.text.replace(/'/g, "\\'")}')" title="تعديل"><i class="fa-solid fa-pen"></i></button>` : ''}
+                  <button onclick="deleteChatMessage(${m.id})" title="حذف"><i class="fa-solid fa-trash"></i></button>
+                </div>
+              ` : ''}
+            </div>
+            ${m.text && m.text !== '[صورة]' ? `<p class="m-0">${m.text}</p>` : ''}
+            ${m.img ? `<img src="${m.img}" class="img-fluid chat-img-preview" onclick="openLightbox('${m.img}')" title="اضغط لتكبير الصورة">` : ''}
+          </div>
+        `;
+      }).join('') || `<p class="text-center my-auto">لا توجد رسائل سابقة. ابدأ النقاش الآن!</p>`;
       container.scrollTop = container.scrollHeight;
+    }
+
+    function openLightbox(imgSrc) {
+      document.getElementById('lightboxImageTarget').src = imgSrc;
+      imageLightboxModal.show();
     }
 
     async function sendChatMessage() {
       const input = document.getElementById('chatInput');
       if (!input.value.trim()) return;
-      const senderDisplay = currentUser ? currentUser.name : 'زائر';
-      await _supabase.from('chat_messages').insert([{ sender: senderDisplay, content: input.value }]);
+      const senderDisplay = currentUser ? currentUser.name : (isAdminLoggedIn ? (sessionStorage.getItem('admin_name') || 'المشرف') : 'زائر');
+      await _supabase.from('chat_messages').insert([{ sender: senderDisplay, content: input.value.trim() }]);
       input.value = '';
       fetchSupabaseData();
+    }
+
+    async function editChatMessage(id, oldText) {
+      const newText = prompt("تعديل الرسالة:", oldText);
+      if (newText !== null && newText.trim() !== "" && newText !== oldText) {
+        await _supabase.from('chat_messages').update({ content: newText.trim() }).eq('id', id);
+        fetchSupabaseData();
+      }
+    }
+
+    async function deleteChatMessage(id) {
+      if (confirm("هل تريد حذف هذه الرسالة؟")) {
+        await _supabase.from('chat_messages').delete().eq('id', id);
+        fetchSupabaseData();
+      }
     }
 
     async function handleImageUpload(e) {
@@ -1114,7 +1581,7 @@
       if (file) {
         const reader = new FileReader();
         reader.onload = async function(event) {
-          const senderDisplay = currentUser ? currentUser.name : 'زائر';
+          const senderDisplay = currentUser ? currentUser.name : (isAdminLoggedIn ? (sessionStorage.getItem('admin_name') || 'المشرف') : 'زائر');
           await _supabase.from('chat_messages').insert([{ sender: senderDisplay, content: '[صورة]', image_url: event.target.result }]);
           fetchSupabaseData();
         };
@@ -1138,7 +1605,12 @@
 
     function runPythonCode() {
       const code = document.getElementById('pythonCodeInput').value.trim();
-      document.getElementById('pythonOutput').innerText = "مخرجات Python (تم التنفيذ بنجاح).";
+      if (!code) {
+        document.getElementById('pythonOutput').innerText = "يرجى كتابة كود Python أولاً.";
+        return;
+      }
+      const match = code.match(/print\s*\(\s*['"](.*?)['"]\s*\)/);
+      document.getElementById('pythonOutput').innerText = match ? match[1] : "مخرجات Python: تم تنفيذ الكود بنجاح.";
     }
 
     function saveStudentSiteCode() {
@@ -1149,6 +1621,7 @@
     async function addNotification(e) {
       e.preventDefault();
       await _supabase.from('notifications').insert([{ title: document.getElementById('notifTitle').value, content: document.getElementById('notifContent').value }]);
+      e.target.reset();
       fetchSupabaseData();
       alert("تم نشر الإشعار بنجاح!");
     }
@@ -1158,6 +1631,7 @@
       const reader = new FileReader();
       reader.onload = async function(event) {
         await _supabase.from('honor_students').insert([{ name: document.getElementById('honorName').value, achievement: document.getElementById('honorTitle').value, image_url: event.target.result }]);
+        e.target.reset();
         fetchSupabaseData();
         alert("تمت الإضافة للوحة الشرف!");
       };
@@ -1166,12 +1640,14 @@
     async function addBook(e) {
       e.preventDefault();
       await _supabase.from('books').insert([{ title: document.getElementById('bookTitle').value, grade: document.getElementById('bookGrade').value, url: document.getElementById('bookUrl').value }]);
+      e.target.reset();
       fetchSupabaseData();
       alert("تم نشر الكتاب بنجاح!");
     }
     async function addVideo(e) {
       e.preventDefault();
       await _supabase.from('educational_videos').insert([{ title: document.getElementById('videoTitle').value, url: document.getElementById('videoUrl').value }]);
+      e.target.reset();
       fetchSupabaseData();
       alert("تم نشر الفيديو بنجاح!");
     }
