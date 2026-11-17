@@ -2,6 +2,9 @@ const SUPABASE_URL = 'https://hoddrxekayofbyqmoyyz.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_Z6u7TuaH-WhcweAyb2hsJg_X5pWJ6HS';
 const _supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+// مفتاح الـ VAPID العام الخاص بك لتفعيل الإشعارات
+const PUBLIC_VAPID_KEY = 'e250e6671f1528857ad88e0d4e08a84c058fbd40e00ebba0b42a2c4681f656b0';
+
 let users = [], notifications = [], honorStudents = [], books = [], videos = [], platforms = [], exams = [], chatMessages = [], auditLogs = [];
 let currentUser = JSON.parse(localStorage.getItem('platform_current_user')) || null;
 let savedTheme = localStorage.getItem('platform_theme') || 'light';
@@ -326,6 +329,9 @@ async function handleLogin(e) {
   updateUI();
   showWelcomeToast(currentUser.name);
   logAction(`تسجيل دخول الطالب: ${currentUser.name}`);
+  
+  // تفعيل الإشعارات تلقائياً عند تسجيل الدخول الناجح
+  registerServiceWorkerAndPush();
 }
 
 async function handleRegister(e) {
@@ -753,4 +759,47 @@ async function addExam(e) {
   fetchSupabaseData();
   alert("تم إضافة الاختبار بنجاح!");
   logAction("تم إضافة امتحان/اختبار جديد");
+}
+
+// ==========================================
+// دوال تفعيل وإدارة الـ Push Notifications
+// ==========================================
+
+function urlBase64ToUint8Array(base64String) {
+  const padding = '='.repeat((4 - base64String.length % 4) % 4);
+  const base64 = (base64String + padding)
+    .replace(/\-/g, '+')
+    .replace(/_/g, '/');
+
+  const rawData = window.atob(base64);
+  const outputArray = new Uint8Array(rawData.length);
+
+  for (let i = 0; i < rawData.length; ++i) {
+    outputArray[i] = rawData.charCodeAt(i);
+  }
+  return outputArray;
+}
+
+async function registerServiceWorkerAndPush() {
+  if ('serviceWorker' in navigator && 'PushManager' in window) {
+    try {
+      // 1. تسجيل ملف الـ Service Worker
+      const registration = await navigator.serviceWorker.register('sw.js');
+      console.log('Service Worker registered successfully:', registration);
+
+      // 2. طلب الاشتراك من المتصفح باستخدام المفتاح العام VAPID
+      const subscription = await registration.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: urlBase64ToUint8Array(PUBLIC_VAPID_KEY)
+      });
+
+      console.log('Push Subscription obtained successfully:', JSON.stringify(subscription));
+      return subscription;
+
+    } catch (error) {
+      console.error('Error during push subscription setup:', error);
+    }
+  } else {
+    console.warn('Push messaging is not supported in this browser.');
+  }
 }
