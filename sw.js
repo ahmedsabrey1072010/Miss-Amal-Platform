@@ -4,8 +4,8 @@ self.addEventListener('push', function(event) {
   const title = data.title || 'إشعار جديد من منصة الأستاذة أمل شفيق';
   const options = {
     body: data.body || 'يوجد تحديث أو إشعار جديد بانتظارك على المنصة.',
-    icon: 'watermarked_img_7360017269884422966.jpg', // أيقونة المنصة
-    badge: 'watermarked_img_7360017269884422966.jpg'
+    icon: 'أيقونة منصة الترجمة والذكاء الاصطناعي – 16 Nov 2026, 6.25 pm_20261116_182526_٠٠٠٠.png',
+    badge: 'أيقونة منصة الترجمة والذكاء الاصطناعي – 16 Nov 2026, 6.25 pm_20261116_182526_٠٠٠٠.png'
   };
 
   event.waitUntil(
