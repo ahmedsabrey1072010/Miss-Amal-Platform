@@ -350,6 +350,34 @@ async function handleRegister(e) {
     return;
   }
 
+  showLoadingOverlay("جاري التحقق من البيانات...");
+
+  // التحقق من وجود رقم الهاتف في قاعدة البيانات مسبقاً
+  const { data: existingUser, error: checkError } = await _supabase
+    .from('profiles')
+    .select('status')
+    .eq('phone', phone)
+    .maybeSingle();
+
+  if (checkError) {
+    hideLoadingOverlay();
+    alert("حدث خطأ أثناء التحقق من البيانات: " + checkError.message);
+    return;
+  }
+
+  // إذا كان الرقم مسجلاً، نمنع الإضافة ونبلغ الطالب بحالة الحساب
+  if (existingUser) {
+    hideLoadingOverlay();
+    if (existingUser.status === 'pending') {
+      alert("هذا الرقم مسجل بالفعل وطلبك ما زال في انتظار موافقة الأدمن.");
+    } else if (existingUser.status === 'approved') {
+      alert("هذا الرقم مسجل ومفعل بالفعل على المنصة! يمكنك تسجيل الدخول مباشرة.");
+    } else {
+      alert("هذا الرقم مسجل بالفعل على المنصة.");
+    }
+    return;
+  }
+
   showLoadingOverlay("جاري إنشاء الحساب...");
   
   const { error } = await _supabase.from('profiles').insert([{
