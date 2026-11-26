@@ -86,7 +86,7 @@
       align-items: flex-start;
       text-align: start;
       line-height: 1.68;
-      transition: background-color 0.22s ease, color 0.22s ease;
+      transition: background-color 0.25s ease, color 0.25s ease;
     }
 
     html[lang="ja"] body {
@@ -106,7 +106,7 @@
       color: #f3f6fb !important;
     }
 
-    /* Top-aligned Modals & Consistent Close (X) Buttons across all languages */
+    /* Modals & Consistent Close Buttons */
     .modal.show .modal-dialog {
       margin-top: 24px;
       margin-bottom: 24px;
@@ -224,6 +224,7 @@
       flex-shrink: 0;
     }
 
+    /* Logical Direction-Aware Sidebar (Zero Overlap in RTL & LTR) */
     #sidebar {
       width: var(--sidebar-w);
       background: var(--bg-sidebar);
@@ -231,15 +232,17 @@
       height: 100vh;
       position: fixed;
       top: 0;
-      left: 0;
+      inset-inline-start: 0;
       z-index: 1050;
       display: flex;
       flex-direction: column;
       align-items: stretch;
-      border-right: 1px solid rgba(255, 255, 255, 0.09);
+      border-inline-end: 1px solid rgba(255, 255, 255, 0.09);
       transition: transform 0.25s var(--ease-out);
     }
-    #sidebar.collapsed { transform: translateX(-100%); }
+
+    html[dir="rtl"] #sidebar.collapsed { transform: translateX(100%); }
+    html[dir="ltr"] #sidebar.collapsed { transform: translateX(-100%); }
 
     .sidebar-backdrop {
       position: fixed;
@@ -345,22 +348,23 @@
       border-inline-start-color: #22d3ee;
     }
 
+    /* Main Content Area Aligned logically with Sidebar */
     #content {
-      margin-left: var(--sidebar-w);
+      margin-inline-start: var(--sidebar-w);
       width: calc(100% - var(--sidebar-w));
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: stretch;
-      transition: margin-left 0.25s var(--ease-out), width 0.25s var(--ease-out);
+      transition: margin-inline-start 0.25s var(--ease-out), width 0.25s var(--ease-out);
     }
     #content.expanded {
-      margin-left: 0;
+      margin-inline-start: 0;
       width: 100%;
     }
 
+    /* Smart Sticky Header with Smooth Scroll Shadow */
     .top-header {
-      direction: ltr;
       background: var(--bg-surface);
       border-bottom: 1px solid var(--border-hairline);
       padding: 12px 22px;
@@ -372,6 +376,14 @@
       justify-content: space-between;
       gap: 14px;
       flex-wrap: wrap;
+      transition: box-shadow 0.25s ease, transform 0.28s var(--ease-out), background-color 0.25s ease;
+    }
+    .top-header.scrolled {
+      box-shadow: 0 10px 28px -12px rgba(9, 17, 32, 0.22);
+      backdrop-filter: blur(10px);
+    }
+    .top-header.header-hidden {
+      transform: translateY(-100%);
     }
 
     .header-left-group {
@@ -387,7 +399,6 @@
       justify-content: flex-end;
       gap: 10px;
       flex-wrap: wrap;
-      margin-left: auto;
     }
 
     .lang-switcher {
@@ -444,8 +455,8 @@
     .notification-dropdown {
       display: none;
       position: absolute;
-      right: 0;
-      left: auto;
+      inset-inline-end: 0;
+      inset-inline-start: auto;
       top: 50px;
       width: 330px;
       max-width: calc(100vw - 24px);
@@ -491,6 +502,12 @@
       flex-direction: column;
       align-items: stretch;
       gap: var(--space-lg);
+      animation: sectionFadeIn 0.28s var(--ease-out);
+    }
+
+    @keyframes sectionFadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .hero-showcase {
@@ -524,7 +541,7 @@
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: var(--space-md);
-      align-items: start;
+      align-items: stretch;
     }
     .bento-action {
       background: var(--bg-surface);
@@ -591,12 +608,16 @@
       min-height: 42px;
       font-size: 0.88rem;
       touch-action: manipulation;
-      transition: filter 0.16s ease, transform 0.16s ease;
+      transition: filter 0.16s ease, transform 0.16s ease, box-shadow 0.16s ease;
     }
     .btn-academy-primary:hover {
       color: #fff;
       filter: brightness(1.08);
       transform: translateY(-1px);
+      box-shadow: 0 8px 20px -6px rgba(59, 73, 223, 0.5);
+    }
+    .btn-academy-primary:active {
+      transform: scale(0.97);
     }
 
     .form-control, .form-select {
@@ -608,12 +629,76 @@
       min-height: 44px;
       font-size: 0.93rem;
       text-align: start;
+      transition: border-color 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
     }
     .form-control:focus, .form-select:focus {
       background-color: var(--bg-surface);
       color: var(--text-primary);
       border-color: var(--accent-primary);
       box-shadow: var(--focus-ring);
+    }
+
+    /* Form Submission Visual Feedback Banner */
+    .form-feedback-banner {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 16px;
+      border-radius: var(--radius-md);
+      font-size: 0.86rem;
+      font-weight: 700;
+      animation: sectionFadeIn 0.25s var(--ease-out);
+    }
+    .form-feedback-banner.show {
+      display: flex;
+    }
+    .form-feedback-banner.success {
+      background: rgba(5, 150, 105, 0.14);
+      border: 1px solid rgba(5, 150, 105, 0.35);
+      color: var(--accent-success);
+    }
+    .form-feedback-banner.error {
+      background: rgba(225, 29, 72, 0.14);
+      border: 1px solid rgba(225, 29, 72, 0.35);
+      color: var(--accent-danger);
+    }
+
+    /* Visual Quiz Progress Bar & Steps */
+    .quiz-progress-wrapper {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-lg);
+      padding: 14px 18px;
+      margin-bottom: 22px;
+    }
+    .quiz-step-dots {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .quiz-step-dot {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--bg-surface);
+      border: 2px solid var(--border-hairline);
+      color: var(--text-secondary);
+      font-size: 0.78rem;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.22s ease;
+    }
+    .quiz-step-dot.correct {
+      background: var(--accent-success);
+      border-color: var(--accent-success);
+      color: #fff;
+    }
+    .quiz-step-dot.wrong {
+      background: var(--accent-danger);
+      border-color: var(--accent-danger);
+      color: #fff;
     }
 
     .quiz-opt-btn {
@@ -625,6 +710,45 @@
       font-size: 0.88rem;
       font-weight: 600;
       touch-action: manipulation;
+      transition: transform 0.14s ease, background-color 0.16s ease, border-color 0.16s ease;
+    }
+    .quiz-opt-btn:active {
+      transform: scale(0.99);
+    }
+
+    /* Forum Live Status Indicator */
+    .live-status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      transition: all 0.25s ease;
+    }
+    .live-status-pill.online {
+      background: rgba(5, 150, 105, 0.14);
+      color: var(--accent-success);
+      border: 1px solid rgba(5, 150, 105, 0.3);
+    }
+    .live-status-pill.offline {
+      background: rgba(225, 29, 72, 0.14);
+      color: var(--accent-danger);
+      border: 1px solid rgba(225, 29, 72, 0.3);
+    }
+    .pulse-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: currentColor;
+      display: inline-block;
+      animation: pulseRing 1.6s infinite;
+    }
+    @keyframes pulseRing {
+      0% { box-shadow: 0 0 0 0 rgba(5, 150, 105, 0.55); }
+      70% { box-shadow: 0 0 0 7px rgba(5, 150, 105, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(5, 150, 105, 0); }
     }
 
     .chat-box {
@@ -759,6 +883,7 @@
       cursor: pointer;
     }
 
+    /* Code Editors & Templates */
     .editor-wrapper {
       border-radius: var(--radius-lg);
       overflow: hidden;
@@ -772,6 +897,7 @@
       justify-content: space-between;
       align-items: center;
       gap: 10px;
+      flex-wrap: wrap;
       border-bottom: 1px solid rgba(255, 255, 255, 0.09);
     }
     .editor-dots {
@@ -793,9 +919,13 @@
       min-height: 30px;
       font-size: 0.76rem;
       cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: background-color 0.16s ease, color 0.16s ease;
     }
     .editor-quick-btn:hover {
-      background: rgba(59, 73, 223, 0.48);
+      background: rgba(59, 73, 223, 0.55);
       color: #fff;
     }
     .editor-statusbar {
@@ -897,6 +1027,23 @@
       min-width: 0;
     }
 
+    /* Responsive Tables inside Admin Panel */
+    .table-responsive {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      border-radius: var(--radius-md);
+    }
+    .table {
+      color: var(--text-primary) !important;
+      --bs-table-bg: transparent;
+      --bs-table-color: var(--text-primary);
+      margin-bottom: 0;
+    }
+    .table th, .table td {
+      vertical-align: middle;
+      padding: 12px 10px;
+    }
+
     footer {
       background: var(--bg-surface);
       border-top: 1px solid var(--border-hairline);
@@ -929,17 +1076,78 @@
       border-color: var(--accent-secondary);
     }
 
-    .table {
-      color: var(--text-primary) !important;
-      --bs-table-bg: transparent;
-      --bs-table-color: var(--text-primary);
+    /* Floating Support & Quick Help Action Button */
+    .floating-support-container {
+      position: fixed;
+      bottom: 22px;
+      inset-inline-end: 22px;
+      z-index: 1030;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 10px;
+    }
+    .floating-support-menu {
+      display: none;
+      flex-direction: column;
+      gap: 8px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-xl);
+      padding: 14px;
+      box-shadow: var(--shadow-float);
+      min-width: 245px;
+      animation: sectionFadeIn 0.2s var(--ease-out);
+    }
+    .floating-support-menu.show {
+      display: flex;
+    }
+    .floating-support-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 13px;
+      border-radius: var(--radius-md);
+      background: var(--bg-elevated);
+      color: var(--text-primary);
+      text-decoration: none;
+      font-size: 0.84rem;
+      font-weight: 700;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: border-color 0.16s ease, transform 0.14s ease;
+    }
+    .floating-support-item:hover {
+      border-color: var(--accent-primary);
+      color: var(--accent-primary);
+      transform: translateX(-2px);
+    }
+    .floating-support-btn {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+      color: #fff;
+      border: none;
+      box-shadow: var(--shadow-float);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      cursor: pointer;
+      transition: transform 0.2s var(--ease-out), filter 0.2s ease;
+    }
+    .floating-support-btn:hover {
+      transform: scale(1.06);
+      filter: brightness(1.08);
     }
 
     @media (max-width: 1024px) {
       .bento-hub { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-sm); }
-      #sidebar { transform: translateX(-100%); }
+      html[dir="rtl"] #sidebar { transform: translateX(100%); }
+      html[dir="ltr"] #sidebar { transform: translateX(-100%); }
       #sidebar.mobile-open { transform: translateX(0) !important; }
-      #content { margin-left: 0 !important; width: 100% !important; }
+      #content { margin-inline-start: 0 !important; width: 100% !important; }
       .admin-layout { flex-direction: column; gap: var(--space-sm); }
       .admin-sidebar {
         width: 100%;
@@ -958,6 +1166,34 @@
       .chat-message { max-width: 88%; }
     }
 
+    @media (max-width: 768px) {
+      .responsive-admin-table thead { display: none; }
+      .responsive-admin-table tr {
+        display: block;
+        background: var(--bg-surface);
+        border: 1px solid var(--border-hairline);
+        border-radius: var(--radius-md);
+        margin-bottom: 10px;
+        padding: 10px 12px;
+      }
+      .responsive-admin-table td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        padding: 6px 4px;
+        border: none;
+        text-align: start;
+      }
+      .responsive-admin-table td::before {
+        content: attr(data-label);
+        font-weight: 700;
+        font-size: 0.78rem;
+        color: var(--text-secondary);
+        flex-shrink: 0;
+      }
+    }
+
     @media (max-width: 576px) {
       .bento-hub { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
       .bento-action { padding: 14px 12px; font-size: 0.83rem; flex-direction: column; text-align: center; gap: 10px; }
@@ -968,6 +1204,7 @@
       .hero-showcase { padding: 28px 18px; border-radius: var(--radius-xl); }
       .chat-box { height: 340px; padding: 12px; gap: 12px; }
       .admin-nav-link { flex: 1 1 100%; }
+      .floating-support-container { bottom: 16px; inset-inline-end: 16px; }
     }
   </style>
 
@@ -1033,7 +1270,7 @@
   </aside>
 
   <div id="content">
-    <header class="top-header">
+    <header class="top-header" id="mainTopHeader">
       <div class="header-left-group">
         <button type="button" class="btn btn-sm btn-outline-secondary" style="min-height: 38px; min-width: 38px;" onclick="toggleSidebar()" aria-label="Toggle Sidebar">
           <i class="fa-solid fa-bars"></i>
@@ -1068,7 +1305,7 @@
           <i class="fa-solid fa-shield-halved text-warning"></i>
         </button>
 
-        <button type="button" class="icon-circle-btn" onclick="toggleTheme()" aria-label="Toggle Theme">
+        <button type="button" class="icon-circle-btn" id="themeToggleBtn" onclick="toggleTheme()" aria-label="Toggle Theme" title="تبديل المظهر (تلقائي حسب الوقت / يدوي)">
           <i class="fa-solid fa-moon" id="themeIcon"></i>
         </button>
 
@@ -1122,7 +1359,7 @@
             <h4 class="fw-bold text-primary mb-2" data-i18n="benefitsTitle">ماذا ستستفيد داخل المنصة؟</h4>
             <p class="m-0 small" data-i18n="benefitsSub">سجل حسابك وفعّله لتصل إلى جميع الأدوات التفاعلية</p>
           </div>
-          <div class="row g-4 align-items-start">
+          <div class="row g-4 align-items-stretch">
             <div class="col-md-3 col-sm-6">
               <div class="sub-tile h-100 text-center">
                 <div class="brand-mark mx-auto mb-3"><i class="fa-solid fa-laptop-code" aria-hidden="true"></i></div>
@@ -1163,7 +1400,7 @@
 
         <div class="surface-card">
           <h4 class="fw-bold mb-4 text-warning" data-i18n="honorSectionTitle"><i class="fa-solid fa-trophy"></i> لوحة الطلاب المتميزين</h4>
-          <div class="row g-4 align-items-start" id="homeHonorContainer">
+          <div class="row g-4 align-items-stretch" id="homeHonorContainer">
             <p class="text-center col-12" data-i18n="loadingHonor">جاري تحميل لوحة الشرف...</p>
           </div>
         </div>
@@ -1173,15 +1410,15 @@
       <section id="booksSection" style="display: none;">
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
           <h4 class="fw-bold m-0" data-i18n="booksTitle"><i class="fa-solid fa-book-open text-danger"></i> مكتبة المذكرات والكتب</h4>
-          <input type="search" id="bookSearch" class="form-control" style="max-width: 300px;" placeholder="بحث عن كتاب أو مرحلة..." aria-label="Search books" onkeyup="filterBooks()">
+          <input type="search" id="bookSearch" class="form-control" style="max-width: 300px;" placeholder="بحث عن كتاب أو مرحلة..." aria-label="Search books" oninput="filterBooks()">
         </div>
-        <div class="row g-4 align-items-start" id="booksContainer"></div>
+        <div class="row g-4 align-items-stretch" id="booksContainer"></div>
       </section>
 
       <!-- VIDEOS SECTION -->
       <section id="videosSection" style="display: none;">
         <h4 class="fw-bold m-0" data-i18n="videosTitle"><i class="fa-solid fa-video text-info"></i> الفيديوهات التعليمية والشروحات</h4>
-        <div class="row g-4 align-items-start" id="videosContainer">
+        <div class="row g-4 align-items-stretch" id="videosContainer">
           <div class="col-12 text-center" data-i18n="loadingVideos">جاري تحميل الفيديوهات...</div>
         </div>
       </section>
@@ -1189,7 +1426,7 @@
       <!-- PLATFORMS SECTION -->
       <section id="platformsSection" style="display: none;">
         <h4 class="fw-bold m-0" data-i18n="platformsTitle"><i class="fa-solid fa-globe text-warning"></i> المنصات التعليمية المعتمدة</h4>
-        <div class="row g-4 align-items-start" id="platformsContainer">
+        <div class="row g-4 align-items-stretch" id="platformsContainer">
           <div class="col-12 text-center" data-i18n="loadingPlatforms">جاري تحميل المنصات التعليمية...</div>
         </div>
       </section>
@@ -1205,16 +1442,28 @@
               <small data-i18n="quickQuizBankSub">حل الأسئلة التفاعلية وتابع نتيجتك قبل بدء الاختبارات</small>
             </div>
             <div class="d-flex align-items-center gap-2">
-              <span id="quickQuizScoreBadge" class="badge bg-success-subtle text-success px-3 py-2 rounded-pill">0 / 4</span>
+              <span id="quickQuizScoreBadge" class="badge bg-success-subtle text-success px-3 py-2 rounded-pill fs-6">0 / 4</span>
               <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-3" onclick="resetQuickQuiz()" data-i18n="resetQuizBtn">إعادة المحاولة</button>
             </div>
           </div>
 
-          <div class="progress mb-4" style="height: 8px; border-radius: 999px;">
-            <div id="quizProgressBar" class="progress-bar bg-success" role="progressbar" style="width: 0%;"></div>
+          <!-- Visual Progress Bar & Step Indicators -->
+          <div class="quiz-progress-wrapper">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-2">
+              <div class="quiz-step-dots" id="quizStepDots">
+                <span class="quiz-step-dot" id="quizDot0">1</span>
+                <span class="quiz-step-dot" id="quizDot1">2</span>
+                <span class="quiz-step-dot" id="quizDot2">3</span>
+                <span class="quiz-step-dot" id="quizDot3">4</span>
+              </div>
+              <small class="fw-bold text-primary" id="quizProgressPercent">0%</small>
+            </div>
+            <div class="progress" style="height: 10px; border-radius: 999px; background: var(--bg-surface);">
+              <div id="quizProgressBar" class="progress-bar bg-success progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%;"></div>
+            </div>
           </div>
 
-          <div class="row g-4 align-items-start" id="quickQuestionsContainer">
+          <div class="row g-4 align-items-stretch" id="quickQuestionsContainer">
             <div class="col-md-6">
               <div class="sub-tile h-100">
                 <span class="badge bg-primary-subtle text-primary mb-2" data-i18n="q1Badge">سؤال 1 • أساسيات الويب</span>
@@ -1271,7 +1520,7 @@
 
         <div class="d-flex flex-column gap-3">
           <h5 class="fw-bold m-0" data-i18n="scheduledExamsTitle"><i class="fa-solid fa-link text-success"></i> الاختبارات والامتحانات المجدولة</h5>
-          <div class="row g-4 align-items-start" id="examsContainer">
+          <div class="row g-4 align-items-stretch" id="examsContainer">
             <div class="col-12 text-center" data-i18n="loadingExams">جاري تحميل الاختبارات...</div>
           </div>
         </div>
@@ -1282,7 +1531,10 @@
         <div class="surface-card">
           <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
             <h5 class="fw-bold m-0" data-i18n="forumTitle"><i class="fa-solid fa-comments text-success"></i> منتدى المحادثة المباشر</h5>
-            <span class="badge bg-success-subtle text-success rounded-pill px-3 py-2" data-i18n="forumOnline"><i class="fa-solid fa-circle fa-2xs"></i> متصل الآن</span>
+            <span id="forumConnectionBadge" class="live-status-pill online">
+              <span class="pulse-dot" aria-hidden="true"></span>
+              <span id="forumConnectionText" data-i18n="forumOnline">متصل الآن</span>
+            </span>
           </div>
 
           <div class="chat-box mb-4" id="chatContainer" aria-live="polite"></div>
@@ -1303,7 +1555,7 @@
         </div>
       </section>
 
-      <!-- UPGRADED EDITORS STUDIO SECTION -->
+      <!-- UPGRADED EDITORS STUDIO SECTION WITH READY TEMPLATES -->
       <section id="editorsStudioSection" style="display: none;">
         <div class="surface-card">
           <div class="d-flex justify-content-between align-items-start flex-wrap gap-3 mb-4">
@@ -1320,8 +1572,13 @@
             </div>
           </div>
 
+          <!-- HTML ONLY -->
           <div id="studioModeHtml" class="studio-mode-pane">
-            <div class="d-flex justify-content-end mb-3">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+              <div class="d-flex gap-2 flex-wrap">
+                <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill" onclick="insertTemplate('html', 'card')"><i class="fa-solid fa-wand-magic-sparkles"></i> <span data-i18n="tplCard">قالب بطاقة</span></button>
+                <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill" onclick="insertTemplate('html', 'form')"><i class="fa-solid fa-wand-magic-sparkles"></i> <span data-i18n="tplForm">قالب نموذج</span></button>
+              </div>
               <button type="button" class="btn btn-academy-primary btn-sm px-4 rounded-pill" onclick="runHtmlOnlyCode()">
                 <i class="fa-solid fa-play"></i> <span data-i18n="runHtmlBtn">معاينة HTML</span>
               </button>
@@ -1352,8 +1609,13 @@
             </div>
           </div>
 
+          <!-- CSS ONLY -->
           <div id="studioModeCss" class="studio-mode-pane" style="display: none;">
-            <div class="d-flex justify-content-end mb-3">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+              <div class="d-flex gap-2 flex-wrap">
+                <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill" onclick="insertTemplate('css', 'gradient')"><i class="fa-solid fa-wand-magic-sparkles"></i> <span data-i18n="tplGradient">تدرج ألوان</span></button>
+                <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill" onclick="insertTemplate('css', 'shadow')"><i class="fa-solid fa-wand-magic-sparkles"></i> <span data-i18n="tplShadow">ظل وحواف</span></button>
+              </div>
               <button type="button" class="btn btn-academy-primary btn-sm px-4 rounded-pill" onclick="runCssOnlyCode()">
                 <i class="fa-solid fa-play"></i> <span data-i18n="runCssBtn">تطبيق CSS</span>
               </button>
@@ -1384,8 +1646,12 @@
             </div>
           </div>
 
+          <!-- HTML & CSS -->
           <div id="studioModeHtmlCss" class="studio-mode-pane" style="display: none;">
-            <div class="d-flex justify-content-end mb-3">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+              <div class="d-flex gap-2 flex-wrap">
+                <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill" onclick="insertTemplate('html-css', 'profile')"><i class="fa-solid fa-wand-magic-sparkles"></i> <span data-i18n="tplProfile">بطاقة تعريف</span></button>
+              </div>
               <button type="button" class="btn btn-academy-primary btn-sm px-4 rounded-pill" onclick="saveStudentSiteCode()">
                 <i class="fa-solid fa-play"></i> <span data-i18n="updatePreviewBtn">تحديث المعاينة</span>
               </button>
@@ -1426,8 +1692,13 @@
             </div>
           </div>
 
+          <!-- JS -->
           <div id="studioModeJs" class="studio-mode-pane" style="display: none;">
-            <div class="d-flex justify-content-end mb-3">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+              <div class="d-flex gap-2 flex-wrap">
+                <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill" onclick="insertTemplate('js', 'loop')"><i class="fa-solid fa-wand-magic-sparkles"></i> <span data-i18n="tplLoop">حلقة تكرار</span></button>
+                <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill" onclick="insertTemplate('js', 'func')"><i class="fa-solid fa-wand-magic-sparkles"></i> <span data-i18n="tplFunc">دالة حسابية</span></button>
+              </div>
               <button type="button" class="btn btn-academy-primary btn-sm px-4 rounded-pill" onclick="runJsCode()"><i class="fa-solid fa-play"></i> <span data-i18n="runJsBtn">تنفيذ JS</span></button>
             </div>
             <div class="editor-wrapper mb-4">
@@ -1445,8 +1716,13 @@
             <pre id="jsOutput" class="p-3 rounded-3 bg-dark text-success font-monospace m-0 border border-secondary" style="min-height: 90px;"></pre>
           </div>
 
+          <!-- PYTHON -->
           <div id="studioModePython" class="studio-mode-pane" style="display: none;">
-            <div class="d-flex justify-content-end mb-3">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+              <div class="d-flex gap-2 flex-wrap">
+                <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill" onclick="insertTemplate('python', 'hello')"><i class="fa-solid fa-wand-magic-sparkles"></i> <span data-i18n="tplPyHello">طباعة نص</span></button>
+                <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill" onclick="insertTemplate('python', 'math')"><i class="fa-solid fa-wand-magic-sparkles"></i> <span data-i18n="tplPyMath">متغيرات وحساب</span></button>
+              </div>
               <button type="button" class="btn btn-warning text-dark fw-bold btn-sm px-4 rounded-pill" onclick="runPythonCode()"><i class="fa-solid fa-play"></i> <span data-i18n="runPyBtn">تشغيل الكود</span></button>
             </div>
             <div class="editor-wrapper mb-4">
@@ -1496,7 +1772,7 @@
               <h6 class="fw-bold text-primary m-0" data-i18n="evalCardsTitle"><i class="fa-solid fa-clipboard-check"></i> كروت التقييم الخاصة بالطالب</h6>
               <span class="badge bg-primary-subtle text-primary rounded-pill" data-i18n="evalPrivateBadge">خاص بالطالب والإدارة</span>
             </div>
-            <div class="row g-3 align-items-start">
+            <div class="row g-3 align-items-stretch">
               <div class="col-6 col-md-3">
                 <div class="surface-card p-3 text-center h-100 mb-0">
                   <div class="fw-bold text-primary fs-5">40%</div>
@@ -1523,6 +1799,8 @@
               </div>
             </div>
           </div>
+
+          <div id="profileFormFeedback" class="form-feedback-banner mb-3" role="status"></div>
 
           <form onsubmit="updateProfile(event)" autocomplete="off">
             <div class="row g-3 align-items-start">
@@ -1580,27 +1858,27 @@
             <button type="button" class="btn btn-outline-danger btn-sm px-3 fw-bold" onclick="adminLogout()" data-i18n="adminLogoutBtn">خروج الأدمن</button>
           </div>
 
-          <div class="row g-3 align-items-start">
+          <div class="row g-3 align-items-stretch">
             <div class="col-md-3 col-6">
-              <div class="sub-tile border-start border-4 border-warning">
+              <div class="sub-tile border-start border-4 border-warning h-100">
                 <small class="fw-bold" data-i18n="statPending">الطلبات المعلقة</small>
                 <h2 id="pendingCount" class="fw-bold text-warning m-0 mt-2">0</h2>
               </div>
             </div>
             <div class="col-md-3 col-6">
-              <div class="sub-tile border-start border-4 border-danger">
+              <div class="sub-tile border-start border-4 border-danger h-100">
                 <small class="fw-bold" data-i18n="statLocked">الحسابات الموقوفة</small>
                 <h2 id="lockedCount" class="fw-bold text-danger m-0 mt-2">0</h2>
               </div>
             </div>
             <div class="col-md-3 col-6">
-              <div class="sub-tile border-start border-4 border-primary">
+              <div class="sub-tile border-start border-4 border-primary h-100">
                 <small class="fw-bold" data-i18n="statApproved">الأعضاء المفعلين</small>
                 <h2 id="studentsCount" class="fw-bold text-primary m-0 mt-2">0</h2>
               </div>
             </div>
             <div class="col-md-3 col-6">
-              <div class="sub-tile border-start border-4 border-success">
+              <div class="sub-tile border-start border-4 border-success h-100">
                 <small class="fw-bold" data-i18n="statLogs">السجلات</small>
                 <h2 id="logsCount" class="fw-bold text-success m-0 mt-2">0</h2>
               </div>
@@ -1623,6 +1901,8 @@
             </nav>
 
             <div class="admin-content-area surface-card">
+              <div id="adminFormFeedback" class="form-feedback-banner mb-3" role="status"></div>
+
               <div class="admin-tab-pane" id="pendingTab">
                 <h6 class="fw-bold mb-4 text-warning" data-i18n="pendingListTitle">طلبات الانضمام المقسمة حسب الصفة</h6>
 
@@ -1632,7 +1912,7 @@
                     <span class="badge bg-primary-subtle text-primary rounded-pill" id="pendingStudentsBadge">0</span>
                   </div>
                   <div class="table-responsive">
-                    <table class="table table-hover align-top mb-0">
+                    <table class="table table-hover align-middle responsive-admin-table">
                       <thead><tr><th data-i18n="thNameInfo">الاسم والبيانات</th><th data-i18n="thGradeDevice">الصف والهاتف</th><th data-i18n="thAction">الإجراء</th></tr></thead>
                       <tbody id="pendingStudentsBody"></tbody>
                     </table>
@@ -1645,7 +1925,7 @@
                     <span class="badge bg-success-subtle text-success rounded-pill" id="pendingTeachersBadge">0</span>
                   </div>
                   <div class="table-responsive">
-                    <table class="table table-hover align-top mb-0">
+                    <table class="table table-hover align-middle responsive-admin-table">
                       <thead><tr><th data-i18n="thNameInfo">الاسم والبيانات</th><th data-i18n="thPhoneDevice">الهاتف</th><th data-i18n="thAction">الإجراء</th></tr></thead>
                       <tbody id="pendingTeachersBody"></tbody>
                     </table>
@@ -1658,7 +1938,7 @@
                     <span class="badge bg-warning-subtle text-warning rounded-pill" id="pendingStaffBadge">0</span>
                   </div>
                   <div class="table-responsive">
-                    <table class="table table-hover align-top mb-0">
+                    <table class="table table-hover align-middle responsive-admin-table">
                       <thead><tr><th data-i18n="thNameInfo">الاسم والبيانات</th><th data-i18n="thPhoneDevice">الهاتف</th><th data-i18n="thAction">الإجراء</th></tr></thead>
                       <tbody id="pendingStaffBody"></tbody>
                     </table>
@@ -1672,7 +1952,7 @@
                 <div class="sub-tile mb-4">
                   <h6 class="fw-bold mb-3" data-i18n="unlockRequestsSubTitle">طلبات فك الحساب الواردة</h6>
                   <div class="table-responsive">
-                    <table class="table table-hover align-top mb-0">
+                    <table class="table table-hover align-middle responsive-admin-table">
                       <thead><tr><th data-i18n="thAccount">الحساب</th><th data-i18n="thReason">السبب والرسالة</th><th data-i18n="thAction">الإجراء</th></tr></thead>
                       <tbody id="unlockRequestsTableBody"></tbody>
                     </table>
@@ -1682,7 +1962,7 @@
                 <div class="sub-tile">
                   <h6 class="fw-bold mb-3" data-i18n="lockedListSubTitle">الحسابات الموقوفة حالياً (طلاب وأدمن)</h6>
                   <div class="table-responsive">
-                    <table class="table table-striped align-top mb-0">
+                    <table class="table table-striped align-middle responsive-admin-table">
                       <thead><tr><th data-i18n="thAccount">الحساب</th><th data-i18n="thPhoneDevice">الهاتف</th><th data-i18n="thAction">الإجراء</th></tr></thead>
                       <tbody id="lockedAccountsTableBody"></tbody>
                     </table>
@@ -1699,7 +1979,7 @@
                     <span class="badge bg-primary-subtle text-primary rounded-pill" id="approvedStudentsBadge">0</span>
                   </div>
                   <div class="table-responsive">
-                    <table class="table table-striped align-top mb-0">
+                    <table class="table table-striped align-middle responsive-admin-table">
                       <thead><tr><th data-i18n="thNameInfo">الاسم والبيانات</th><th data-i18n="thGradeDevice">الصف</th><th data-i18n="thAction">الإجراء</th></tr></thead>
                       <tbody id="approvedStudentsBody"></tbody>
                     </table>
@@ -1712,7 +1992,7 @@
                     <span class="badge bg-success-subtle text-success rounded-pill" id="approvedTeachersBadge">0</span>
                   </div>
                   <div class="table-responsive">
-                    <table class="table table-striped align-top mb-0">
+                    <table class="table table-striped align-middle responsive-admin-table">
                       <thead><tr><th data-i18n="thNameInfo">الاسم والبيانات</th><th data-i18n="thPhoneDevice">الهاتف</th><th data-i18n="thAction">الإجراء</th></tr></thead>
                       <tbody id="approvedTeachersBody"></tbody>
                     </table>
@@ -1725,7 +2005,7 @@
                     <span class="badge bg-warning-subtle text-warning rounded-pill" id="approvedStaffBadge">0</span>
                   </div>
                   <div class="table-responsive">
-                    <table class="table table-striped align-top mb-0">
+                    <table class="table table-striped align-middle responsive-admin-table">
                       <thead><tr><th data-i18n="thNameInfo">الاسم والبيانات</th><th data-i18n="thPhoneDevice">الدور</th><th data-i18n="thAction">الإجراء</th></tr></thead>
                       <tbody id="approvedStaffBody"></tbody>
                     </table>
@@ -1742,13 +2022,13 @@
                 </ul>
                 <div class="tab-content">
                   <div class="tab-pane fade show active" id="allLogsPane">
-                    <div class="table-responsive"><table class="table table-sm align-top"><tbody id="logsTableBody"></tbody></table></div>
+                    <div class="table-responsive"><table class="table table-sm align-middle"><tbody id="logsTableBody"></tbody></table></div>
                   </div>
                   <div class="tab-pane fade" id="studentLogsPane">
-                    <div class="table-responsive"><table class="table table-sm align-top"><tbody id="studentLogsTableBody"></tbody></table></div>
+                    <div class="table-responsive"><table class="table table-sm align-middle"><tbody id="studentLogsTableBody"></tbody></table></div>
                   </div>
                   <div class="tab-pane fade" id="adminLogsPane">
-                    <div class="table-responsive"><table class="table table-sm align-top"><tbody id="adminLogsTableBody"></tbody></table></div>
+                    <div class="table-responsive"><table class="table table-sm align-middle"><tbody id="adminLogsTableBody"></tbody></table></div>
                   </div>
                 </div>
               </div>
@@ -1837,6 +2117,28 @@
         </div>
       </div>
     </footer>
+  </div>
+
+  <!-- FLOATING QUICK HELP & DIRECT SUPPORT WIDGET -->
+  <div class="floating-support-container" id="floatingSupportContainer">
+    <div class="floating-support-menu" id="floatingSupportMenu" role="menu">
+      <div class="fw-bold small text-primary border-bottom pb-2 mb-1" data-i18n="floatingMenuTitle">المساعدة السريعة والدعم</div>
+      <a href="https://wa.me/201143038021" target="_blank" rel="noopener noreferrer" class="floating-support-item">
+        <i class="fa-brands fa-whatsapp text-success fa-lg"></i>
+        <span data-i18n="contactSupport">تواصل مع الدعم الفني</span>
+      </a>
+      <a href="https://wa.me/201287255571" target="_blank" rel="noopener noreferrer" class="floating-support-item">
+        <i class="fa-solid fa-chalkboard-user text-primary"></i>
+        <span data-i18n="contactTeacher">تواصل مع المعلم</span>
+      </a>
+      <button type="button" class="floating-support-item w-100 text-start" onclick="toggleFloatingSupport(); showSection(null, 'examsSection', document.querySelector('#sidebar .nav-link:nth-child(5)'))">
+        <i class="fa-solid fa-circle-question text-warning"></i>
+        <span data-i18n="quickQuiz">تدريب سريع</span>
+      </button>
+    </div>
+    <button type="button" class="floating-support-btn" onclick="toggleFloatingSupport()" aria-label="Quick Help & Support">
+      <i class="fa-solid fa-headset" id="floatingSupportIcon"></i>
+    </button>
   </div>
 
   <!-- ADMIN MODAL, UNLOCK REQUEST & STAFF JOIN -->
@@ -2045,7 +2347,7 @@
     function isSafeUrl(url) {
       if (!url) return false;
       try {
-        const parsed = new URL(url, window.location.origin);
+        const parsed = new URL(url.trim(), window.location.origin);
         return parsed.protocol === 'https:' || parsed.protocol === 'http:';
       } catch (_) {
         return false;
@@ -2135,10 +2437,20 @@
         startExam: 'بدء الاختبار الآن',
         forumTitle: 'منتدى المحادثة المباشر',
         forumOnline: 'متصل الآن',
+        forumOffline: 'غير متصل بالإنترنت',
         chatPlaceholder: 'اكتب رسالتك للمجموعة هنا...',
         sendBtn: 'إرسال',
         chatEmpty: 'لا توجد رسائل سابقة. ابدأ النقاش الآن!',
-        editorSubDesc: 'اختر نوع المحرر المناسب من قائمة المحررات الفرعية',
+        editorSubDesc: 'اختر نوع المحرر المناسب أو استخدم القوالب الجاهزة للتدريب السريع',
+        tplCard: 'قالب بطاقة',
+        tplForm: 'قالب نموذج',
+        tplGradient: 'تدرج ألوان',
+        tplShadow: 'ظل وحواف',
+        tplProfile: 'بطاقة تعريف',
+        tplLoop: 'حلقة تكرار',
+        tplFunc: 'دالة حسابية',
+        tplPyHello: 'طباعة نص',
+        tplPyMath: 'متغيرات وحساب',
         runHtmlBtn: 'معاينة HTML',
         runCssBtn: 'تطبيق CSS',
         updatePreviewBtn: 'تحديث المعاينة',
@@ -2238,6 +2550,8 @@
         footerAcademy: 'منصة المس أمل شفيق السيد للبرمجة والذكاء الاصطناعي',
         contactTeacher: 'تواصل مع المعلم',
         contactSupport: 'تواصل مع الدعم الفني',
+        floatingMenuTitle: 'المساعدة السريعة والدعم',
+        savedSuccessMsg: 'تم حفظ البيانات ونشرها بنجاح!',
         protectedAlert: 'عذراً، هذا القسم متاح فقط لطلاب المنصة المفعلين بعد تسجيل الدخول.'
       },
 
@@ -2323,10 +2637,20 @@
         startExam: 'Start Quiz',
         forumTitle: 'Live Discussion Forum',
         forumOnline: 'Online Now',
+        forumOffline: 'Offline',
         chatPlaceholder: 'Write a message to the group...',
         sendBtn: 'Send',
         chatEmpty: 'No messages yet. Start the discussion!',
-        editorSubDesc: 'Pick an editor mode from the submenu or toolbar',
+        editorSubDesc: 'Pick an editor mode or insert ready-made code templates',
+        tplCard: 'Card Template',
+        tplForm: 'Form Template',
+        tplGradient: 'Gradient Style',
+        tplShadow: 'Shadow & Radius',
+        tplProfile: 'Profile Card',
+        tplLoop: 'For Loop',
+        tplFunc: 'Math Function',
+        tplPyHello: 'Print Text',
+        tplPyMath: 'Variables & Math',
         runHtmlBtn: 'Preview HTML',
         runCssBtn: 'Apply CSS',
         updatePreviewBtn: 'Update Preview',
@@ -2426,6 +2750,8 @@
         footerAcademy: 'Ms. Amal Shafik El-Sayed Code & AI Academy',
         contactTeacher: 'Contact Teacher',
         contactSupport: 'Contact Support',
+        floatingMenuTitle: 'Quick Help & Support',
+        savedSuccessMsg: 'Saved and published successfully!',
         protectedAlert: 'Please sign in with an activated account to access this section.'
       },
 
@@ -2511,10 +2837,20 @@
         startExam: 'テストを開始',
         forumTitle: 'ライブディスカッション掲示板',
         forumOnline: 'オンライン中',
+        forumOffline: 'オフライン',
         chatPlaceholder: 'グループにメッセージを入力...',
         sendBtn: '送信',
         chatEmpty: 'まだメッセージはありません。会話を始めましょう！',
-        editorSubDesc: 'サブメニューまたは上部ボタンからエディタを選択',
+        editorSubDesc: 'エディタを選択するか、サンプルテンプレートを挿入して練習できます',
+        tplCard: 'カード雛形',
+        tplForm: 'フォーム雛形',
+        tplGradient: 'グラデーション',
+        tplShadow: '影と角丸',
+        tplProfile: 'プロフィール',
+        tplLoop: '繰り返し処理',
+        tplFunc: '計算関数',
+        tplPyHello: 'テキスト出力',
+        tplPyMath: '変数と計算',
         runHtmlBtn: 'HTMLプレビュー',
         runCssBtn: 'CSSを適用',
         updatePreviewBtn: 'プレビュー更新',
@@ -2614,6 +2950,8 @@
         footerAcademy: 'アマル・シャフィク先生 コード＆AIアカデミー',
         contactTeacher: '先生に連絡',
         contactSupport: 'サポートに連絡',
+        floatingMenuTitle: 'クイックヘルプ＆サポート',
+        savedSuccessMsg: '正常に保存・公開されました！',
         protectedAlert: 'このセクションを利用するには承認済みアカウントでログインしてください。'
       }
     };
@@ -2655,6 +2993,7 @@
       const chatInput = document.getElementById('chatInput');
       if (chatInput) chatInput.placeholder = t('chatPlaceholder');
 
+      updateConnectionStatusUI();
       updateScoreBadge();
       updateUI();
     }
@@ -2666,7 +3005,6 @@
     let users = [], adminsList = [], notifications = [], honorStudents = [], books = [], videos = [], platforms = [], exams = [], chatMessages = [], auditLogs = [];
     let studentLogs = [], adminLogs = [];
     let currentUser = JSON.parse(localStorage.getItem('platform_current_user')) || null;
-    let savedTheme = localStorage.getItem('platform_theme') || 'light';
     let isAdminLoggedIn = sessionStorage.getItem('admin_logged_in') === 'true';
     let currentAdminRole = sessionStorage.getItem('admin_role') || 'admin';
     let cachedDeviceSummary = localStorage.getItem('platform_device_summary') || '';
@@ -2676,6 +3014,96 @@
     let failedAttemptsMap = JSON.parse(localStorage.getItem('login_failed_attempts') || '{}');
     let lockedAccountsLocal = JSON.parse(localStorage.getItem('locked_accounts_local') || '[]');
     let unlockRequestsLocal = JSON.parse(localStorage.getItem('unlock_requests_local') || '[]');
+
+    /* Automatic Dark Mode Based on Time of Day + Manual Override */
+    function getAutoThemeByTime() {
+      const hour = new Date().getHours();
+      return (hour >= 18 || hour < 6) ? 'dark' : 'light';
+    }
+
+    function applyTheme(themeValue) {
+      document.body.setAttribute('data-theme', themeValue);
+      const tIcon = document.getElementById('themeIcon');
+      if (tIcon) {
+        tIcon.className = themeValue === 'dark' ? 'fa-solid fa-sun text-warning' : 'fa-solid fa-moon';
+      }
+    }
+
+    const manualThemeOverride = localStorage.getItem('platform_theme_manual');
+    const initialTheme = manualThemeOverride || getAutoThemeByTime();
+    applyTheme(initialTheme);
+
+    function toggleTheme() {
+      const nextTheme = document.body.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+      localStorage.setItem('platform_theme_manual', nextTheme);
+      applyTheme(nextTheme);
+    }
+
+    /* Smart Sticky Header Behavior on Scroll */
+    let lastScrollY = window.scrollY;
+    window.addEventListener('scroll', () => {
+      const header = document.getElementById('mainTopHeader');
+      if (!header) return;
+      const currentScrollY = window.scrollY;
+      header.classList.toggle('scrolled', currentScrollY > 12);
+      if (currentScrollY > 140 && currentScrollY > lastScrollY) {
+        header.classList.add('header-hidden');
+      } else {
+        header.classList.remove('header-hidden');
+      }
+      lastScrollY = currentScrollY;
+    }, { passive: true });
+
+    /* Forum Connection Status Monitor */
+    function updateConnectionStatusUI() {
+      const badge = document.getElementById('forumConnectionBadge');
+      const textEl = document.getElementById('forumConnectionText');
+      if (!badge || !textEl) return;
+      const isOnline = navigator.onLine;
+      badge.classList.toggle('online', isOnline);
+      badge.classList.toggle('offline', !isOnline);
+      textEl.textContent = isOnline ? t('forumOnline') : t('forumOffline');
+    }
+    window.addEventListener('online', updateConnectionStatusUI);
+    window.addEventListener('offline', updateConnectionStatusUI);
+
+    /* Form Visual Feedback Banner Helper */
+    function showFormFeedback(bannerId, message, isError = false) {
+      const banner = document.getElementById(bannerId);
+      if (!banner) return;
+      banner.className = `form-feedback-banner show ${isError ? 'error' : 'success'}`;
+      banner.innerHTML = `<i class="fa-solid ${isError ? 'fa-circle-exclamation' : 'fa-circle-check'}"></i><span>${escapeHtml(message)}</span>`;
+      setTimeout(() => {
+        banner.classList.remove('show');
+      }, 4200);
+    }
+
+    /* Floating Support Menu Toggle & Outside Click Dismissal */
+    function toggleFloatingSupport() {
+      const menu = document.getElementById('floatingSupportMenu');
+      const icon = document.getElementById('floatingSupportIcon');
+      if (!menu) return;
+      const isOpen = menu.classList.toggle('show');
+      if (icon) {
+        icon.className = isOpen ? 'fa-solid fa-xmark' : 'fa-solid fa-headset';
+      }
+    }
+
+    document.addEventListener('click', (e) => {
+      const notifContainer = document.getElementById('notificationContainer');
+      const notifDropdown = document.getElementById('notificationDropdown');
+      if (notifContainer && notifDropdown && !notifContainer.contains(e.target)) {
+        notifDropdown.classList.remove('show');
+      }
+
+      const floatContainer = document.getElementById('floatingSupportContainer');
+      const floatMenu = document.getElementById('floatingSupportMenu');
+      const floatIcon = document.getElementById('floatingSupportIcon');
+      if (floatContainer && floatMenu && !floatContainer.contains(e.target)) {
+        floatMenu.classList.remove('show');
+        if (floatIcon) floatIcon.className = 'fa-solid fa-headset';
+      }
+    });
 
     function saveSecurityState() {
       localStorage.setItem('login_failed_attempts', JSON.stringify(failedAttemptsMap));
@@ -2742,12 +3170,6 @@
       3: { correct: 'radius', okKey: 'q3Correct' }
     };
     const answeredQuestions = {};
-
-    document.body.setAttribute('data-theme', savedTheme);
-    if (savedTheme === 'dark') {
-      const tIcon = document.getElementById('themeIcon');
-      if (tIcon) tIcon.className = 'fa-solid fa-sun text-warning';
-    }
 
     window.addEventListener('DOMContentLoaded', async () => {
       authModal = new bootstrap.Modal(document.getElementById('authModal'));
@@ -3139,6 +3561,55 @@
       reader.readAsDataURL(file);
     }
 
+    /* Ready-Made Code Templates for Students */
+    const CODE_TEMPLATES = {
+      html: {
+        card: `<div style="font-family: sans-serif; padding: 20px; border: 1px solid #cbd5e1; border-radius: 12px; max-width: 340px;">\n  <h2 style="color: #3b49df; margin-top: 0;">Global Code & AI</h2>\n  <p>Welcome to your interactive HTML card.</p>\n  <button style="background: #3b49df; color: #fff; border: none; padding: 8px 16px; border-radius: 8px;">Start Learning</button>\n</div>`,
+        form: `<form style="font-family: sans-serif; display: flex; flex-direction: column; gap: 10px; max-width: 300px;">\n  <label>Student Name:</label>\n  <input type="text" placeholder="Enter your name" style="padding: 8px; border-radius: 6px; border: 1px solid #94a3b8;">\n  <button type="button" style="background: #059669; color: #fff; border: none; padding: 10px; border-radius: 6px;">Submit</button>\n</form>`
+      },
+      css: {
+        gradient: `.demo-box {\n  padding: 24px;\n  border-radius: 16px;\n  background: linear-gradient(135deg, #3b49df, #0891b2);\n  color: #ffffff;\n  text-align: center;\n}\n.demo-btn {\n  background: #ffffff;\n  color: #3b49df;\n  border: none;\n  padding: 8px 18px;\n  border-radius: 999px;\n  font-weight: bold;\n}`,
+        shadow: `.demo-box {\n  padding: 24px;\n  border-radius: 20px;\n  background: #f8fafc;\n  border: 2px solid #3b49df;\n  box-shadow: 0 12px 24px rgba(59, 73, 223, 0.22);\n  color: #0f172a;\n}`
+      },
+      'html-css': {
+        profile: {
+          html: `<div class="student-card">\n  <h3>Ahmed Sabry</h3>\n  <p>Front-End & AI Student</p>\n  <span class="badge">HTML • CSS • JS</span>\n</div>`,
+          css: `.student-card {\n  font-family: sans-serif;\n  background: #0d1526;\n  color: #f8fafc;\n  padding: 24px;\n  border-radius: 18px;\n  text-align: center;\n}\n.badge {\n  display: inline-block;\n  margin-top: 8px;\n  padding: 5px 12px;\n  border-radius: 999px;\n  background: #3b49df;\n  font-size: 12px;\n}`
+        }
+      },
+      js: {
+        loop: `for (let i = 1; i <= 5; i++) {\n  console.log("Lesson #" + i + " completed!");\n}`,
+        func: `function calculateScore(practical, exam) {\n  return practical + exam;\n}\nconsole.log("Total Score:", calculateScore(38, 29));`
+      },
+      python: {
+        hello: `print("Hello from Global Code & AI Academy!")`,
+        math: `x = 15\ny = 25\nprint("Sum = 40")`
+      }
+    };
+
+    function insertTemplate(mode, tplKey) {
+      if (mode === 'html') {
+        document.getElementById('htmlOnlyInput').value = CODE_TEMPLATES.html[tplKey] || '';
+        runHtmlOnlyCode();
+      } else if (mode === 'css') {
+        document.getElementById('cssOnlyInput').value = CODE_TEMPLATES.css[tplKey] || '';
+        runCssOnlyCode();
+      } else if (mode === 'html-css') {
+        const pair = CODE_TEMPLATES['html-css'][tplKey];
+        if (pair) {
+          document.getElementById('studentSiteCode').value = pair.html;
+          document.getElementById('combinedCssCode').value = pair.css;
+          saveStudentSiteCode();
+        }
+      } else if (mode === 'js') {
+        document.getElementById('jsCodeInput').value = CODE_TEMPLATES.js[tplKey] || '';
+        runJsCode();
+      } else if (mode === 'python') {
+        document.getElementById('pythonCodeInput').value = CODE_TEMPLATES.python[tplKey] || '';
+        runPythonCode();
+      }
+    }
+
     function toggleEditorsSubmenu(event, element) {
       if (event) event.preventDefault();
       const submenu = document.getElementById('editorsSubmenu');
@@ -3244,20 +3715,6 @@
         toggleSidebar();
       }
       if (sectionId === 'adminSection') loadAdminData();
-    }
-
-    function toggleTheme() {
-      const body = document.body;
-      const themeIcon = document.getElementById('themeIcon');
-      if (body.getAttribute('data-theme') === 'light') {
-        body.setAttribute('data-theme', 'dark');
-        themeIcon.className = 'fa-solid fa-sun text-warning';
-        localStorage.setItem('platform_theme', 'dark');
-      } else {
-        body.setAttribute('data-theme', 'light');
-        themeIcon.className = 'fa-solid fa-moon';
-        localStorage.setItem('platform_theme', 'light');
-      }
     }
 
     function toggleSidebar() {
@@ -3594,11 +4051,13 @@
       };
       const { error } = await _supabase.from('profiles').update(updateData).eq('id', currentUser.id);
       hideLoadingOverlay();
-      if (error) alert(error.message);
-      else {
+      if (error) {
+        showFormFeedback('profileFormFeedback', error.message, true);
+      } else {
         localStorage.setItem(`opt_email_${currentUser.phone}`, optEmail);
         localStorage.setItem('platform_current_user', JSON.stringify(currentUser));
         updateUI();
+        showFormFeedback('profileFormFeedback', t('savedSuccessMsg'), false);
         logAction(`تحديث الملف الشخصي: ${currentUser.name}`, 'student', currentUser.name);
       }
     }
@@ -3634,6 +4093,7 @@
         } catch (_) {}
       }
       await logAction(`تم فك قفل الحساب: ${name || identifier}`, 'admin', name || identifier);
+      showFormFeedback('adminFormFeedback', t('savedSuccessMsg'), false);
       loadAdminData();
     }
 
@@ -3671,9 +4131,9 @@
 
       const renderReqRow = (u, showGrade = true) => `
         <tr>
-          <td><strong>${escapeHtml(u.name)}</strong><br><small>${escapeHtml(u.username || '')}</small></td>
-          <td>${showGrade ? `${escapeHtml(u.grade || '')}<br>` : ''}${escapeHtml(u.phone || '')}</td>
-          <td>
+          <td data-label="${escapeHtml(t('thNameInfo'))}"><strong>${escapeHtml(u.name)}</strong><br><small>${escapeHtml(u.username || '')}</small></td>
+          <td data-label="${escapeHtml(t('thGradeDevice'))}">${showGrade ? `${escapeHtml(u.grade || '')}<br>` : ''}${escapeHtml(u.phone || '')}</td>
+          <td data-label="${escapeHtml(t('thAction'))}">
             <button type="button" class="btn btn-success btn-sm me-1" onclick="approveUser(${Number(u.id)})">OK</button>
             <button type="button" class="btn btn-danger btn-sm" onclick="rejectUser(${Number(u.id)})">X</button>
           </td>
@@ -3686,9 +4146,9 @@
 
       document.getElementById('unlockRequestsTableBody').innerHTML = unlockRequestsLocal.map(r => `
         <tr>
-          <td><strong>${escapeHtml(r.name)}</strong> <span class="badge bg-secondary-subtle text-secondary">${r.accountType === 'admin' ? 'Admin' : 'Student'}</span><br><small>${escapeHtml(r.phone)}</small></td>
-          <td>${escapeHtml(r.note || '-')}<br><small>${escapeHtml(r.deviceInfo || '')}</small></td>
-          <td>
+          <td data-label="${escapeHtml(t('thAccount'))}"><strong>${escapeHtml(r.name)}</strong> <span class="badge bg-secondary-subtle text-secondary">${r.accountType === 'admin' ? 'Admin' : 'Student'}</span><br><small>${escapeHtml(r.phone)}</small></td>
+          <td data-label="${escapeHtml(t('thReason'))}">${escapeHtml(r.note || '-')}<br><small>${escapeHtml(r.deviceInfo || '')}</small></td>
+          <td data-label="${escapeHtml(t('thAction'))}">
             <button type="button" class="btn btn-success btn-sm me-1" onclick="unlockAccount('${escapeHtml(r.key || (r.accountType + '_' + r.phone))}', '${escapeHtml(r.accountType)}', '${escapeHtml(r.phone)}', '${escapeHtml(r.name)}')">Unlock</button>
             <button type="button" class="btn btn-outline-secondary btn-sm" onclick="dismissUnlockRequest(${Number(r.id)})">X</button>
           </td>
@@ -3697,9 +4157,9 @@
 
       document.getElementById('lockedAccountsTableBody').innerHTML = lockedAll.map(acc => `
         <tr>
-          <td><strong>${escapeHtml(acc.name)}</strong> <span class="badge bg-danger-subtle text-danger">${escapeHtml(acc.roleLabel)}</span></td>
-          <td>${escapeHtml(acc.identifier)}</td>
-          <td>
+          <td data-label="${escapeHtml(t('thAccount'))}"><strong>${escapeHtml(acc.name)}</strong> <span class="badge bg-danger-subtle text-danger">${escapeHtml(acc.roleLabel)}</span></td>
+          <td data-label="${escapeHtml(t('thPhoneDevice'))}">${escapeHtml(acc.identifier)}</td>
+          <td data-label="${escapeHtml(t('thAction'))}">
             <button type="button" class="btn btn-success btn-sm" onclick="unlockAccount('${escapeHtml(acc.key)}', '${escapeHtml(acc.accountType)}', '${escapeHtml(acc.identifier)}', '${escapeHtml(acc.name)}')">Unlock</button>
           </td>
         </tr>
@@ -3707,9 +4167,9 @@
 
       const renderApprovedRow = (u) => `
         <tr>
-          <td><strong>${escapeHtml(u.name)}</strong><br><small>${escapeHtml(u.phone || '')}</small></td>
-          <td>${escapeHtml(u.grade || u.role || '')}</td>
-          <td><button type="button" class="btn btn-outline-danger btn-sm" onclick="deleteStudent(${Number(u.id)})" aria-label="Delete Member"><i class="fa-solid fa-trash"></i></button></td>
+          <td data-label="${escapeHtml(t('thNameInfo'))}"><strong>${escapeHtml(u.name)}</strong><br><small>${escapeHtml(u.phone || '')}</small></td>
+          <td data-label="${escapeHtml(t('thGradeDevice'))}">${escapeHtml(u.grade || u.role || '')}</td>
+          <td data-label="${escapeHtml(t('thAction'))}"><button type="button" class="btn btn-outline-danger btn-sm" onclick="deleteStudent(${Number(u.id)})" aria-label="Delete Member"><i class="fa-solid fa-trash"></i></button></td>
         </tr>
       `;
 
@@ -3722,6 +4182,7 @@
       document.getElementById('adminLogsTableBody').innerHTML = adminLogs.map(l => `<tr><td>${escapeHtml(l.action)}</td><td><small>${escapeHtml(new Date(l.created_at || Date.now()).toLocaleString())}</small></td></tr>`).join('') || `<tr><td colspan="2" class="text-center">-</td></tr>`;
 
       document.getElementById('adminNotificationsList').innerHTML = notifications.map(n => `<div class="sub-tile d-flex justify-content-between align-items-start gap-2"><div><h6 class="fw-bold text-primary m-0">${escapeHtml(n.title)}</h6><p class="small m-0 mt-1">${escapeHtml(n.content)}</p></div><button type="button" class="btn btn-outline-danger btn-sm" onclick="deleteItem('notifications', ${Number(n.id)})" aria-label="Delete"><i class="fa-solid fa-trash"></i></button></div>`).join('');
+      document.getElementById('adminHonorList').innerHTML = honorStudents.map(h => `<div class="sub-tile d-flex justify-content-between align-items-start gap-2"><div><h6 class="fw-bold text-warning m-0">${escapeHtml(h.name)}</h6><small>${escapeHtml(h.achievement)}</small></div><button type="button" class="btn btn-outline-danger btn-sm" onclick="deleteItem('honor_students', ${Number(h.id)})" aria-label="Delete"><i class="fa-solid fa-trash"></i></button></div>`).join('');
       document.getElementById('adminBooksList').innerHTML = books.map(b => `<div class="sub-tile d-flex justify-content-between align-items-start gap-2"><div><h6 class="fw-bold m-0">${escapeHtml(b.title)}</h6><small>${escapeHtml(b.grade)}</small></div><button type="button" class="btn btn-outline-danger btn-sm" onclick="deleteItem('books', ${Number(b.id)})" aria-label="Delete"><i class="fa-solid fa-trash"></i></button></div>`).join('');
       document.getElementById('adminVideosList').innerHTML = videos.map(v => `<div class="sub-tile d-flex justify-content-between align-items-start gap-2"><h6 class="fw-bold m-0">${escapeHtml(v.title)}</h6><button type="button" class="btn btn-outline-danger btn-sm" onclick="deleteItem('educational_videos', ${Number(v.id)})" aria-label="Delete"><i class="fa-solid fa-trash"></i></button></div>`).join('');
       document.getElementById('adminPlatformsList').innerHTML = platforms.map(pl => `<div class="sub-tile d-flex justify-content-between align-items-start gap-2"><div><h6 class="fw-bold m-0">${escapeHtml(pl.title)}</h6><small>${escapeHtml(pl.url)}</small></div><button type="button" class="btn btn-outline-danger btn-sm" onclick="deleteItem('platforms', ${Number(pl.id)})" aria-label="Delete"><i class="fa-solid fa-trash"></i></button></div>`).join('');
@@ -3738,6 +4199,7 @@
     async function approveUser(id) {
       const target = users.find(u => Number(u.id) === Number(id));
       await _supabase.from('profiles').update({ status: 'approved' }).eq('id', id);
+      showFormFeedback('adminFormFeedback', t('savedSuccessMsg'), false);
       loadAdminData();
       logAction(`تم تفعيل الحساب: ${target ? target.name : id}`, 'admin', target ? target.name : null);
     }
@@ -3762,15 +4224,19 @@
     function updateScoreBadge() {
       const totalQ = Object.keys(QUICK_ANSWERS).length;
       const score = Object.values(answeredQuestions).filter(Boolean).length;
+      const pct = Math.round((score / totalQ) * 100);
       const badge = document.getElementById('quickQuizScoreBadge');
       const bar = document.getElementById('quizProgressBar');
+      const pctLabel = document.getElementById('quizProgressPercent');
       if (badge) badge.innerText = `${t('scorePrefix')}: ${score} / ${totalQ}`;
-      if (bar) bar.style.width = `${Math.round((score / totalQ) * 100)}%`;
+      if (bar) bar.style.width = `${pct}%`;
+      if (pctLabel) pctLabel.innerText = `${pct}%`;
     }
 
     function answerQuickQuestion(qIndex, choice, btnEl) {
       const q = QUICK_ANSWERS[qIndex];
       const feedbackEl = document.getElementById(`quizFeedback${qIndex}`);
+      const dotEl = document.getElementById(`quizDot${qIndex}`);
       if (!q || !feedbackEl) return;
       btnEl.parentElement.querySelectorAll('button').forEach(b => {
         b.classList.remove('btn-success', 'btn-danger', 'text-white');
@@ -3782,12 +4248,20 @@
         feedbackEl.className = 'small mt-3 fw-semibold text-success';
         feedbackEl.innerText = t(q.okKey);
         answeredQuestions[qIndex] = true;
+        if (dotEl) {
+          dotEl.classList.remove('wrong');
+          dotEl.classList.add('correct');
+        }
       } else {
         btnEl.classList.remove('btn-outline-secondary');
         btnEl.classList.add('btn-danger', 'text-white');
         feedbackEl.className = 'small mt-3 fw-semibold text-danger';
         feedbackEl.innerText = t('qWrong');
         answeredQuestions[qIndex] = false;
+        if (dotEl) {
+          dotEl.classList.remove('correct');
+          dotEl.classList.add('wrong');
+        }
       }
       updateScoreBadge();
     }
@@ -3800,6 +4274,9 @@
       });
       document.querySelectorAll('[id^="quizFeedback"]').forEach(el => {
         el.innerText = '';
+      });
+      document.querySelectorAll('.quiz-step-dot').forEach(dot => {
+        dot.classList.remove('correct', 'wrong');
       });
       updateScoreBadge();
     }
@@ -3834,36 +4311,43 @@
     function renderHomeHonor() {
       const container = document.getElementById('homeHonorContainer');
       if (!honorStudents.length) { container.innerHTML = `<p class="text-center col-12">${escapeHtml(t('loadingHonor'))}</p>`; return; }
-      container.innerHTML = honorStudents.map(h => `<div class="col-md-4"><div class="honor-card"><img src="${escapeHtml(h.image_url)}" alt="${escapeHtml(h.name)}" class="honor-avatar"><h6 class="fw-bold mb-1">${escapeHtml(h.name)}</h6><small class="text-warning fw-bold">${escapeHtml(h.achievement)}</small></div></div>`).join('');
+      container.innerHTML = honorStudents.map(h => `<div class="col-md-4"><div class="honor-card h-100"><img src="${escapeHtml(h.image_url)}" alt="${escapeHtml(h.name)}" class="honor-avatar"><h6 class="fw-bold mb-1">${escapeHtml(h.name)}</h6><small class="text-warning fw-bold">${escapeHtml(h.achievement)}</small></div></div>`).join('');
     }
 
     function renderBooks(list = books) {
       const container = document.getElementById('booksContainer');
       if (!list || !list.length) { container.innerHTML = `<p class="text-center col-12">${escapeHtml(t('noBooks'))}</p>`; return; }
-      container.innerHTML = list.filter(b => isSafeUrl(b.url)).map(b => `<div class="col-md-4"><div class="sub-tile h-100 d-flex flex-column"><h6 class="fw-bold mb-2">${escapeHtml(b.title)}</h6><span class="badge bg-danger-subtle text-danger mb-3 align-self-start">${escapeHtml(b.grade)}</span><a href="${escapeHtml(b.url)}" target="_blank" rel="noopener noreferrer" class="btn btn-outline-danger btn-sm mt-auto fw-bold rounded-pill">${escapeHtml(t('downloadOpen'))}</a></div></div>`).join('');
+      container.innerHTML = list.filter(b => isSafeUrl(b.url)).map(b => `<div class="col-md-4"><div class="sub-tile h-100 d-flex flex-column"><h6 class="fw-bold mb-2">${escapeHtml(b.title)}</h6><span class="badge bg-danger-subtle text-danger mb-3 align-self-start">${escapeHtml(b.grade)}</span><a href="${escapeHtml(b.url.trim())}" target="_blank" rel="noopener noreferrer" class="btn btn-outline-danger btn-sm mt-auto fw-bold rounded-pill">${escapeHtml(t('downloadOpen'))}</a></div></div>`).join('');
     }
 
     function filterBooks() {
-      const q = document.getElementById('bookSearch').value.toLowerCase();
-      renderBooks(books.filter(b => b.title.toLowerCase().includes(q) || b.grade.toLowerCase().includes(q)));
+      const rawQuery = (document.getElementById('bookSearch')?.value || '').trim().toLowerCase();
+      if (!rawQuery) {
+        renderBooks(books);
+        return;
+      }
+      renderBooks(books.filter(b =>
+        String(b.title || '').toLowerCase().includes(rawQuery) ||
+        String(b.grade || '').toLowerCase().includes(rawQuery)
+      ));
     }
 
     function renderVideos(list = videos) {
       const container = document.getElementById('videosContainer');
       if (!list || !list.length) { container.innerHTML = `<p class="text-center col-12">${escapeHtml(t('noVideos'))}</p>`; return; }
-      container.innerHTML = list.filter(v => isSafeUrl(v.url)).map(v => `<div class="col-md-6"><div class="sub-tile h-100 d-flex flex-column justify-content-between gap-3"><h6 class="fw-bold m-0">${escapeHtml(v.title)}</h6><a href="${escapeHtml(v.url)}" target="_blank" rel="noopener noreferrer" class="btn btn-academy-primary btn-sm rounded-pill">${escapeHtml(t('watchLesson'))}</a></div></div>`).join('');
+      container.innerHTML = list.filter(v => isSafeUrl(v.url)).map(v => `<div class="col-md-6"><div class="sub-tile h-100 d-flex flex-column justify-content-between gap-3"><h6 class="fw-bold m-0">${escapeHtml(v.title)}</h6><a href="${escapeHtml(v.url.trim())}" target="_blank" rel="noopener noreferrer" class="btn btn-academy-primary btn-sm rounded-pill">${escapeHtml(t('watchLesson'))}</a></div></div>`).join('');
     }
 
     function renderPlatforms() {
       const container = document.getElementById('platformsContainer');
       if (!platforms.length) { container.innerHTML = `<p class="text-center col-12">${escapeHtml(t('noPlatforms'))}</p>`; return; }
-      container.innerHTML = platforms.filter(pl => isSafeUrl(pl.url)).map(pl => `<div class="col-md-4"><div class="sub-tile h-100 d-flex flex-column justify-content-between gap-3"><h6 class="fw-bold m-0">${escapeHtml(pl.title)}</h6><a href="${escapeHtml(pl.url)}" target="_blank" rel="noopener noreferrer" class="btn btn-warning text-dark fw-bold btn-sm rounded-pill">${escapeHtml(t('visitPlatform'))}</a></div></div>`).join('');
+      container.innerHTML = platforms.filter(pl => isSafeUrl(pl.url)).map(pl => `<div class="col-md-4"><div class="sub-tile h-100 d-flex flex-column justify-content-between gap-3"><h6 class="fw-bold m-0">${escapeHtml(pl.title)}</h6><a href="${escapeHtml(pl.url.trim())}" target="_blank" rel="noopener noreferrer" class="btn btn-warning text-dark fw-bold btn-sm rounded-pill">${escapeHtml(t('visitPlatform'))}</a></div></div>`).join('');
     }
 
     function renderExams() {
       const container = document.getElementById('examsContainer');
       if (!exams.length) { container.innerHTML = `<p class="text-center col-12">${escapeHtml(t('noExams'))}</p>`; return; }
-      container.innerHTML = exams.filter(ex => isSafeUrl(ex.url)).map(ex => `<div class="col-md-6"><div class="sub-tile h-100 d-flex flex-column justify-content-between gap-3"><h6 class="fw-bold m-0">${escapeHtml(ex.title)}</h6><a href="${escapeHtml(ex.url)}" target="_blank" rel="noopener noreferrer" class="btn btn-success btn-sm fw-bold rounded-pill">${escapeHtml(t('startExam'))}</a></div></div>`).join('');
+      container.innerHTML = exams.filter(ex => isSafeUrl(ex.url)).map(ex => `<div class="col-md-6"><div class="sub-tile h-100 d-flex flex-column justify-content-between gap-3"><h6 class="fw-bold m-0">${escapeHtml(ex.title)}</h6><a href="${escapeHtml(ex.url.trim())}" target="_blank" rel="noopener noreferrer" class="btn btn-success btn-sm fw-bold rounded-pill">${escapeHtml(t('startExam'))}</a></div></div>`).join('');
     }
 
     function runHtmlOnlyCode() {
@@ -3903,44 +4387,58 @@
 
     async function addNotification(e) {
       e.preventDefault();
-      await _supabase.from('notifications').insert([{ title: document.getElementById('notifTitle').value, content: document.getElementById('notifContent').value }]);
+      await _supabase.from('notifications').insert([{ title: document.getElementById('notifTitle').value.trim(), content: document.getElementById('notifContent').value.trim() }]);
       e.target.reset();
-      fetchSupabaseData();
+      showFormFeedback('adminFormFeedback', t('savedSuccessMsg'), false);
+      loadAdminData();
     }
     async function addHonorStudent(e) {
       e.preventDefault();
       const file = document.getElementById('honorImgFile').files[0];
       const reader = new FileReader();
       reader.onload = async function(ev) {
-        await _supabase.from('honor_students').insert([{ name: document.getElementById('honorName').value, achievement: document.getElementById('honorTitle').value, image_url: ev.target.result }]);
+        await _supabase.from('honor_students').insert([{ name: document.getElementById('honorName').value.trim(), achievement: document.getElementById('honorTitle').value.trim(), image_url: ev.target.result }]);
         e.target.reset();
-        fetchSupabaseData();
+        showFormFeedback('adminFormFeedback', t('savedSuccessMsg'), false);
+        loadAdminData();
       };
       reader.readAsDataURL(file);
     }
     async function addBook(e) {
       e.preventDefault();
-      await _supabase.from('books').insert([{ title: document.getElementById('bookTitle').value, grade: document.getElementById('bookGrade').value, url: document.getElementById('bookUrl').value }]);
+      const urlVal = document.getElementById('bookUrl').value.trim();
+      if (!isSafeUrl(urlVal)) { showFormFeedback('adminFormFeedback', 'Invalid URL', true); return; }
+      await _supabase.from('books').insert([{ title: document.getElementById('bookTitle').value.trim(), grade: document.getElementById('bookGrade').value, url: urlVal }]);
       e.target.reset();
-      fetchSupabaseData();
+      showFormFeedback('adminFormFeedback', t('savedSuccessMsg'), false);
+      loadAdminData();
     }
     async function addVideo(e) {
       e.preventDefault();
-      await _supabase.from('educational_videos').insert([{ title: document.getElementById('videoTitle').value, url: document.getElementById('videoUrl').value }]);
+      const urlVal = document.getElementById('videoUrl').value.trim();
+      if (!isSafeUrl(urlVal)) { showFormFeedback('adminFormFeedback', 'Invalid URL', true); return; }
+      await _supabase.from('educational_videos').insert([{ title: document.getElementById('videoTitle').value.trim(), url: urlVal }]);
       e.target.reset();
-      fetchSupabaseData();
+      showFormFeedback('adminFormFeedback', t('savedSuccessMsg'), false);
+      loadAdminData();
     }
     async function addPlatform(e) {
       e.preventDefault();
-      await _supabase.from('platforms').insert([{ title: document.getElementById('platTitle').value, url: document.getElementById('platUrl').value }]);
+      const urlVal = document.getElementById('platUrl').value.trim();
+      if (!isSafeUrl(urlVal)) { showFormFeedback('adminFormFeedback', 'Invalid URL', true); return; }
+      await _supabase.from('platforms').insert([{ title: document.getElementById('platTitle').value.trim(), url: urlVal }]);
       e.target.reset();
-      fetchSupabaseData();
+      showFormFeedback('adminFormFeedback', t('savedSuccessMsg'), false);
+      loadAdminData();
     }
     async function addExam(e) {
       e.preventDefault();
-      await _supabase.from('exams').insert([{ title: document.getElementById('examTitle').value, url: document.getElementById('examUrl').value }]);
+      const urlVal = document.getElementById('examUrl').value.trim();
+      if (!isSafeUrl(urlVal)) { showFormFeedback('adminFormFeedback', 'Invalid URL', true); return; }
+      await _supabase.from('exams').insert([{ title: document.getElementById('examTitle').value.trim(), url: urlVal }]);
       e.target.reset();
-      fetchSupabaseData();
+      showFormFeedback('adminFormFeedback', t('savedSuccessMsg'), false);
+      loadAdminData();
     }
 
     function urlBase64ToUint8Array(base64String) {
